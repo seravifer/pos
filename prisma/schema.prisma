@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model bill {
+  id           Int            @id @default(autoincrement())
+  tableId      Int?
+  people       Int?
+  total        Float?
+  paid         Float?
+  createdAt    DateTime?
+  updatedAt    DateTime?
+  table        table?         @relation(fields: [tableId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  billProducts billProducts[]
+}
+
+model billProducts {
+  id        Int    @id @default(autoincrement())
+  bilId     Int?
+  productId Int?
+  price     Float?
+  quantity  Int?
+  bill      bill?  @relation(fields: [bilId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model category {
+  id      Int       @id @default(autoincrement())
+  name    String?
+  product product[]
+}
+
+model product {
+  id          Int       @id @default(autoincrement())
+  name        String?
+  description String?
+  price       Float?
+  cost        Float?
+  tax         Float?
+  stock       Int?
+  image       String?
+  categoryId  Int?
+  createdAt   DateTime?
+  updatedAt   DateTime?
+  category    category? @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model table {
+  id   Int     @id @default(autoincrement())
+  name String?
+  size Int?
+  bill bill[]
+}
+
+model user {
+  id       Int     @id @default(autoincrement())
+  name     String?
+  username String?
+  password String?
+  role     String?
+}
