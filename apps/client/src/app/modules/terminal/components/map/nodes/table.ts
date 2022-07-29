@@ -1,4 +1,6 @@
 import Konva from 'konva';
+import { Node } from './node';
+import { ItemFormOptions, ItemType } from './types';
 
 export type TableOptions = {
   id: string;
@@ -7,7 +9,7 @@ export type TableOptions = {
   y: number;
 };
 
-export class Table extends Konva.Group {
+export class Table extends Node {
   private options: TableOptions;
 
   constructor(options: TableOptions) {
@@ -24,18 +26,36 @@ export class Table extends Konva.Group {
     this.init();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   public removeFocus() {}
 
   public hasFocus() {
     return false;
   }
 
-  public override toObject(): TableOptions {
+  public getEditOptions(): ItemFormOptions[] {
+    return [
+      {
+        key: 'text',
+        value: this.options.text,
+        type: 'text',
+      },
+    ];
+  }
+
+  public setEditOptions(options: any): void {
+    const textNode = this.findOne('Text') as Konva.Text;
+    textNode.text(options.text);
+    this.options.text = options.text;
+  }
+
+  public override toObject(): TableOptions & { type: ItemType } {
     return {
       id: this.id(),
       text: (this.findOne('Text') as Konva.Text).text(),
       x: this.x(),
       y: this.y(),
+      type: 'table',
     };
   }
 
@@ -85,12 +105,6 @@ export class Table extends Konva.Group {
       align: 'center',
     });
 
-    this.toObject = () => ({
-      x: this.x(),
-      y: this.y(),
-      id: this.id(),
-      text: name.text(),
-    });
     this.add(...shape, name);
   }
 }

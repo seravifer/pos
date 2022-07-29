@@ -4,28 +4,14 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'onboarding',
     pathMatch: 'full',
   },
   {
-    path: 'dashboard',
+    path: 'onboarding',
     loadChildren: () =>
-      import('./modules/dashboard/dashboard.module').then(
-        (m) => m.DashboardModule
-      ),
-  },
-  {
-    path: 'products',
-    loadChildren: () =>
-      import('./modules/products/products.module').then(
-        (m) => m.ProductsModule
-      ),
-  },
-  {
-    path: 'settings',
-    loadChildren: () =>
-      import('./modules/settings/settings.module').then(
-        (m) => m.SettingsModule
+      import('./modules/onboarding/onboarding.module').then(
+        (m) => m.OnboardingModule
       ),
   },
   {
@@ -36,18 +22,9 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'onboarding',
+    path: 'admin',
     loadChildren: () =>
-      import('./modules/onboarding/onboarding.module').then(
-        (m) => m.OnboardingModule
-      ),
-  },
-  {
-    path: 'categories',
-    loadChildren: () =>
-      import('./modules/categories/categories.module').then(
-        (m) => m.CategoriesModule
-      ),
+      import('./modules/admin/admin.module').then((m) => m.AdminModule),
   },
 ];
 

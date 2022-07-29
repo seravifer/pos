@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Product } from '@pos/models';
+import { CategoryWithProducts, Product } from '@pos/models';
 import { environment } from '@pos/client/environment';
 
 @Injectable({
@@ -9,8 +9,14 @@ import { environment } from '@pos/client/environment';
 export class ProductsService {
   constructor(private http: HttpClient) {}
 
-  getProducts() {
+  getOnlyProducts() {
     return this.http.get<Product[]>(`${environment.apiUrl}/products`);
+  }
+
+  getAllProducts() {
+    return this.http.get<CategoryWithProducts[]>(
+      `${environment.apiUrl}/products/all`
+    );
   }
 
   createProduct(product: Product) {

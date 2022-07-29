@@ -1,16 +1,28 @@
 export type Bill = {
-  id: number;
+  id: string;
   tableId: number | null;
   people: number | null;
   total: number | null;
   paid: number | null;
-  createdAt: Date | null;
-  updatedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type BillWithProducts = Bill & {
+  products: BProduct[];
+};
+
+export type BProduct = {
+  id: string;
+  name: string;
+  productId: number;
+  price: number;
+  quantity: number;
 };
 
 export type BillProduct = {
-  id: number;
-  bilId: number | null;
+  id: string;
+  billId: number | null;
   productId: number | null;
   price: number | null;
   quantity: number | null;
@@ -18,12 +30,17 @@ export type BillProduct = {
 
 export type Category = {
   id: number;
-  name: string | null;
+  name: string;
+  color: string | null;
+};
+
+export type CategoryWithProducts = Category & {
+  products: Product[];
 };
 
 export type Product = {
   id: number;
-  name: string | null;
+  name: string;
   description: string | null;
   price: number | null;
   cost: number | null;
@@ -34,18 +51,6 @@ export type Product = {
   createdAt: Date | null;
   updatedAt: Date | null;
 };
-
-export type ProductReq = Pick<
-  Product,
-  | 'name'
-  | 'description'
-  | 'price'
-  | 'cost'
-  | 'tax'
-  | 'stock'
-  | 'image'
-  | 'categoryId'
->;
 
 export type Table = {
   id: number;
@@ -59,4 +64,16 @@ export type User = {
   username: string | null;
   password: string | null;
   role: string | null;
+};
+
+export type Item = {
+  id: string;
+  type: string;
+  options: any | null;
+  locationId: number | null;
+};
+
+export type Location = {
+  id: number;
+  name: string;
 };

@@ -4,10 +4,10 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
+import { Bill } from '@pos/models';
 import { DBService } from '../db.service';
 
 @Controller('bills')
@@ -16,29 +16,41 @@ export class BillsController {
 
   @Get()
   get() {
-    return this.dbService.bill.findMany();
+    return this.dbService.bill.findMany({
+      include: {
+        products: {
+          include: {
+            product: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
   }
 
   @Post()
-  creae(@Body() data: any) {
+  create(@Body() data: Bill) {
     return this.dbService.bill.create({ data });
   }
 
   @Get(':id')
-  getById(@Param('id', ParseIntPipe) id: number) {
+  getById(@Param('id') id: string) {
     return this.dbService.bill.findUnique({ where: { id } });
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() data: any) {
+  update(@Param('id') id: string, @Body() data: Bill) {
     return this.dbService.bill.update({
       where: { id },
-      data,
+      data: data,
     });
   }
 
   @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('id') id: string) {
     return this.dbService.bill.delete({
       where: { id },
     });

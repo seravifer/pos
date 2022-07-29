@@ -1,0 +1,39 @@
+<div class="actions">
+  <button pButton (click)="addItem('table')" type="button">Mesa</button>
+  <button pButton (click)="addItem('text')" type="button">Texto</button>
+  <button pButton (click)="onSave()" type="button" class="p-button-success">
+    Guardar
+  </button>
+  <hr />
+  <form *ngIf="form" [formGroup]="form">
+    <div *ngFor="let option of formOptions">
+      <div [ngSwitch]="option.type">
+        <input
+          *ngSwitchCase="'text'"
+          [formControlName]="option.key"
+          [type]="'text'"
+        />
+      </div>
+    </div>
+  </form>
+  <hr />
+
+  <button
+    *ngIf="selectedItem"
+    pButton
+    (click)="onDelete()"
+    type="button"
+    class="p-button-danger"
+  >
+    Eliminar
+  </button>
+</div>
+
+<div class="map-container">
+  <div class="locations">
+    <div class="location">Primera planta</div>
+  </div>
+  <div class="map">
+    <div id="canvas" style="border: 2px solid #000000"></div>
+  </div>
+</div>

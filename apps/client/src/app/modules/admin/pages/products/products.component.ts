@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Category, Product } from '@pos/models';
 import { ProductsService } from '@pos/client/services/products.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { CategoriesService } from '../../services/categories.service';
+import { CategoriesService } from '@pos/client/services/categories.service';
 
 @Component({
   selector: 'pos-products',
@@ -26,7 +26,7 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit() {
     this.productsService
-      .getProducts()
+      .getOnlyProducts()
       .subscribe((data) => (this.products = data));
     this.categoriesService
       .getCategories()

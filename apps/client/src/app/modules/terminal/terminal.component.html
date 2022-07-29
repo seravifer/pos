@@ -1,0 +1,86 @@
+<main>
+  <div class="tables">
+    <div
+      class="table"
+      *ngFor="let table of tables"
+      (click)="onSelectTable(table)"
+    >
+      {{ table.name }}
+    </div>
+  </div>
+  <div class="items">
+    <div class="categories">
+      <div
+        class="category item"
+        (click)="onSelectCategory(category)"
+        *ngFor="let category of categories"
+      >
+        {{ category.name }}
+      </div>
+    </div>
+    <ng-container *ngIf="selectedCategory">
+      <h2>{{ selectedCategory.name }}</h2>
+      <div class="products">
+        <div
+          class="products item"
+          (click)="onSelectProduct(product)"
+          *ngFor="let product of selectedCategory.products"
+        >
+          {{ product.name }}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="bill">
+    <div class="list">
+      <ng-container *ngFor="let item of bill?.products">
+        <input
+          type="radio"
+          [id]="item.id"
+          name="items"
+          [(ngModel)]="selectedItemId"
+          (ngModelChange)="selectedItem = item"
+        />
+        <label class="list-item" [for]="item.id">
+          <div class="info">
+            <div class="name">{{ item.name }}</div>
+            <div class="quantity">{{ item.quantity }} productos</div>
+          </div>
+          <div class="actions">
+            <div class="action" (click)="changeQuantity(item, 1)">+</div>
+            <div class="action" (click)="changeQuantity(item, -1)">-</div>
+          </div>
+          <div class="price">
+            {{ item.quantity * item.price | currency: 'EUR' }}
+          </div>
+        </label>
+      </ng-container>
+    </div>
+
+    <div class="total">Total: {{ bill?.total ?? 0 | currency: 'EUR' }}</div>
+
+    <div class="calc">
+      <div class="payment">Cobrar</div>
+
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>C</button>
+
+      <button>4</button>
+      <button>5</button>
+      <button>6</button>
+      <button>P</button>
+
+      <button>7</button>
+      <button>8</button>
+      <button>9</button>
+      <button>D</button>
+
+      <button>+/-</button>
+      <button>0</button>
+      <button>,</button>
+      <button><=</button>
+    </div>
+  </div>
+</main>

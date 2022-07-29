@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { TerminalComponent } from './terminal.component';
-import { MapComponent } from './map/map.component';
+import { MapComponent } from './components/map/map.component';
 import { ButtonModule } from 'primeng/button';
+import { TabViewModule } from 'primeng/tabview';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
   { path: '', component: TerminalComponent },
@@ -12,6 +14,13 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [TerminalComponent, MapComponent],
-  imports: [CommonModule, RouterModule.forChild(routes), ButtonModule],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    FormsModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    TabViewModule,
+  ],
 })
 export class TerminalModule {}

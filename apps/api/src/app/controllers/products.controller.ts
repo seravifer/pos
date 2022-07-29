@@ -19,8 +19,17 @@ export class ProductsController {
     return this.dbService.product.findMany();
   }
 
+  @Get('/all')
+  getAll() {
+    return this.dbService.category.findMany({
+      include: {
+        products: true,
+      },
+    });
+  }
+
   @Post()
-  creae(@Body() data: any) {
+  create(@Body() data: any) {
     return this.dbService.product.create({ data });
   }
 
@@ -31,9 +40,10 @@ export class ProductsController {
 
   @Put(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() data: any) {
+    const { createdAt, updateAt, ...rest } = data;
     return this.dbService.product.update({
       where: { id },
-      data,
+      data: rest,
     });
   }
 

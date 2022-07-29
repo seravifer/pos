@@ -1,0 +1,176 @@
+main {
+  padding: 20px;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  gap: 20px;
+}
+
+.tables {
+  height: 100%;
+  background-color: white;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+
+  .table {
+    height: 80px;
+    background-color: green;
+    border-radius: 8px;
+    padding: 10px;
+    width: 160px;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    word-break: break-word;
+  }
+}
+
+.items {
+  height: 100%;
+  background-color: white;
+  border-radius: 16px;
+  flex: 2 1 auto;
+  padding: 20px;
+
+  .item {
+    height: 80px;
+    background-color: blue;
+    border-radius: 8px;
+    padding: 10px;
+    width: 160px;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    word-break: break-word;
+  }
+
+  .categories {
+    display: flex;
+    height: 240px;
+    gap: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+  }
+
+  .products {
+    display: flex;
+    gap: 20px;
+  }
+}
+
+.bill {
+  height: 100%;
+  border-radius: 16px;
+  flex: 1 1 auto;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+
+  .list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+
+    input {
+      display: none;
+    }
+
+    input:checked + label {
+      background-color: #ccc;
+    }
+
+    .list-item {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 20px;
+      gap: 20px;
+
+      .info {
+        flex: 1;
+
+        .name {
+          font-size: 20px;
+          font-weight: bold;
+        }
+        .quantity {
+          font-size: 16px;
+        }
+      }
+
+      .actions {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+      }
+
+      .action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        font-weight: bold;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        height: 42px;
+        width: 42px;
+      }
+
+      .price {
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+        font-weight: bold;
+        min-width: 100px;
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  .total {
+    text-align: right;
+    font-size: 32px;
+    font-weight: bold;
+    margin: 20px;
+  }
+
+  .calc {
+    display: grid;
+    grid-template-columns: 4fr repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    background-color: #ccc;
+    grid-gap: 1px;
+    border: 1px solid #ccc;
+    margin: 20px;
+    border-radius: 16px;
+
+    .payment {
+      grid-column: 1;
+      grid-row: 1 / span 4;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-top-left-radius: 16px;
+      border-bottom-left-radius: 16px;
+    }
+
+    button {
+      background-color: white;
+      border: none;
+      height: 80px;
+
+      &:nth-child(5) {
+        border-top-right-radius: 16px;
+      }
+
+      &:last-child {
+        border-bottom-right-radius: 16px;
+      }
+    }
+  }
+}

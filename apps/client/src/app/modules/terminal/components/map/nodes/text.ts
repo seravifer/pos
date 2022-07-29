@@ -1,17 +1,23 @@
 import Konva from 'konva';
+import { Node } from './node';
+import { ItemType } from './types';
 
 export type TextOptions = {
   id: string;
   text: string;
   x: number;
   y: number;
+  rotation: number;
 };
 
-export class Text extends Konva.Group {
+export class Text extends Node {
   private options: TextOptions;
 
   constructor(options: TextOptions) {
     super({
+      x: options.x,
+      y: options.y,
+      id: options.id,
       draggable: true,
     });
     this.options = options;
@@ -26,26 +32,37 @@ export class Text extends Konva.Group {
     return (this.findOne('Transformer') as Konva.Transformer).visible();
   }
 
-  public override toObject() {
+  public getEditOptions(): any[] {
+    return [];
+  }
+
+  public setEditOptions(options: any[]): void {
+    // eslint-disable-next-line no-console
+    console.log(options);
+  }
+
+  public override toObject(): TextOptions & { type: ItemType } {
     return {
-      id: this.options.id,
-      text: this.options.text,
-      x: this.options.x,
-      y: this.options.y,
+      id: this.id(),
+      type: 'text',
+      text: (this.findOne('Text') as Konva.Text)?.text(),
+      x: this.x(),
+      y: this.y(),
+      rotation: (this.findOne('Text') as Konva.Text).rotation(),
     };
   }
 
   private init() {
     const textNode = new Konva.Text({
       text: this.options.text,
-      x: this.options.x,
-      y: this.options.y,
+      rotation: this.options.rotation,
       fontSize: 20,
       width: 200,
     });
 
     const tr = new Konva.Transformer({
       nodes: [textNode],
+      visible: false,
       enabledAnchors: ['middle-left', 'middle-right'],
       // set minimum width of text
       boundBoxFunc: function (oldBox, newBox) {
@@ -68,7 +85,6 @@ export class Text extends Konva.Group {
       tr.show();
     });
 
-    console.log(this.parent);
     textNode.on('dblclick dbltap', () => {
       console.log(this.parent);
       // hide text node and transformer:

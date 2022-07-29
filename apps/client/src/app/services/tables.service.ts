@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Category } from '@pos/models';
+import { Table } from '@pos/models';
 import { environment } from '@pos/client/environment';
 
 @Injectable({
@@ -10,25 +10,25 @@ export class TablesService {
   constructor(private http: HttpClient) {}
 
   getTables() {
-    return this.http.get<Category[]>(`${environment.apiUrl}/tables`);
+    return this.http.get<Table[]>(`${environment.apiUrl}/tables`);
   }
 
-  createCategory(product: Category) {
-    return this.http.post<Category>(`${environment.apiUrl}/tables`, product);
+  createTable(product: Table) {
+    return this.http.post<Table>(`${environment.apiUrl}/tables`, product);
   }
 
-  getCategory(id: string) {
-    return this.http.get<Category>(`${environment.apiUrl}/tables/${id}`);
+  getTable(id: string) {
+    return this.http.get<Table>(`${environment.apiUrl}/tables/${id}`);
   }
 
-  updateCategory(product: Category) {
-    return this.http.put<Category>(
+  updateTable(product: Table) {
+    return this.http.put<Table>(
       `${environment.apiUrl}/tables/${product.id}`,
       product
     );
   }
 
-  deleteCategory(product: Category) {
+  deleteTable(product: Table) {
     return this.http.delete(`${environment.apiUrl}/tables/${product.id}`);
   }
 }

@@ -20,7 +20,7 @@ export class CategoriesController {
   }
 
   @Post()
-  creae(@Body() data: any) {
+  create(@Body() data: any) {
     return this.dbService.category.create({ data });
   }
 

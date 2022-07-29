@@ -20,7 +20,7 @@ export class TablesController {
   }
 
   @Post()
-  creae(@Body() data: any) {
+  create(@Body() data: any) {
     return this.dbService.table.create({ data });
   }
 
