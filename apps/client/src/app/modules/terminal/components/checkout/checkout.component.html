@@ -1,0 +1,14 @@
+<p-selectButton
+  [options]="paymentOptions"
+  [(ngModel)]="type"
+  optionLabel="name"
+  optionValue="code"
+></p-selectButton>
+<div class="total">
+  {{ bill?.total ?? 0 | currency: 'EUR' }}
+</div>
+<div class="payment">
+  {{ payment | currency: 'EUR' }}
+</div>
+<pos-calculator [(ngModel)]="payment"></pos-calculator>
+<button pButton (click)="confirm()">Pagar</button>

@@ -31,7 +31,7 @@ export class BillProductsController {
 
   @Delete(':id')
   delete(@Param('id') id: string) {
-    return this.dbService.bill.delete({
+    return this.dbService.billProducts.delete({
       where: { id },
     });
   }

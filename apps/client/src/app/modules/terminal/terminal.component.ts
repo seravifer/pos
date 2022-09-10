@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { BillsService } from '@pos/client/services/bill.service';
 import { ProductsService } from '@pos/client/services/products.service';
-import { TablesService } from '@pos/client/services/tables.service';
 import {
   BillWithProducts,
   BProduct,
   CategoryWithProducts,
   Product,
-  Table,
 } from '@pos/models';
 import { v4 as uuid } from 'uuid';
 
@@ -17,30 +15,41 @@ import { v4 as uuid } from 'uuid';
   styleUrls: ['./terminal.component.scss'],
 })
 export class TerminalComponent implements OnInit {
-  public tables: Table[] = [];
-  public bill!: BillWithProducts;
+  public bills: BillWithProducts[] = [];
+  public selectedBill: BillWithProducts | null = null;
+
   public categories: CategoryWithProducts[] = [];
   public selectedCategory: CategoryWithProducts | null = null;
+
   public selectedItem: BProduct | null = null;
   public selectedItemId: string | null = null;
 
+  public showCheckout = false;
+
   constructor(
     private productsService: ProductsService,
-    private tablesService: TablesService,
     private billService: BillsService
   ) {}
 
   ngOnInit(): void {
-    this.tablesService.getTables().subscribe((tables) => {
-      this.tables = tables;
-    });
     this.productsService.getAllProducts().subscribe((categories) => {
       this.categories = categories;
       this.selectedCategory = categories[0];
     });
     this.billService.getBills().subscribe((bills) => {
-      this.bill = bills[0];
+      this.bills = bills;
     });
+  }
+
+  newBill() {
+    this.billService.createBill({}).subscribe((bill) => {
+      this.bills.push(bill);
+      this.selectedBill = bill;
+    });
+  }
+
+  onSelectBill(bill: BillWithProducts) {
+    this.selectedBill = bill;
   }
 
   onSelectCategory(category: CategoryWithProducts) {
@@ -48,12 +57,17 @@ export class TerminalComponent implements OnInit {
   }
 
   onSelectProduct(product: Product) {
-    const exists = this.bill.products.find(
+    if (!this.selectedBill) {
+      return;
+    }
+    const exists = this.selectedBill.products.find(
       (val) => val.productId === product.id
     );
     if (exists) {
       exists.quantity++;
-      this.billService.updateBillProduct(this.bill.id, exists).subscribe();
+      this.billService
+        .updateBillProduct(this.selectedBill.id, exists)
+        .subscribe();
     } else {
       const newProduct: BProduct = {
         id: uuid(),
@@ -62,34 +76,60 @@ export class TerminalComponent implements OnInit {
         price: product.price ?? 0,
         quantity: 1,
       };
-      this.bill.products.push(newProduct);
-      this.billService.updateBillProduct(this.bill.id, newProduct).subscribe();
+      this.selectedBill.products.push(newProduct);
+      this.billService
+        .updateBillProduct(this.selectedBill.id, newProduct)
+        .subscribe();
     }
     this.calcTotal();
   }
 
   changeQuantity(product: BProduct, quantity: number) {
+    if (!this.selectedBill) {
+      return;
+    }
     product.quantity = product.quantity + quantity;
     if (product.quantity < 1) {
-      this.bill.products = this.bill.products.filter(
+      this.selectedBill.products = this.selectedBill.products.filter(
         (val) => val.productId !== product.productId
       );
-      this.billService.deleteBillProduct(this.bill.id, product).subscribe();
+      this.billService
+        .deleteBillProduct(this.selectedBill.id, product)
+        .subscribe();
     } else {
-      this.billService.updateBillProduct(this.bill.id, product).subscribe();
+      this.billService
+        .updateBillProduct(this.selectedBill.id, product)
+        .subscribe();
     }
     this.calcTotal();
   }
 
+  onClose() {
+    if (!this.selectedBill) {
+      return;
+    }
+    this.selectedBill.closedAt = new Date();
+    this.billService.updateBill(this.selectedBill).subscribe();
+    this.selectedBill = null;
+  }
+
+  onCheckout(payment: number) {
+    if (!this.selectedBill) {
+      return;
+    }
+    this.selectedBill.paid = payment;
+    this.showCheckout = false;
+    this.billService.updateBill(this.selectedBill).subscribe();
+  }
+
   private calcTotal() {
-    this.bill.total = this.bill?.products.reduce(
+    if (!this.selectedBill) {
+      return;
+    }
+    this.selectedBill.total = this.selectedBill?.products.reduce(
       (acc, cur) => acc + cur.price * cur.quantity,
       0
     );
-  }
-
-  onSelectTable(table: Table) {
-    // TODO
-    this.bill.tableId = table.id;
+    this.billService.updateBill(this.selectedBill).subscribe();
   }
 }

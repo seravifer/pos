@@ -5,7 +5,11 @@ import { TerminalComponent } from './terminal.component';
 import { MapComponent } from './components/map/map.component';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
+import { DialogModule } from 'primeng/dialog';
+import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CalculatorComponent } from './components/calculator/calculator.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
 
 const routes: Routes = [
   { path: '', component: TerminalComponent },
@@ -13,7 +17,12 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [TerminalComponent, MapComponent],
+  declarations: [
+    TerminalComponent,
+    MapComponent,
+    CalculatorComponent,
+    CheckoutComponent,
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -21,6 +30,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     ButtonModule,
     TabViewModule,
+    DialogModule,
+    SelectButtonModule,
   ],
 })
 export class TerminalModule {}

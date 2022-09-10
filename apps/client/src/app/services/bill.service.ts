@@ -30,8 +30,11 @@ export class BillsService {
       );
   }
 
-  createBill(bill: Bill) {
-    return this.http.post<Bill>(`${environment.apiUrl}/bills`, bill);
+  createBill(bill: Partial<Bill>) {
+    return this.http.post<BillWithProducts>(
+      `${environment.apiUrl}/bills`,
+      bill
+    );
   }
 
   getBill(id: string) {
@@ -39,9 +42,10 @@ export class BillsService {
   }
 
   updateBill(bill: BillWithProducts) {
+    const { products, ...billData } = bill;
     return this.http.put<BillWithProducts>(
       `${environment.apiUrl}/bills/${bill.id}`,
-      bill
+      billData
     );
   }
 

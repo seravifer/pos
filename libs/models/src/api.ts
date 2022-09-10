@@ -4,6 +4,7 @@ export type Bill = {
   people: number | null;
   total: number | null;
   paid: number | null;
+  closedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 };

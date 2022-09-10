@@ -1,12 +1,9 @@
 <main>
-  <div class="tables">
-    <div
-      class="table"
-      *ngFor="let table of tables"
-      (click)="onSelectTable(table)"
-    >
-      {{ table.name }}
+  <div class="bills">
+    <div class="bill" *ngFor="let bill of bills" (click)="onSelectBill(bill)">
+      {{ bill.id }}
     </div>
+    <div class="add" (click)="newBill()"><i class="pi pi-plus"></i></div>
   </div>
   <div class="items">
     <div class="categories">
@@ -31,13 +28,17 @@
       </div>
     </ng-container>
   </div>
-  <div class="bill">
-    <div class="list">
-      <ng-container *ngFor="let item of bill?.products">
+  <div class="summary">
+    <div class="list not-selected" *ngIf="!selectedBill">
+      Seleccione una comanda
+    </div>
+    <div class="list" *ngIf="selectedBill">
+      <div>Mesa: {{ selectedBill.id }}</div>
+      <ng-container *ngFor="let item of selectedBill.products">
         <input
           type="radio"
-          [id]="item.id"
           name="items"
+          [id]="item.id"
           [(ngModel)]="selectedItemId"
           (ngModelChange)="selectedItem = item"
         />
@@ -57,30 +58,24 @@
       </ng-container>
     </div>
 
-    <div class="total">Total: {{ bill?.total ?? 0 | currency: 'EUR' }}</div>
+    <div class="total">
+      Pagado: {{ selectedBill?.paid ?? 0 | currency: 'EUR' }}
+    </div>
+    <div class="total">
+      Total: {{ selectedBill?.total ?? 0 | currency: 'EUR' }}
+    </div>
 
-    <div class="calc">
-      <div class="payment">Cobrar</div>
-
-      <button>1</button>
-      <button>2</button>
-      <button>3</button>
-      <button>C</button>
-
-      <button>4</button>
-      <button>5</button>
-      <button>6</button>
-      <button>P</button>
-
-      <button>7</button>
-      <button>8</button>
-      <button>9</button>
-      <button>D</button>
-
-      <button>+/-</button>
-      <button>0</button>
-      <button>,</button>
-      <button><=</button>
+    <div class="actions">
+      <button pButton>Imprimir ticket</button>
+      <button pButton (click)="onClose()">Cerrar ticket</button>
+      <button pButton (click)="showCheckout = true">Cobrar</button>
     </div>
   </div>
 </main>
+
+<p-dialog [(visible)]="showCheckout" [modal]="true">
+  <pos-checkout
+    [bill]="selectedBill"
+    (checkout)="onCheckout($event)"
+  ></pos-checkout>
+</p-dialog>

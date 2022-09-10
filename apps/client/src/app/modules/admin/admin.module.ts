@@ -9,6 +9,11 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'dashboard',
+      },
+      {
         path: 'categories',
         loadChildren: () =>
           import('./pages/categories/categories.module').then(

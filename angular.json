@@ -3,7 +3,7 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
-    "models": "libs/models",
-    "client": "apps/client"
+    "client": "apps/client",
+    "models": "libs/models"
   }
 }
