@@ -1,4 +1,4 @@
-export type ItemType = 'table' | 'text';
+export type ItemType = 'table' | 'text' | 'circle';
 export type ItemFormOptions = {
   key: string;
   value: unknown;

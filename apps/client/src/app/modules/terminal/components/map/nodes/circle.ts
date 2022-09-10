@@ -2,7 +2,7 @@ import Konva from 'konva';
 import { Node } from './node';
 import { ItemFormOptions, ItemType } from './types';
 
-export type TableOptions = {
+export type CircleOptions = {
   id: string;
   text: string;
   height: number;
@@ -12,19 +12,21 @@ export type TableOptions = {
   y: number;
 };
 
-export class Table extends Node {
-  private options: TableOptions;
+export class Circle extends Node {
+  private options: CircleOptions;
 
-  constructor(options: TableOptions) {
+  constructor(options: CircleOptions) {
     super({
-      id: options.id,
       x: options.x,
       y: options.y,
+      id: options.id,
       width: +options.width,
       height: +options.height,
       draggable: true,
+      name: 'circle',
     });
     this.options = options;
+    this.changeRotation(+options.rotation);
     this.render();
   }
 
@@ -62,6 +64,9 @@ export class Table extends Node {
 
   public setEditOptions(options: any): void {
     this.options = { ...this.options, ...options };
+    this.width(+options.width);
+    this.height(+options.height);
+    this.changeRotation(+options.rotation);
     this.render();
   }
 
@@ -85,10 +90,10 @@ export class Table extends Node {
     this.y(this.y() + dy);
   }
 
-  public override toObject(): TableOptions & { type: ItemType } {
+  public override toObject(): CircleOptions & { type: ItemType } {
     return {
       id: this.id(),
-      type: 'table',
+      type: 'circle',
       text: this.options.text,
       height: +this.options.height,
       width: +this.options.width,
@@ -100,41 +105,30 @@ export class Table extends Node {
 
   private render() {
     this.destroyChildren();
-    this.width(+this.options.width);
-    this.height(+this.options.height);
-    this.changeRotation(+this.options.rotation);
 
-    const chairs = [
-      new Konva.Circle({
-        x: 0,
-        y: +this.options.height / 2,
-        radius: 20,
-        fill: 'green',
-      }),
-      new Konva.Circle({
-        x: +this.options.width,
-        y: +this.options.height / 2,
-        radius: 20,
-        fill: 'green',
-      }),
-      new Konva.Circle({
-        x: +this.options.width / 2,
-        y: +this.options.height,
-        radius: 20,
-        fill: 'green',
-      }),
-      new Konva.Circle({
-        x: +this.options.width / 2,
-        y: 0,
-        radius: 20,
-        fill: 'green',
-      }),
-    ];
-    const table = new Konva.Rect({
+    const chairs = [];
+    const totalPoints = 6;
+    const r = this.options.height / 2;
+    for (let i = 1; i <= totalPoints; i++) {
+      const theta = (Math.PI * 2) / totalPoints;
+      const angle = theta * i;
+
+      chairs.push(
+        new Konva.Circle({
+          x: r * Math.cos(angle) + r,
+          y: r * Math.sin(angle) + r,
+          radius: 20,
+          fill: 'green',
+        })
+      );
+    }
+
+    const circle = new Konva.Circle({
       width: +this.options.width,
       height: +this.options.height,
+      x: +this.options.width / 2,
+      y: +this.options.height / 2,
       fill: 'lightblue',
-      cornerRadius: 6,
       stroke: 'white',
       strokeWidth: 2,
     });
@@ -149,6 +143,6 @@ export class Table extends Node {
       align: 'center',
     });
 
-    this.add(...chairs, table, name);
+    this.add(...chairs, circle, name);
   }
 }

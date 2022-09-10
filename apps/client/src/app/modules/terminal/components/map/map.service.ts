@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { Table } from './nodes/table';
 import { Text } from './nodes/text';
 import { Node } from './nodes/node';
+import { Circle } from './nodes/circle';
 import Konva from 'konva';
 import { ItemType } from './nodes/types';
 
@@ -12,6 +13,7 @@ export class MapService {
   private itemTypes: { [key in ItemType]: typeof Konva.Group } = {
     table: Table,
     text: Text,
+    circle: Circle,
   };
 
   private defaultTypeItems: { [key in ItemType]: () => Konva.Group } = {
@@ -19,6 +21,19 @@ export class MapService {
       new Table({
         id: uuid(),
         text: '123',
+        height: 100,
+        width: 100,
+        rotation: 0,
+        x: 100,
+        y: 100,
+      }),
+    circle: () =>
+      new Circle({
+        id: uuid(),
+        text: '123',
+        height: 100,
+        width: 100,
+        rotation: 0,
         x: 100,
         y: 100,
       }),

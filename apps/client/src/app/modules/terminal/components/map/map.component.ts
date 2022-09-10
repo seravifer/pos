@@ -61,7 +61,9 @@ export class MapComponent implements OnInit, AfterContentInit {
   }
 
   addItem(type: ItemType) {
-    this.activeLayer.add(this.mapService.createItem(type));
+    const node = this.mapService.createItem(type);
+    this.activeLayer.add(node);
+    this.onSelect(node as Node);
   }
 
   onDelete() {
@@ -69,10 +71,11 @@ export class MapComponent implements OnInit, AfterContentInit {
       this.deletedItems.push(this.selectedItem.toObject().id);
       this.selectedItem.destroy();
       this.selectedItem = undefined;
+      this.onSelect();
     }
   }
 
-  onSelect(item: Node) {
+  onSelect(item?: Node) {
     this.selectedItem = item;
     this.formOptions = undefined;
     this.form = undefined;
