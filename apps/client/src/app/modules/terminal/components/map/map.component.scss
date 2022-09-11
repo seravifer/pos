@@ -5,3 +5,13 @@
 .actions {
   width: 300px;
 }
+
+.locations {
+  display: flex;
+  gap: 20px;
+}
+
+#canvas {
+  border: 1px solid #000000;
+  background-image: url('/assets/floor.webp');
+}

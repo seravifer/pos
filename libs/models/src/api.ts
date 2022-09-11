@@ -1,6 +1,6 @@
 export type Bill = {
   id: string;
-  tableId: number | null;
+  tableId: string | null;
   people: number | null;
   total: number | null;
   paid: number | null;
@@ -16,21 +16,21 @@ export type BillWithProducts = Bill & {
 export type BProduct = {
   id: string;
   name: string;
-  productId: number;
+  productId: string;
   price: number;
   quantity: number;
 };
 
 export type BillProduct = {
   id: string;
-  billId: number | null;
-  productId: number | null;
+  billId: string | null;
+  productId: string | null;
   price: number | null;
   quantity: number | null;
 };
 
 export type Category = {
-  id: number;
+  id: string;
   name: string;
   color: string | null;
 };
@@ -40,7 +40,7 @@ export type CategoryWithProducts = Category & {
 };
 
 export type Product = {
-  id: number;
+  id: string;
   name: string;
   description: string | null;
   price: number | null;
@@ -48,33 +48,29 @@ export type Product = {
   tax: number | null;
   stock: number | null;
   image: string | null;
-  categoryId: number | null;
+  categoryId: string | null;
   createdAt: Date | null;
   updatedAt: Date | null;
 };
 
 export type Table = {
-  id: number;
-  name: string | null;
-  size: number | null;
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  options: any;
+  locationId: string | null;
 };
 
 export type User = {
-  id: number;
+  id: string;
   name: string | null;
   username: string | null;
   password: string | null;
   role: string | null;
 };
 
-export type Item = {
-  id: string;
-  type: string;
-  options: any | null;
-  locationId: number | null;
-};
-
 export type Location = {
-  id: number;
+  id: string;
   name: string;
 };

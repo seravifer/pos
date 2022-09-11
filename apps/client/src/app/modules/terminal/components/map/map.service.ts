@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Item } from '@pos/models';
+import { Table as ITable } from '@pos/models';
 import { v4 as uuid } from 'uuid';
 import { Table } from './nodes/table';
 import { Text } from './nodes/text';
@@ -23,6 +23,7 @@ export class MapService {
         text: '123',
         height: 100,
         width: 100,
+        chairs: 4,
         rotation: 0,
         x: 100,
         y: 100,
@@ -30,9 +31,9 @@ export class MapService {
     circle: () =>
       new Circle({
         id: uuid(),
+        chairs: 4,
         text: '123',
         height: 100,
-        width: 100,
         rotation: 0,
         x: 100,
         y: 100,
@@ -51,7 +52,7 @@ export class MapService {
     return this.defaultTypeItems[type]();
   }
 
-  convertToItems(items?: Konva.Layer['children']): Item[] {
+  convertToItems(items?: Konva.Layer['children']): ITable[] {
     return items?.map((child) => {
       if (child instanceof Node) {
         const item = child.toObject();
@@ -59,15 +60,16 @@ export class MapService {
         return {
           id,
           type,
+          name: item.text,
           options,
           locationId: null,
         };
       }
       return null;
-    }) as Item[];
+    }) as ITable[];
   }
 
-  parseItems(items: Item[]) {
+  parseItems(items: ITable[]) {
     return items.map((item) => {
       return new this.itemTypes[item.type as ItemType]({
         ...item,

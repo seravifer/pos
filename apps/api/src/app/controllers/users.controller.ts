@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -25,12 +24,12 @@ export class UsersController {
   }
 
   @Get(':id')
-  getById(@Param('id', ParseIntPipe) id: number) {
+  getById(@Param('id') id: string) {
     return this.dbService.user.findUnique({ where: { id } });
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() data: any) {
+  update(@Param('id') id: string, @Body() data: any) {
     return this.dbService.user.update({
       where: { id },
       data,
@@ -38,7 +37,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('id') id: string) {
     return this.dbService.user.delete({
       where: { id },
     });

@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -34,12 +33,12 @@ export class ProductsController {
   }
 
   @Get(':id')
-  getById(@Param('id', ParseIntPipe) id: number) {
+  getById(@Param('id') id: string) {
     return this.dbService.product.findUnique({ where: { id } });
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() data: any) {
+  update(@Param('id') id: string, @Body() data: any) {
     const { createdAt, updateAt, ...rest } = data;
     return this.dbService.product.update({
       where: { id },
@@ -48,7 +47,7 @@ export class ProductsController {
   }
 
   @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('id') id: string) {
     return this.dbService.product.delete({
       where: { id },
     });

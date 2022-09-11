@@ -4,10 +4,10 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
+import { Table } from '@pos/models';
 import { DBService } from '../db.service';
 
 @Controller('tables')
@@ -20,17 +20,48 @@ export class TablesController {
   }
 
   @Post()
-  create(@Body() data: any) {
-    return this.dbService.table.create({ data });
+  createOrUpdate(@Body() table: Table) {
+    return this.dbService.table.upsert({
+      where: {
+        id: table.id,
+      },
+      update: table,
+      create: table,
+    });
+  }
+
+  @Post('/_bulk')
+  createOrUpdateAll(@Body() tables: Table[]) {
+    const update = tables.map((table) => {
+      return this.dbService.table.upsert({
+        where: {
+          id: table.id,
+        },
+        update: table,
+        create: table,
+      });
+    });
+    return this.dbService.$transaction(update);
+  }
+
+  @Delete('/_bulk')
+  deleteAll(@Body() ids: string[]) {
+    return this.dbService.table.deleteMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
   }
 
   @Get(':id')
-  getById(@Param('id', ParseIntPipe) id: number) {
+  getById(@Param('id') id: string) {
     return this.dbService.table.findUnique({ where: { id } });
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() data: any) {
+  update(@Param('id') id: string, @Body() data: any) {
     return this.dbService.table.update({
       where: { id },
       data,
@@ -38,7 +69,7 @@ export class TablesController {
   }
 
   @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('id') id: string) {
     return this.dbService.table.delete({
       where: { id },
     });

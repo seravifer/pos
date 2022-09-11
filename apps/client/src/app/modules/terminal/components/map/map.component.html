@@ -9,16 +9,27 @@
   <form *ngIf="form" [formGroup]="form">
     <div *ngFor="let option of formOptions">
       <div [ngSwitch]="option.type">
-        <input
-          *ngSwitchCase="'text'"
-          [formControlName]="option.key"
-          [type]="'text'"
-        />
-        <input
-          *ngSwitchCase="'number'"
-          [formControlName]="option.key"
-          [type]="'number'"
-        />
+        <ng-container *ngSwitchCase="'text'">
+          <label>{{ option['name'] }}</label>
+          <input [formControlName]="option.key" type="text" pInputText />
+        </ng-container>
+
+        <ng-container *ngSwitchCase="'number'">
+          <label>{{ option['name'] }}</label>
+          <p-inputNumber
+            [formControlName]="option.key"
+            [step]="option['step'] ?? 1"
+            [min]="option['min'] ?? 0"
+            [max]="option['max']"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+            spinnerMode="horizontal"
+            decrementButtonClass="p-button-danger"
+            incrementButtonClass="p-button-success"
+            incrementButtonIcon="pi pi-plus"
+            decrementButtonIcon="pi pi-minus"
+          ></p-inputNumber>
+        </ng-container>
       </div>
     </div>
   </form>
@@ -37,9 +48,18 @@
 
 <div class="map-container">
   <div class="locations">
-    <div class="location">Primera planta</div>
+    <div
+      class="location"
+      *ngFor="let location of locations"
+      (click)="onChangeFloor(location.id)"
+    >
+      <button pButton>{{ location.name }}</button>
+    </div>
+    <button pButton (click)="onCreateFloor()">
+      <i class="pi pi-plus"></i>
+    </button>
   </div>
   <div class="map">
-    <div id="canvas" style="border: 2px solid #000000"></div>
+    <div id="canvas"></div>
   </div>
 </div>

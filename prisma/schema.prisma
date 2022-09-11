@@ -9,7 +9,7 @@ datasource db {
 
 model bill {
   id        String         @id @default(uuid())
-  tableId   Int?
+  tableId   String?
   people    Int?
   total     Float?
   paid      Float?
@@ -23,7 +23,7 @@ model bill {
 model billProducts {
   id        String  @id @default(uuid())
   billId    String
-  productId Int
+  productId String
   price     Float   @default(0)
   quantity  Int     @default(0)
   note      String?
@@ -32,14 +32,14 @@ model billProducts {
 }
 
 model category {
-  id       Int       @id @default(autoincrement())
+  id       String    @id @default(uuid())
   name     String
   color    String?
   products product[]
 }
 
 model product {
-  id           Int            @id @default(autoincrement())
+  id           String         @id @default(uuid())
   name         String
   description  String?
   price        Float?
@@ -47,38 +47,34 @@ model product {
   tax          Float?
   stock        Int?
   image        String?
-  categoryId   Int?
+  categoryId   String?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   categories   category?      @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   billProducts billProducts[]
 }
 
-model table {
-  id    Int    @id @default(autoincrement())
-  name  String
-  size  Int    @default(0)
-  bills bill[]
-}
-
 model user {
-  id       Int     @id @default(autoincrement())
+  id       String  @id @default(uuid())
   name     String?
   username String?
   password String?
   role     String?
 }
 
-model item {
+model table {
   id         String    @id @default(uuid())
+  name       String
+  size       Int       @default(0)
   type       String
-  options    String?
-  locationId Int?
-  location   location? @relation(fields: [locationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  options    String
+  locationId String?
+  location   location? @relation(fields: [locationId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  bills      bill[]
 }
 
 model location {
-  id    Int    @id @default(autoincrement())
-  name  String
-  items item[]
+  id     String  @id @default(uuid())
+  name   String
+  tables table[]
 }

@@ -35,14 +35,7 @@
     <div class="list" *ngIf="selectedBill">
       <div>Mesa: {{ selectedBill.id }}</div>
       <ng-container *ngFor="let item of selectedBill.products">
-        <input
-          type="radio"
-          name="items"
-          [id]="item.id"
-          [(ngModel)]="selectedItemId"
-          (ngModelChange)="selectedItem = item"
-        />
-        <label class="list-item" [for]="item.id">
+        <div class="list-item">
           <div class="info">
             <div class="name">{{ item.name }}</div>
             <div class="quantity">{{ item.quantity }} productos</div>
@@ -54,7 +47,7 @@
           <div class="price">
             {{ item.quantity * item.price | currency: 'EUR' }}
           </div>
-        </label>
+        </div>
       </ng-container>
     </div>
 

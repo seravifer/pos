@@ -6,7 +6,7 @@ export type CircleOptions = {
   id: string;
   text: string;
   height: number;
-  width: number;
+  chairs: number;
   rotation: number;
   x: number;
   y: number;
@@ -20,7 +20,7 @@ export class Circle extends Node {
       x: options.x,
       y: options.y,
       id: options.id,
-      width: +options.width,
+      width: +options.height,
       height: +options.height,
       draggable: true,
       name: 'circle',
@@ -43,28 +43,37 @@ export class Circle extends Node {
         key: 'text',
         value: this.options.text,
         type: 'text',
+        name: 'Nombre',
       },
       {
         key: 'height',
         value: +this.options.height,
+        name: 'Ancho',
         type: 'number',
+        step: 10,
       },
       {
-        key: 'width',
-        value: +this.options.width,
+        key: 'chairs',
+        value: +this.options.chairs,
+        name: 'Sillas',
         type: 'number',
+        step: 1,
       },
       {
         key: 'rotation',
         value: +this.options.rotation,
+        name: 'Ángulo',
         type: 'number',
+        step: 45,
+        min: 0,
+        max: 360,
       },
     ];
   }
 
   public setEditOptions(options: any): void {
     this.options = { ...this.options, ...options };
-    this.width(+options.width);
+    this.width(+options.height);
     this.height(+options.height);
     this.changeRotation(+options.rotation);
     this.render();
@@ -96,7 +105,7 @@ export class Circle extends Node {
       type: 'circle',
       text: this.options.text,
       height: +this.options.height,
-      width: +this.options.width,
+      chairs: +this.options.chairs,
       rotation: +this.options.rotation,
       x: this.x(),
       y: this.y(),
@@ -107,7 +116,7 @@ export class Circle extends Node {
     this.destroyChildren();
 
     const chairs = [];
-    const totalPoints = 6;
+    const totalPoints = this.options.chairs;
     const r = this.options.height / 2;
     for (let i = 1; i <= totalPoints; i++) {
       const theta = (Math.PI * 2) / totalPoints;
@@ -124,9 +133,9 @@ export class Circle extends Node {
     }
 
     const circle = new Konva.Circle({
-      width: +this.options.width,
+      width: +this.options.height,
       height: +this.options.height,
-      x: +this.options.width / 2,
+      x: +this.options.height / 2,
       y: +this.options.height / 2,
       fill: 'lightblue',
       stroke: 'white',
@@ -137,7 +146,7 @@ export class Circle extends Node {
       fontSize: 22,
       fontFamily: 'Calibri',
       fill: '#000',
-      width: +this.options.width,
+      width: +this.options.height,
       height: +this.options.height,
       verticalAlign: 'middle',
       align: 'center',

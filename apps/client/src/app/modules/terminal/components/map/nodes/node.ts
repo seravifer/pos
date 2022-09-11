@@ -5,5 +5,5 @@ export abstract class Node extends Konva.Group {
   public abstract removeFocus(): void;
   public abstract hasFocus(): boolean;
   public abstract getEditOptions(): ItemFormOptions[];
-  public abstract setEditOptions(options: any[]): void;
+  public abstract setEditOptions(options: any): void;
 }

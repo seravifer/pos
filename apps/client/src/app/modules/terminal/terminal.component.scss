@@ -88,14 +88,6 @@ main {
     flex-direction: column;
     gap: 20px;
 
-    input {
-      display: none;
-    }
-
-    input:checked + label {
-      background-color: #ccc;
-    }
-
     .list-item {
       display: flex;
       border-bottom: 1px solid #ddd;

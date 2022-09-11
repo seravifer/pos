@@ -5,7 +5,7 @@ import { Category } from '@pos/models';
   name: 'category',
 })
 export class CategoryPipe implements PipeTransform {
-  transform(value: number, categories: Category[]): string {
-    return categories.find((category) => category.id === value)?.name ?? '-';
+  transform(id: string, categories: Category[]): string {
+    return categories.find((category) => category.id === id)?.name ?? '-';
   }
 }

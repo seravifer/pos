@@ -1,10 +1,14 @@
 import { AfterContentInit, Component, OnInit } from '@angular/core';
-import { ItemsService } from '@pos/client/services/items.service';
+import { TableService } from '@pos/client/services/table.service';
 import { Node } from './nodes/node';
 import { MapService } from './map.service';
-import Konva from 'konva';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ItemFormOptions, ItemType } from './nodes/types';
+import { LocationsService } from '@pos/client/services/locations.service';
+import { v4 as uuid } from 'uuid';
+import { Location } from '@pos/models';
+import { combineLatest } from 'rxjs';
+import Konva from 'konva';
 
 @Component({
   selector: 'pos-map',
@@ -13,7 +17,9 @@ import { ItemFormOptions, ItemType } from './nodes/types';
 })
 export class MapComponent implements OnInit, AfterContentInit {
   private canvas!: Konva.Stage;
-  private activeLayer!: Konva.Layer;
+  private activeLayer?: Konva.Layer;
+  private layers: Konva.Layer[] = [];
+  public locations: Location[] = [];
 
   public deletedItems: string[] = [];
   public selectedItem?: Node;
@@ -22,15 +28,29 @@ export class MapComponent implements OnInit, AfterContentInit {
   public formOptions?: ItemFormOptions[];
 
   constructor(
-    private itemsService: ItemsService,
+    private tableService: TableService,
+    private locationsService: LocationsService,
     private mapService: MapService
   ) {}
 
   ngOnInit(): void {
-    this.itemsService.getItems().subscribe((data) => {
-      if (data.length > 0) {
-        this.activeLayer.add(...this.mapService.parseItems(data));
-      }
+    combineLatest({
+      locations: this.locationsService.getLocations(),
+      tables: this.tableService.getTables(),
+    }).subscribe(({ locations, tables }) => {
+      this.locations = locations;
+      this.layers = locations.map(
+        (l) => new Konva.Layer({ visible: false, id: l.id })
+      );
+      this.layers.forEach((l) => this.canvas.add(l));
+      this.activeLayer = this.layers[0];
+      this.activeLayer.show();
+
+      tables.forEach((t) => {
+        const node = this.mapService.parseItems([t]);
+        const layer = this.layers.find((l) => l.id() === t.locationId);
+        layer?.add(...node);
+      });
     });
   }
 
@@ -38,17 +58,15 @@ export class MapComponent implements OnInit, AfterContentInit {
     Konva.hitOnDragEnabled = true;
     this.canvas = new Konva.Stage({
       container: 'canvas',
-      width: 500,
-      height: 500,
+      width: 1000,
+      height: 1000,
       draggable: false,
     });
-    this.activeLayer = new Konva.Layer();
-    this.canvas.add(this.activeLayer);
     this.canvas.on('click', (e) => {
       // FIXME: refactor
       const el = e.target.getParent();
       this.onSelect(el);
-      const focusElement = this.activeLayer.children?.find((node) => {
+      const focusElement = this.activeLayer?.children?.find((node) => {
         if (node instanceof Node) {
           return node.hasFocus();
         }
@@ -60,9 +78,27 @@ export class MapComponent implements OnInit, AfterContentInit {
     });
   }
 
+  onChangeFloor(id: string) {
+    this.activeLayer?.hide();
+    this.activeLayer = this.layers.find((l) => l.id() === id);
+    this.activeLayer?.show();
+  }
+
+  onCreateFloor() {
+    const newLocation = { id: uuid(), name: 'test' };
+    this.locations.push(newLocation);
+    this.layers.push(new Konva.Layer({ visible: false, id: newLocation.id }));
+    this.onChangeFloor(newLocation.id);
+    this.locationsService.createLocation(newLocation).subscribe();
+  }
+
+  onDeleteFloor() {
+    // TODO
+  }
+
   addItem(type: ItemType) {
     const node = this.mapService.createItem(type);
-    this.activeLayer.add(node);
+    this.activeLayer?.add(node);
     this.onSelect(node as Node);
   }
 
@@ -70,7 +106,6 @@ export class MapComponent implements OnInit, AfterContentInit {
     if (this.selectedItem) {
       this.deletedItems.push(this.selectedItem.toObject().id);
       this.selectedItem.destroy();
-      this.selectedItem = undefined;
       this.onSelect();
     }
   }
@@ -92,8 +127,13 @@ export class MapComponent implements OnInit, AfterContentInit {
   }
 
   onSave() {
-    const items = this.mapService.convertToItems(this.activeLayer.children);
-    this.itemsService.createOrUpdateItems(items).subscribe();
-    this.itemsService.deleteItems(this.deletedItems).subscribe();
+    const items = this.layers.flatMap((l) =>
+      this.mapService
+        .convertToItems(l.children)
+        .map((t) => ({ ...t, locationId: l.id() }))
+    );
+
+    this.tableService.createOrUpdateTables(items).subscribe();
+    this.tableService.deleteTables(this.deletedItems).subscribe();
   }
 }

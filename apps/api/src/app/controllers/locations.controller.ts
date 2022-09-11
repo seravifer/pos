@@ -25,12 +25,12 @@ export class LocationsController {
   }
 
   @Get(':id')
-  getById(@Param('id', ParseIntPipe) id: number) {
+  getById(@Param('id') id: string) {
     return this.dbService.location.findUnique({ where: { id } });
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() data: any) {
+  update(@Param('id') id: string, @Body() data: any) {
     return this.dbService.location.update({
       where: { id },
       data,
@@ -38,7 +38,7 @@ export class LocationsController {
   }
 
   @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number) {
+  delete(@Param('id') id: string) {
     return this.dbService.location.delete({
       where: { id },
     });
