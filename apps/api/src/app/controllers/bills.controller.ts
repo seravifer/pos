@@ -8,7 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { Bill } from '@pos/models';
-import { DBService } from '../db.service';
+import { DBService } from '../services/db.service';
 
 @Controller('bills')
 export class BillsController {

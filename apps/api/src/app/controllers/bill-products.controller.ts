@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { BProduct } from '@pos/models';
-import { DBService } from '../db.service';
+import { DBService } from '../services/db.service';
 
 @Controller('bills/:id/products')
 export class BillProductsController {
@@ -15,7 +15,7 @@ export class BillProductsController {
       price: item.price,
       quantity: item.quantity,
     };
-    return this.dbService.billProducts.upsert({
+    return this.dbService.billProduct.upsert({
       where: {
         id: item.id,
       },
@@ -26,12 +26,12 @@ export class BillProductsController {
 
   @Get(':id')
   getById(@Param('id') id: string) {
-    return this.dbService.billProducts.findUnique({ where: { id } });
+    return this.dbService.billProduct.findUnique({ where: { id } });
   }
 
   @Delete(':id')
   delete(@Param('id') id: string) {
-    return this.dbService.billProducts.delete({
+    return this.dbService.billProduct.delete({
       where: { id },
     });
   }

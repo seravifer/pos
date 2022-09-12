@@ -73,7 +73,7 @@ export class MapService {
     return items.map((item) => {
       return new this.itemTypes[item.type as ItemType]({
         ...item,
-        ...item.options,
+        ...(item.options as any),
       });
     });
   }

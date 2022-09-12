@@ -13,7 +13,7 @@ export class LocationsService {
     return this.http.get<Location[]>(`${environment.apiUrl}/locations`);
   }
 
-  createLocation(product: Location) {
+  createLocation(product: Partial<Location>) {
     return this.http.post<Location>(`${environment.apiUrl}/locations`, product);
   }
 

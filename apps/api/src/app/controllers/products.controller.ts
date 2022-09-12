@@ -7,7 +7,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { DBService } from '../db.service';
+import { DBService } from '../services/db.service';
 
 @Controller('products')
 export class ProductsController {

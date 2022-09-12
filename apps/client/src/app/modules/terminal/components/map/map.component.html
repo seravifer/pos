@@ -51,7 +51,7 @@
     <div
       class="location"
       *ngFor="let location of locations"
-      (click)="onChangeFloor(location.id)"
+      (click)="onChangeFloor(location.id!)"
     >
       <button pButton>{{ location.name }}</button>
     </div>

@@ -1,0 +1,48 @@
+<input type="text" [(ngModel)]="section.name" pInputText placeholder="Nombre" />
+
+<button pButton (click)="onSave()">Guardar</button>
+<button pButton (click)="onDelete()">Borrar</button>
+
+<p-dropdown
+  [options]="categories"
+  [(ngModel)]="selectedCategory"
+  optionLabel="name"
+></p-dropdown>
+<p-pickList
+  [source]="selectedCategory?.products ?? []"
+  [target]="products"
+  sourceHeader="Disponible"
+  targetHeader="Seleccionados"
+  [dragdrop]="true"
+  [responsive]="true"
+  [sourceStyle]="{ height: '30rem' }"
+  [targetStyle]="{ height: '30rem' }"
+  filterBy="name"
+  sourceFilterPlaceholder="Search by name"
+  targetFilterPlaceholder="Search by name"
+>
+  <ng-template pTemplate="sourceFilter" let-options="options">
+    <div class="p-picklist-filter">
+      <input
+        [(ngModel)]="sourceFilterValue"
+        type="text"
+        (keyup)="options.filter($any($event.target)?.value)"
+        role="textbox"
+        class="p-picklist-filter-input p-inputtext p-component"
+      />
+      <span
+        *ngIf="sourceFilterValue"
+        class="p-picklist-filter-icon pi pi-times"
+        (click)="options.reset(); sourceFilterValue = ''"
+      ></span>
+    </div>
+  </ng-template>
+  <ng-template let-product pTemplate="item">
+    <div class="product">
+      <div class="product-name">
+        {{ product.name }}
+      </div>
+      <div class="product-price">{{ product.price }}€</div>
+    </div>
+  </ng-template>
+</p-pickList>

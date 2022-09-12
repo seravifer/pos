@@ -18,6 +18,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@pos/client/*": [
+        "apps/client/src/app/*"
+      ],
       "@pos/client/environment": [
         "apps/client/src/environments/environment.ts"
       ],
@@ -26,6 +29,9 @@
       ],
       "@pos/models": [
         "libs/models/src/index.ts"
+      ],
+      "@pos/api/services/*": [
+        "apps/api/src/app/services/*"
       ]
     }
   },

@@ -1,0 +1,24 @@
+<div class="options">
+  <input pInputText type="text" placeholder="Nombre" />
+  <p-checkbox [value]="true" label="Activado"></p-checkbox>
+  <button pButton class="left">Guardar</button>
+</div>
+
+<div class="groups">
+  <div class="group">
+    <input type="text" pInputText placeholder="Group Name" />
+    <p-dropdown></p-dropdown>
+    <p-inputNumber
+      [showButtons]="true"
+      buttonLayout="horizontal"
+      spinnerMode="horizontal"
+      decrementButtonClass="p-button-danger"
+      incrementButtonClass="p-button-success"
+      incrementButtonIcon="pi pi-plus"
+      decrementButtonIcon="pi pi-minus"
+    ></p-inputNumber>
+  </div>
+  <div class="add">
+    <i class="pi pi-plus"></i>
+  </div>
+</div>

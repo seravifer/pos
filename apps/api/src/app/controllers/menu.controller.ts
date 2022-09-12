@@ -4,34 +4,34 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
+import { Menu } from '@pos/models';
 import { DBService } from '../services/db.service';
 
-@Controller('locations')
-export class LocationsController {
+@Controller('menus')
+export class MenusController {
   constructor(private readonly dbService: DBService) {}
 
   @Get()
   get() {
-    return this.dbService.location.findMany();
+    return this.dbService.menu.findMany();
   }
 
   @Post()
-  create(@Body() data: any) {
-    return this.dbService.location.create({ data });
+  create(@Body() data: Menu) {
+    return this.dbService.menu.create({ data });
   }
 
   @Get(':id')
   getById(@Param('id') id: string) {
-    return this.dbService.location.findUnique({ where: { id } });
+    return this.dbService.menu.findUnique({ where: { id } });
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() data: any) {
-    return this.dbService.location.update({
+  update(@Param('id') id: string, @Body() data: Menu) {
+    return this.dbService.menu.update({
       where: { id },
       data,
     });
@@ -39,7 +39,7 @@ export class LocationsController {
 
   @Delete(':id')
   delete(@Param('id') id: string) {
-    return this.dbService.location.delete({
+    return this.dbService.menu.delete({
       where: { id },
     });
   }

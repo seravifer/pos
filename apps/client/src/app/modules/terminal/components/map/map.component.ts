@@ -19,7 +19,7 @@ export class MapComponent implements OnInit, AfterContentInit {
   private canvas!: Konva.Stage;
   private activeLayer?: Konva.Layer;
   private layers: Konva.Layer[] = [];
-  public locations: Location[] = [];
+  public locations: Partial<Location>[] = [];
 
   public deletedItems: string[] = [];
   public selectedItem?: Node;
@@ -132,8 +132,9 @@ export class MapComponent implements OnInit, AfterContentInit {
         .convertToItems(l.children)
         .map((t) => ({ ...t, locationId: l.id() }))
     );
-
     this.tableService.createOrUpdateTables(items).subscribe();
-    this.tableService.deleteTables(this.deletedItems).subscribe();
+    if (this.deletedItems.length > 0) {
+      this.tableService.deleteTables(this.deletedItems).subscribe();
+    }
   }
 }
