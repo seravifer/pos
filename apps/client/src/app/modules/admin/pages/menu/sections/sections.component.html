@@ -9,7 +9,7 @@
   optionLabel="name"
 ></p-dropdown>
 <p-pickList
-  [source]="selectedCategory?.products ?? []"
+  [source]="selectedCategory?.products ?? [] | filterList: products"
   [target]="products"
   sourceHeader="Disponible"
   targetHeader="Seleccionados"

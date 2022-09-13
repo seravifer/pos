@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { BProduct } from '@pos/models';
+import { IBillProduct } from '@pos/models';
 import { DBService } from '../services/db.service';
 
 @Controller('bills/:id/products')
@@ -7,7 +7,7 @@ export class BillProductsController {
   constructor(private readonly dbService: DBService) {}
 
   @Post()
-  create(@Param('id') billId: string, @Body() item: BProduct) {
+  create(@Param('id') billId: string, @Body() item: IBillProduct) {
     const product = {
       id: item.id,
       billId,

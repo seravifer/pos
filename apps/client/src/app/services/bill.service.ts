@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Bill, BillWithProducts, BProduct } from '@pos/models';
+import { Bill, BillWithProducts, IBillProduct } from '@pos/models';
 import { environment } from '@pos/client/environment';
 import { map } from 'rxjs';
 
@@ -54,19 +54,19 @@ export class BillsService {
   }
 
   getBillProducts(id: string) {
-    return this.http.get<BProduct[]>(
+    return this.http.get<IBillProduct[]>(
       `${environment.apiUrl}/bills/${id}/products`
     );
   }
 
-  updateBillProduct(id: string, product: BProduct) {
+  updateBillProduct(id: string, product: IBillProduct) {
     return this.http.post<Bill>(
       `${environment.apiUrl}/bills/${id}/products`,
       product
     );
   }
 
-  deleteBillProduct(id: string, product: BProduct) {
+  deleteBillProduct(id: string, product: IBillProduct) {
     return this.http.delete(
       `${environment.apiUrl}/bills/${id}/products/${product.id}`
     );

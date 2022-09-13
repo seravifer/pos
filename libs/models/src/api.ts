@@ -26,11 +26,13 @@ export {
   SectionProduct,
 };
 
+export type ID = { id: string };
+
 export type BillWithProducts = Bill & {
-  products: BProduct[];
+  products: IBillProduct[];
 };
 
-export type BProduct = {
+export type IBillProduct = {
   id: string;
   name: string;
   productId: string;
@@ -39,9 +41,5 @@ export type BProduct = {
 };
 
 export type CategoryWithProducts = Category & {
-  products: Product[];
-};
-
-export type SectionWithProducts = Section & {
   products: Product[];
 };

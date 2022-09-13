@@ -3,7 +3,7 @@ import { BillsService } from '@pos/client/services/bill.service';
 import { ProductsService } from '@pos/client/services/products.service';
 import {
   BillWithProducts,
-  BProduct,
+  IBillProduct,
   CategoryWithProducts,
   Product,
 } from '@pos/models';
@@ -21,7 +21,7 @@ export class TerminalComponent implements OnInit {
   public categories: CategoryWithProducts[] = [];
   public selectedCategory: CategoryWithProducts | null = null;
 
-  public selectedItem: BProduct | null = null;
+  public selectedItem: IBillProduct | null = null;
   public selectedItemId: string | null = null;
 
   public showCheckout = false;
@@ -69,7 +69,7 @@ export class TerminalComponent implements OnInit {
         .updateBillProduct(this.selectedBill.id, exists)
         .subscribe();
     } else {
-      const newProduct: BProduct = {
+      const newProduct: IBillProduct = {
         id: uuid(),
         name: product.name,
         productId: product.id,
@@ -84,7 +84,7 @@ export class TerminalComponent implements OnInit {
     this.calcTotal();
   }
 
-  changeQuantity(product: BProduct, quantity: number) {
+  changeQuantity(product: IBillProduct, quantity: number) {
     if (!this.selectedBill) {
       return;
     }

@@ -1,24 +1,48 @@
-<div class="options">
-  <input pInputText type="text" placeholder="Nombre" />
-  <p-checkbox [value]="true" label="Activado"></p-checkbox>
-  <button pButton class="left">Guardar</button>
-</div>
-
-<div class="groups">
-  <div class="group">
-    <input type="text" pInputText placeholder="Group Name" />
-    <p-dropdown></p-dropdown>
-    <p-inputNumber
-      [showButtons]="true"
-      buttonLayout="horizontal"
-      spinnerMode="horizontal"
-      decrementButtonClass="p-button-danger"
-      incrementButtonClass="p-button-success"
-      incrementButtonIcon="pi pi-plus"
-      decrementButtonIcon="pi pi-minus"
-    ></p-inputNumber>
+<div [formGroup]="form">
+  <div class="options">
+    <input pInputText type="text" placeholder="Nombre" formControlName="name" />
+    <p-checkbox
+      label="Activado"
+      [binary]="true"
+      [formControl]="$any(form.get('active'))"
+    ></p-checkbox>
+    <button pButton class="left" (click)="onSave()">Guardar</button>
   </div>
-  <div class="add">
-    <i class="pi pi-plus"></i>
+
+  <div class="groups" formArrayName="sections">
+    <div
+      class="group"
+      *ngFor="let sectionsForm of sectionsForm.controls; let i = index"
+      [formGroupName]="i"
+    >
+      <input
+        type="text"
+        formControlName="name"
+        pInputText
+        placeholder="Nombre de la sección"
+      />
+      <p-dropdown
+        [options]="sections"
+        optionLabel="name"
+        optionValue="id"
+        placeholder="Selecciona una sección"
+        formControlName="sectionId"
+        (onChange)="onSectionChange($event.value, i)"
+      ></p-dropdown>
+      <p-inputNumber
+        formControlName="maxProducts"
+        [min]="0"
+        [showButtons]="true"
+        buttonLayout="horizontal"
+        spinnerMode="horizontal"
+        decrementButtonClass="p-button-danger"
+        incrementButtonClass="p-button-success"
+        incrementButtonIcon="pi pi-plus"
+        decrementButtonIcon="pi pi-minus"
+      ></p-inputNumber>
+    </div>
+    <div class="add" (click)="onAdd()">
+      <i class="pi pi-plus"></i>
+    </div>
   </div>
 </div>

@@ -6,13 +6,14 @@ import { SectionsComponent } from './sections/sections.component';
 import { PickListModule } from 'primeng/picklist';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { GroupComponent } from './group/group.component';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TableModule } from 'primeng/table';
+import { FilterListPipe } from './sections/filter-list.pipe';
 
 const routes: Routes = [
   { path: '', component: MenuComponent },
@@ -23,12 +24,18 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [MenuComponent, SectionsComponent, GroupComponent],
+  declarations: [
+    MenuComponent,
+    SectionsComponent,
+    GroupComponent,
+    FilterListPipe,
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     PickListModule,
     FormsModule,
+    ReactiveFormsModule,
     DropdownModule,
     InputTextModule,
     InputNumberModule,
