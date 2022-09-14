@@ -6,7 +6,7 @@ import { Text } from './nodes/text';
 import { Node } from './nodes/node';
 import { Circle } from './nodes/circle';
 import Konva from 'konva';
-import { ItemType } from './nodes/types';
+import { ItemType } from './types';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
@@ -52,7 +52,7 @@ export class MapService {
     return this.defaultTypeItems[type]();
   }
 
-  convertToItems(items?: Konva.Layer['children']): ITable[] {
+  convertToItems(items?: Konva.Layer['children'] | Konva.Group[]): ITable[] {
     return items?.map((child) => {
       if (child instanceof Node) {
         const item = child.toObject();

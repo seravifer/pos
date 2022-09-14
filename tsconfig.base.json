@@ -10,33 +10,19 @@
     "importHelpers": true,
     "target": "es2020",
     "module": "esnext",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@pos/client/*": [
-        "apps/client/src/app/*"
-      ],
+      "@pos/api/services/*": ["apps/api/src/app/services/*"],
+      "@pos/client/*": ["apps/client/src/app/*"],
       "@pos/client/environment": [
         "apps/client/src/environments/environment.ts"
       ],
-      "@pos/client/services/*": [
-        "apps/client/src/app/services/*"
-      ],
-      "@pos/models": [
-        "libs/models/src/index.ts"
-      ],
-      "@pos/api/services/*": [
-        "apps/api/src/app/services/*"
-      ]
+      "@pos/client/services/*": ["apps/client/src/app/services/*"],
+      "@pos/models": ["libs/models/src/index.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

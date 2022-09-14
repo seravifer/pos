@@ -1,6 +1,6 @@
 import Konva from 'konva';
 import { Node } from './node';
-import { ItemType } from './types';
+import { ItemType } from '../types';
 
 export type TextOptions = {
   id: string;

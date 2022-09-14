@@ -51,6 +51,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('./pages/menu/menu.module').then((m) => m.MenuModule),
       },
+      {
+        path: 'map-editor',
+        loadChildren: () =>
+          import('./pages/map-editor/map-editor.module').then(
+            (m) => m.MapEditorModule
+          ),
+      },
     ],
   },
 ];

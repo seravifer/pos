@@ -1,6 +1,6 @@
 import Konva from 'konva';
 import { Node } from './node';
-import { ItemFormOptions, ItemType } from './types';
+import { ItemFormOptions, ItemType } from '../types';
 
 export type TableOptions = {
   id: string;

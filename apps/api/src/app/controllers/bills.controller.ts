@@ -17,6 +17,9 @@ export class BillsController {
   @Get()
   get() {
     return this.dbService.bill.findMany({
+      where: {
+        closedAt: null,
+      },
       include: {
         products: {
           include: {

@@ -27,8 +27,7 @@
             decrementButtonClass="p-button-danger"
             incrementButtonClass="p-button-success"
             incrementButtonIcon="pi pi-plus"
-            decrementButtonIcon="pi pi-minus"
-          ></p-inputNumber>
+            decrementButtonIcon="pi pi-minus"></p-inputNumber>
         </ng-container>
       </div>
     </div>
@@ -40,8 +39,7 @@
     pButton
     (click)="onDelete()"
     type="button"
-    class="p-button-danger"
-  >
+    class="p-button-danger">
     Eliminar
   </button>
 </div>
@@ -51,11 +49,10 @@
     <div
       class="location"
       *ngFor="let location of locations"
-      (click)="onChangeFloor(location.id!)"
-    >
+      (click)="onChangeLocation(location.id!)">
       <button pButton>{{ location.name }}</button>
     </div>
-    <button pButton (click)="onCreateFloor()">
+    <button pButton (click)="onCreateLocation()">
       <i class="pi pi-plus"></i>
     </button>
   </div>

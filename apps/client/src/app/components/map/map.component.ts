@@ -1,58 +1,44 @@
-import { AfterContentInit, Component, OnInit } from '@angular/core';
-import { TableService } from '@pos/client/services/table.service';
+import {
+  AfterContentInit,
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+} from '@angular/core';
 import { Node } from './nodes/node';
 import { MapService } from './map.service';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ItemFormOptions, ItemType } from './nodes/types';
-import { LocationsService } from '@pos/client/services/locations.service';
+import { Location, Table } from '@pos/models';
 import { v4 as uuid } from 'uuid';
-import { Location } from '@pos/models';
-import { combineLatest } from 'rxjs';
+import { ItemFormOptions, ItemType } from './types';
+import { FormGroup, FormControl } from '@angular/forms';
 import Konva from 'konva';
 
 @Component({
   selector: 'pos-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapComponent implements OnInit, AfterContentInit {
+export class MapComponent implements AfterContentInit, OnChanges {
+  @Input() locations: Partial<Location>[] = [];
+  @Input() tables: Table[] = [];
+
+  @Output() selected = new EventEmitter<Table>();
+  @Output() save = new EventEmitter<Table[]>();
+  @Output() createLocation = new EventEmitter<Partial<Location>>();
+
   private canvas!: Konva.Stage;
   private activeLayer?: Konva.Layer;
   private layers: Konva.Layer[] = [];
-  public locations: Partial<Location>[] = [];
 
-  public deletedItems: string[] = [];
   public selectedItem?: Node;
 
   public form?: FormGroup;
   public formOptions?: ItemFormOptions[];
 
-  constructor(
-    private tableService: TableService,
-    private locationsService: LocationsService,
-    private mapService: MapService
-  ) {}
-
-  ngOnInit(): void {
-    combineLatest({
-      locations: this.locationsService.getLocations(),
-      tables: this.tableService.getTables(),
-    }).subscribe(({ locations, tables }) => {
-      this.locations = locations;
-      this.layers = locations.map(
-        (l) => new Konva.Layer({ visible: false, id: l.id })
-      );
-      this.layers.forEach((l) => this.canvas.add(l));
-      this.activeLayer = this.layers[0];
-      this.activeLayer.show();
-
-      tables.forEach((t) => {
-        const node = this.mapService.parseItems([t]);
-        const layer = this.layers.find((l) => l.id() === t.locationId);
-        layer?.add(...node);
-      });
-    });
-  }
+  constructor(private mapService: MapService) {}
 
   ngAfterContentInit(): void {
     Konva.hitOnDragEnabled = true;
@@ -78,21 +64,38 @@ export class MapComponent implements OnInit, AfterContentInit {
     });
   }
 
-  onChangeFloor(id: string) {
+  ngOnChanges() {
+    if (this.locations.length > 0 && this.tables && this.canvas) {
+      this.layers = this.locations.map(
+        (l) => new Konva.Layer({ visible: false, id: l.id })
+      );
+      this.layers.forEach((l) => this.canvas.add(l));
+      this.activeLayer = this.layers[0];
+      this.activeLayer.show();
+
+      this.tables.forEach((t) => {
+        const node = this.mapService.parseItems([t]);
+        const layer = this.layers.find((l) => l.id() === t.locationId);
+        layer?.add(...node);
+      });
+    }
+  }
+
+  onChangeLocation(id: string) {
     this.activeLayer?.hide();
     this.activeLayer = this.layers.find((l) => l.id() === id);
     this.activeLayer?.show();
   }
 
-  onCreateFloor() {
+  onCreateLocation() {
     const newLocation = { id: uuid(), name: 'test' };
     this.locations.push(newLocation);
     this.layers.push(new Konva.Layer({ visible: false, id: newLocation.id }));
-    this.onChangeFloor(newLocation.id);
-    this.locationsService.createLocation(newLocation).subscribe();
+    this.onChangeLocation(newLocation.id);
+    this.createLocation.emit(newLocation);
   }
 
-  onDeleteFloor() {
+  onDeleteLocation() {
     // TODO
   }
 
@@ -104,7 +107,6 @@ export class MapComponent implements OnInit, AfterContentInit {
 
   onDelete() {
     if (this.selectedItem) {
-      this.deletedItems.push(this.selectedItem.toObject().id);
       this.selectedItem.destroy();
       this.onSelect();
     }
@@ -115,6 +117,9 @@ export class MapComponent implements OnInit, AfterContentInit {
     this.formOptions = undefined;
     this.form = undefined;
     if (this.selectedItem) {
+      this.selected.emit(
+        this.mapService.convertToItems([this.selectedItem])[0]
+      );
       this.form = new FormGroup({});
       this.formOptions = this.selectedItem.getEditOptions();
       this.formOptions.forEach((el) => {
@@ -127,14 +132,11 @@ export class MapComponent implements OnInit, AfterContentInit {
   }
 
   onSave() {
-    const items = this.layers.flatMap((l) =>
+    const tables = this.layers.flatMap((l) =>
       this.mapService
         .convertToItems(l.children)
         .map((t) => ({ ...t, locationId: l.id() }))
     );
-    this.tableService.createOrUpdateTables(items).subscribe();
-    if (this.deletedItems.length > 0) {
-      this.tableService.deleteTables(this.deletedItems).subscribe();
-    }
+    this.save.emit(tables);
   }
 }

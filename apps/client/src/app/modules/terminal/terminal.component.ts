@@ -44,7 +44,7 @@ export class TerminalComponent implements OnInit {
   newBill() {
     this.billService.createBill({}).subscribe((bill) => {
       this.bills.push(bill);
-      this.selectedBill = bill;
+      this.selectedBill = { ...bill, products: [] };
     });
   }
 
@@ -111,6 +111,7 @@ export class TerminalComponent implements OnInit {
     this.selectedBill.closedAt = new Date();
     this.billService.updateBill(this.selectedBill).subscribe();
     this.selectedBill = null;
+    this.bills = this.bills.filter((val) => !val.closedAt);
   }
 
   onCheckout(payment: number) {

@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import { ItemFormOptions } from './types';
+import { ItemFormOptions } from '../types';
 
 export abstract class Node extends Konva.Group {
   public abstract removeFocus(): void;

@@ -32,6 +32,13 @@ export class TablesController {
 
   @Post('/_bulk')
   createOrUpdateAll(@Body() tables: Table[]) {
+    const deleteAll = this.dbService.table.deleteMany({
+      where: {
+        id: {
+          notIn: tables.map((t) => t.id),
+        },
+      },
+    });
     const update = tables.map((table) => {
       return this.dbService.table.upsert({
         where: {
@@ -41,18 +48,7 @@ export class TablesController {
         create: table,
       });
     });
-    return this.dbService.$transaction(update);
-  }
-
-  @Delete('/_bulk')
-  deleteAll(@Body() ids: string[]) {
-    return this.dbService.table.deleteMany({
-      where: {
-        id: {
-          in: ids,
-        },
-      },
-    });
+    return this.dbService.$transaction([deleteAll, ...update]);
   }
 
   @Get(':id')
@@ -61,7 +57,7 @@ export class TablesController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() data: any) {
+  update(@Param('id') id: string, @Body() data: Table) {
     return this.dbService.table.update({
       where: { id },
       data,
