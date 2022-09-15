@@ -1,24 +1,37 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Bill } from '@pos/models';
+import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'pos-checkout',
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.scss'],
 })
-export class CheckoutComponent {
-  @Input() bill: Bill | null = null;
-  @Output() checkout = new EventEmitter<number>();
+export class CheckoutComponent implements OnInit {
+  public bill: Bill | null = null;
 
   public payment = 0;
   public type: 'cash' | 'card' = 'cash';
 
   public paymentOptions = [
-    { name: 'Tarjeta', code: 'card' },
-    { name: 'Efectivo', code: 'cash' },
+    { name: 'Tarjeta', code: 'card', icon: 'pi pi-credit-card' },
+    { name: 'Efectivo', code: 'cash', icon: 'pi pi-euro' },
   ];
 
+  constructor(
+    public ref: DynamicDialogRef,
+    public config: DynamicDialogConfig
+  ) {}
+
+  ngOnInit(): void {
+    this.bill = this.config.data.bill;
+  }
+
   confirm() {
-    this.checkout.emit(this.payment);
+    this.ref.close(this.payment);
+  }
+
+  cancel() {
+    this.ref.close();
   }
 }

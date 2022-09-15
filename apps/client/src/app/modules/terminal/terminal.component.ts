@@ -7,12 +7,15 @@ import {
   CategoryWithProducts,
   Product,
 } from '@pos/models';
+import { DialogService } from 'primeng/dynamicdialog';
 import { v4 as uuid } from 'uuid';
+import { CheckoutComponent } from './components/checkout/checkout.component';
 
 @Component({
   selector: 'pos-terminal',
   templateUrl: './terminal.component.html',
   styleUrls: ['./terminal.component.scss'],
+  providers: [DialogService],
 })
 export class TerminalComponent implements OnInit {
   public bills: BillWithProducts[] = [];
@@ -24,11 +27,10 @@ export class TerminalComponent implements OnInit {
   public selectedItem: IBillProduct | null = null;
   public selectedItemId: string | null = null;
 
-  public showCheckout = false;
-
   constructor(
     private productsService: ProductsService,
-    private billService: BillsService
+    private billService: BillsService,
+    public dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -104,7 +106,7 @@ export class TerminalComponent implements OnInit {
     this.calcTotal();
   }
 
-  onClose() {
+  closeBill() {
     if (!this.selectedBill) {
       return;
     }
@@ -114,13 +116,21 @@ export class TerminalComponent implements OnInit {
     this.bills = this.bills.filter((val) => !val.closedAt);
   }
 
-  onCheckout(payment: number) {
-    if (!this.selectedBill) {
-      return;
-    }
-    this.selectedBill.paid = payment;
-    this.showCheckout = false;
-    this.billService.updateBill(this.selectedBill).subscribe();
+  checkout() {
+    this.dialogService
+      .open(CheckoutComponent, {
+        closable: false,
+        data: {
+          bill: this.selectedBill,
+        },
+      })
+      .onClose.subscribe((payment: number) => {
+        if (!payment || !this.selectedBill) return;
+        this.selectedBill.closedAt = new Date();
+        this.billService.updateBill(this.selectedBill).subscribe();
+        this.selectedBill = null;
+        this.bills = this.bills.filter((val) => !val.closedAt);
+      });
   }
 
   private calcTotal() {

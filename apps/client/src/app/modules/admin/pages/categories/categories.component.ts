@@ -9,11 +9,29 @@ import { MessageService, ConfirmationService } from 'primeng/api';
   styleUrls: ['./categories.component.scss'],
 })
 export class CategoriesComponent implements OnInit {
-  categories: Category[] = [];
-  category: Partial<Category> = {};
-  selectedCategories!: Category[] | null;
-  categoryDialog = false;
-  submitted = false;
+  public categories: Category[] = [];
+  public category: Partial<Category> = {};
+  public selectedCategories!: Category[] | null;
+  public categoryDialog = false;
+  public submitted = false;
+
+  public COLORS = [
+    '#264653ff',
+    '#2a9d8fff',
+    '#e9c46aff',
+    '#f4a261ff',
+    '#e76f51ff',
+  ];
+
+  public ICONS = [
+    'icons8-banana-split-50.png',
+    'icons8-cherry-cheesecake-50.png',
+    'icons8-chocolate-bar-50.png',
+    'icons8-ice-cream-cone-50.png',
+    'icons8-jelly-50.png',
+    'icons8-pizza-50.png',
+    'icons8-strawberry-cheesecake-50.png',
+  ];
 
   constructor(
     private categoriesService: CategoriesService,
@@ -56,8 +74,8 @@ export class CategoriesComponent implements OnInit {
     });
   }
 
-  editCategory(product: Category) {
-    this.category = { ...product };
+  editCategory(category: Category) {
+    this.category = { ...category, icon: category.icon ?? this.ICONS[0] };
     this.categoryDialog = true;
   }
 

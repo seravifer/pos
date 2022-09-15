@@ -11,8 +11,8 @@ model Bill {
   id        String        @id @default(uuid())
   tableId   String?
   people    Int?
-  total     Float?
-  paid      Float?
+  total     Float         @default(0)
+  paid      Float         @default(0)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
   closedAt  DateTime?
@@ -41,6 +41,7 @@ model Category {
   id        String    @id @default(uuid())
   name      String
   color     String?
+  icon      String?
   products  Product[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

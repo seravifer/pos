@@ -22,6 +22,7 @@ import { SliderModule } from 'primeng/slider';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 const routes: Routes = [{ path: '', component: CategoriesComponent }];
 
@@ -51,6 +52,7 @@ const routes: Routes = [{ path: '', component: CategoriesComponent }];
     InputNumberModule,
     ConfirmDialogModule,
     InputTextareaModule,
+    OverlayPanelModule,
   ],
   providers: [MessageService, ConfirmationService],
 })

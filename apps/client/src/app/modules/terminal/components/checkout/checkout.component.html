@@ -1,14 +1,34 @@
 <p-selectButton
   [options]="paymentOptions"
   [(ngModel)]="type"
-  optionLabel="name"
-  optionValue="code"
-></p-selectButton>
-<div class="total">
-  {{ bill?.total ?? 0 | currency: 'EUR' }}
-</div>
-<div class="payment">
-  {{ payment | currency: 'EUR' }}
+  optionValue="code">
+  <ng-template let-item>
+    <div class="payment-label">
+      <i [class]="item.icon"></i>
+      <div>{{ item.name }}</div>
+    </div>
+  </ng-template>
+</p-selectButton>
+<div class="price-summary">
+  <div class="price-summary__item">
+    <div>Total</div>
+    <div>{{ bill?.total | currency: 'EUR' }}</div>
+  </div>
+  <div class="price-summary__item">
+    <div>A pagar</div>
+    <div>{{ payment | currency: 'EUR' }}</div>
+  </div>
 </div>
 <pos-calculator [(ngModel)]="payment"></pos-calculator>
-<button pButton (click)="confirm()">Pagar</button>
+<div class="actions">
+  <button
+    pButton
+    class="p-button-danger p-button-lg"
+    (click)="cancel()"
+    label="Cancelar"></button>
+  <button
+    pButton
+    class="p-button-success p-button-lg"
+    (click)="confirm()"
+    label="Confirmar"></button>
+</div>

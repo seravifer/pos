@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -22,7 +22,7 @@ registerLocaleData(es);
   ],
   providers: [
     {
-      provide: 'LOCALE_ID',
+      provide: LOCALE_ID,
       useValue: 'es-ES',
     },
   ],

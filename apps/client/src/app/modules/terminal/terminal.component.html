@@ -11,19 +11,23 @@
         class="category item"
         (click)="onSelectCategory(category)"
         *ngFor="let category of categories"
-      >
-        {{ category.name }}
+        [style.background-color]="category.color">
+        <img [src]="'/assets/icons/' + category.icon" />
+        <div>{{ category.name }}</div>
       </div>
     </div>
     <ng-container *ngIf="selectedCategory">
       <h2>{{ selectedCategory.name }}</h2>
       <div class="products">
         <div
-          class="products item"
+          class="item"
           (click)="onSelectProduct(product)"
-          *ngFor="let product of selectedCategory.products"
-        >
-          {{ product.name }}
+          *ngFor="let product of selectedCategory.products">
+          <div
+            class="color"
+            [style.background-color]="selectedCategory.color"></div>
+          <div>{{ product.name }}</div>
+          <div class="price">{{ product.price | currency: 'EUR' }}</div>
         </div>
       </div>
     </ng-container>
@@ -32,43 +36,74 @@
     <div class="list not-selected" *ngIf="!selectedBill">
       Seleccione una comanda
     </div>
-    <div class="list" *ngIf="selectedBill">
-      <div>Mesa: {{ selectedBill.id }}</div>
-      <ng-container *ngFor="let item of selectedBill.products">
-        <div class="list-item">
-          <div class="info">
-            <div class="name">{{ item.name }}</div>
-            <div class="quantity">{{ item.quantity }} productos</div>
+    <ng-container *ngIf="selectedBill">
+      <div class="table"># Mesa 1</div>
+      <div class="list">
+        <ng-container *ngFor="let item of selectedBill.products">
+          <div class="list-item">
+            <div class="info">
+              <div class="name">{{ item.name }}</div>
+              <div class="price">
+                {{ item.quantity * item.price | currency: 'EUR' }}
+              </div>
+            </div>
+            <div class="change-quantity">
+              <div class="quantity">
+                <button
+                  pButton
+                  type="button"
+                  class="p-button-rounded p-button-icon-only"
+                  icon="pi pi-minus"
+                  (click)="changeQuantity(item, -1)"></button>
+                {{ item.quantity }}
+                <button
+                  pButton
+                  type="button"
+                  class="p-button-rounded p-button-icon-only"
+                  icon="pi pi-plus"
+                  (click)="changeQuantity(item, 1)"></button>
+              </div>
+              <div class="item-price">
+                {{ item.price | currency: 'EUR' }}
+              </div>
+            </div>
           </div>
-          <div class="actions">
-            <div class="action" (click)="changeQuantity(item, 1)">+</div>
-            <div class="action" (click)="changeQuantity(item, -1)">-</div>
-          </div>
-          <div class="price">
-            {{ item.quantity * item.price | currency: 'EUR' }}
-          </div>
+        </ng-container>
+      </div>
+
+      <div class="price-summary">
+        <div class="price-summary__item">
+          <div>Subtotal</div>
+          <div>{{ selectedBill.total * 0.9 | currency: 'EUR' }}</div>
         </div>
-      </ng-container>
-    </div>
+        <div class="price-summary__item">
+          <div>Impuestos (10%)</div>
+          <div>{{ selectedBill.total * 0.1 | currency: 'EUR' }}</div>
+        </div>
+        <div class="price-summary__item price-summary__item--total">
+          <div>Total</div>
+          <div>{{ selectedBill.total | currency: 'EUR' }}</div>
+        </div>
+      </div>
 
-    <div class="total">
-      Pagado: {{ selectedBill?.paid ?? 0 | currency: 'EUR' }}
-    </div>
-    <div class="total">
-      Total: {{ selectedBill?.total ?? 0 | currency: 'EUR' }}
-    </div>
-
-    <div class="actions">
-      <button pButton>Imprimir ticket</button>
-      <button pButton (click)="onClose()">Cerrar ticket</button>
-      <button pButton (click)="showCheckout = true">Cobrar</button>
-    </div>
+      <div class="actions">
+        <button
+          pButton
+          class="p-button-outlined p-button-lg"
+          label="Imprimir ticket"></button>
+        <button
+          pButton
+          *ngIf="selectedBill.total === selectedBill.paid"
+          (click)="closeBill()"
+          class="p-button-lg"
+          label="Cobrar"></button>
+        <button
+          pButton
+          *ngIf="selectedBill.total !== selectedBill.paid"
+          (click)="checkout()"
+          class="p-button-lg"
+          label="Cobrar"></button>
+      </div>
+    </ng-container>
   </div>
 </main>
-
-<p-dialog [(visible)]="showCheckout" [modal]="true">
-  <pos-checkout
-    [bill]="selectedBill"
-    (checkout)="onCheckout($event)"
-  ></pos-checkout>
-</p-dialog>

@@ -9,8 +9,7 @@
         label="New"
         icon="pi pi-plus"
         class="p-button-success p-mr-2"
-        (click)="openNew()"
-      ></button>
+        (click)="openNew()"></button>
       <button
         pButton
         pRipple
@@ -18,8 +17,7 @@
         icon="pi pi-trash"
         class="p-button-danger"
         (click)="deleteSelectedCategories()"
-        [disabled]="!selectedCategories || !selectedCategories.length"
-      ></button>
+        [disabled]="!selectedCategories || !selectedCategories.length"></button>
     </ng-template>
 
     <ng-template pTemplate="right">
@@ -29,15 +27,13 @@
         [maxFileSize]="1000000"
         label="Import"
         chooseLabel="Import"
-        class="p-mr-2 p-d-inline-block"
-      ></p-fileUpload>
+        class="p-mr-2 p-d-inline-block"></p-fileUpload>
       <button
         pButton
         pRipple
         label="Export"
         icon="pi pi-upload"
-        class="p-button-help"
-      ></button>
+        class="p-button-help"></button>
     </ng-template>
   </p-toolbar>
 
@@ -46,18 +42,12 @@
     [value]="categories"
     [rows]="10"
     [paginator]="true"
-    [globalFilterFields]="[
-      'name',
-      'country.name',
-      'representative.name',
-      'status'
-    ]"
+    [globalFilterFields]="['name']"
     [(selection)]="selectedCategories"
     [rowHover]="true"
     dataKey="id"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-    [showCurrentPageReport]="true"
-  >
+    [showCurrentPageReport]="true">
     <ng-template pTemplate="caption">
       <div class="p-d-flex p-ai-center p-jc-between">
         <h5 class="p-m-0">Manage Categories</h5>
@@ -67,8 +57,7 @@
             pInputText
             type="text"
             (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-            placeholder="Search..."
-          />
+            placeholder="Search..." />
         </span>
       </div>
     </ng-template>
@@ -97,15 +86,13 @@
             pRipple
             icon="pi pi-pencil"
             class="p-button-rounded p-button-success p-mr-2"
-            (click)="editCategory(category)"
-          ></button>
+            (click)="editCategory(category)"></button>
           <button
             pButton
             pRipple
             icon="pi pi-trash"
             class="p-button-rounded p-button-warning"
-            (click)="deleteCategory(category)"
-          ></button>
+            (click)="deleteCategory(category)"></button>
         </td>
       </tr>
     </ng-template>
@@ -122,8 +109,7 @@
   [style]="{ width: '450px' }"
   header="Category Details"
   [modal]="true"
-  styleClass="p-fluid"
->
+  styleClass="p-fluid">
   <ng-template pTemplate="content">
     <div class="p-field">
       <label for="name">Name</label>
@@ -133,11 +119,59 @@
         id="name"
         [(ngModel)]="category.name"
         required
-        autofocus
-      />
-      <small class="p-invalid" *ngIf="submitted && !category.name"
-        >Name is required.</small
-      >
+        autofocus />
+      <small class="p-invalid" *ngIf="submitted && !category.name">
+        Name is required.
+      </small>
+    </div>
+
+    <div class="p-field">
+      <p-overlayPanel #colors [dismissable]="true" [showCloseIcon]="true">
+        <ng-template pTemplate>
+          <div class="color-options">
+            <div
+              class="color-option"
+              *ngFor="let color of COLORS"
+              (click)="category.color = color"
+              [style.background-color]="color"></div>
+          </div>
+        </ng-template>
+      </p-overlayPanel>
+
+      <label for="name">Color</label>
+      <div
+        class="color-picker"
+        (click)="colors.show($event)"
+        [style.background-color]="category.color"></div>
+      <small class="p-invalid" *ngIf="submitted && !category.color">
+        Color is required.
+      </small>
+    </div>
+
+    <div class="p-field">
+      <p-overlayPanel #icons [dismissable]="true" [showCloseIcon]="true">
+        <ng-template pTemplate>
+          <div class="icon-options">
+            <div
+              class="icon-option"
+              *ngFor="let icon of ICONS"
+              (click)="category.icon = icon">
+              <img [src]="'/assets/icons/' + icon" />
+            </div>
+          </div>
+        </ng-template>
+      </p-overlayPanel>
+
+      <label for="name">Color</label>
+      <div
+        class="icon-picker"
+        (click)="icons.show($event)"
+        [style.background-color]="category.color">
+        <img [src]="'/assets/icons/' + category.icon" />
+      </div>
+      <small class="p-invalid" *ngIf="submitted && !category.icon">
+        Icon is required.
+      </small>
     </div>
   </ng-template>
 
@@ -148,16 +182,14 @@
       label="Cancel"
       icon="pi pi-times"
       class="p-button-text"
-      (click)="hideDialog()"
-    ></button>
+      (click)="hideDialog()"></button>
     <button
       pButton
       pRipple
       label="Save"
       icon="pi pi-check"
       class="p-button-text"
-      (click)="saveCategory()"
-    ></button>
+      (click)="saveCategory()"></button>
   </ng-template>
 </p-dialog>
 
