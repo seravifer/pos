@@ -10,7 +10,7 @@ export type TextOptions = {
   rotation: number;
 };
 
-export class Text extends Node {
+export class TextNode extends Node {
   private options: TextOptions;
 
   constructor(options: TextOptions) {

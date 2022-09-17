@@ -1,34 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { BillsService } from '@pos/client/services/bill.service';
+import { LocationsService } from '@pos/client/services/locations.service';
 import { ProductsService } from '@pos/client/services/products.service';
+import { TableService } from '@pos/client/services/table.service';
 import {
   BillWithProducts,
   IBillProduct,
   CategoryWithProducts,
   Product,
+  Table,
+  Location,
 } from '@pos/models';
 import { DialogService } from 'primeng/dynamicdialog';
+import { combineLatest } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 import { CheckoutComponent } from './components/checkout/checkout.component';
+import { PeopleComponent } from './components/people/people.component';
 
 @Component({
   selector: 'pos-terminal',
   templateUrl: './terminal.component.html',
   styleUrls: ['./terminal.component.scss'],
-  providers: [DialogService],
 })
 export class TerminalComponent implements OnInit {
   public categories: CategoryWithProducts[] = [];
   public bills: BillWithProducts[] = [];
+  public locations: Location[] = [];
+  public tables: Table[] = [];
 
   public selectedBill: BillWithProducts | null = null;
   public selectedItem: IBillProduct | null = null;
-
   public selectedCategory: CategoryWithProducts | null = null;
+  public pageShowing: 'bill' | 'map' = 'map';
 
   constructor(
     private productsService: ProductsService,
     private billService: BillsService,
+    private tableService: TableService,
+    private locationsService: LocationsService,
     private dialogService: DialogService
   ) {}
 
@@ -40,13 +49,30 @@ export class TerminalComponent implements OnInit {
     this.billService.getBills().subscribe((bills) => {
       this.bills = bills;
     });
+    combineLatest({
+      locations: this.locationsService.getLocations(),
+      tables: this.tableService.getTables(),
+    }).subscribe(({ locations, tables }) => {
+      this.locations = locations;
+      this.tables = tables;
+    });
   }
 
-  newBill() {
-    this.billService.createBill({}).subscribe((bill) => {
-      this.bills.push(bill);
-      this.selectedBill = { ...bill, products: [] };
-    });
+  onSelectTable(table: Table) {
+    const bill = this.bills.find((b) => b.tableId === table.id);
+    if (bill) {
+      this.selectedBill = bill;
+    } else {
+      this.billService
+        .createBill({
+          tableId: table.id,
+        })
+        .subscribe((bill) => {
+          this.bills.push(bill);
+          this.selectedBill = { ...bill, products: [] };
+        });
+    }
+    this.pageShowing = 'bill';
   }
 
   selectBill(bill: BillWithProducts) {
@@ -105,14 +131,28 @@ export class TerminalComponent implements OnInit {
     this.calcTotal();
   }
 
+  changePeople() {
+    this.dialogService
+      .open(PeopleComponent, {
+        closable: false,
+        data: {
+          bill: this.selectedBill,
+        },
+      })
+      .onClose.subscribe((people: number) => {
+        if (!people || !this.selectedBill) return;
+        this.selectedBill.people = people;
+        this.billService.updateBill(this.selectedBill).subscribe();
+      });
+  }
+
   closeBill() {
-    if (!this.selectedBill) {
-      return;
-    }
+    if (!this.selectedBill) return;
     this.selectedBill.closedAt = new Date();
     this.billService.updateBill(this.selectedBill).subscribe();
-    this.selectedBill = null;
     this.bills = this.bills.filter((val) => !val.closedAt);
+    this.selectedBill = null;
+    this.pageShowing = 'map';
   }
 
   checkout() {
@@ -125,10 +165,8 @@ export class TerminalComponent implements OnInit {
       })
       .onClose.subscribe((payment: number) => {
         if (!payment || !this.selectedBill) return;
-        this.selectedBill.closedAt = new Date();
+        this.selectedBill.paid = this.selectedBill.paid + payment;
         this.billService.updateBill(this.selectedBill).subscribe();
-        this.selectedBill = null;
-        this.bills = this.bills.filter((val) => !val.closedAt);
       });
   }
 

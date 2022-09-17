@@ -1,24 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Table as ITable } from '@pos/models';
 import { v4 as uuid } from 'uuid';
-import { Table } from './nodes/table';
-import { Text } from './nodes/text';
+import { TableNode } from './nodes/table';
+import { TextNode } from './nodes/text';
 import { Node } from './nodes/node';
-import { Circle } from './nodes/circle';
+import { CircleNode } from './nodes/circle';
 import Konva from 'konva';
 import { ItemType } from './types';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
   private itemTypes: { [key in ItemType]: typeof Konva.Group } = {
-    table: Table,
-    text: Text,
-    circle: Circle,
+    table: TableNode,
+    text: TextNode,
+    circle: CircleNode,
   };
 
   private defaultTypeItems: { [key in ItemType]: () => Konva.Group } = {
     table: () =>
-      new Table({
+      new TableNode({
         id: uuid(),
         text: 'Mesa X',
         height: 100,
@@ -29,7 +29,7 @@ export class MapService {
         y: 100,
       }),
     circle: () =>
-      new Circle({
+      new CircleNode({
         id: uuid(),
         chairs: 4,
         text: 'Mesa X',
@@ -39,7 +39,7 @@ export class MapService {
         y: 100,
       }),
     text: () =>
-      new Text({
+      new TextNode({
         id: uuid(),
         text: 'Tu texto',
         x: 100,

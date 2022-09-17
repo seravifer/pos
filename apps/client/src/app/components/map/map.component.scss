@@ -2,6 +2,8 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  height: 100%;
 }
 
 .actions {
@@ -28,10 +30,6 @@
 
 .location-button.p-button-outlined {
   background: white;
-}
-
-.map {
-  position: relative;
 }
 
 .location-name {
@@ -68,7 +66,20 @@
   }
 }
 
+.map-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .map {
+    position: relative;
+    flex: 1 1 auto;
+  }
+}
+
 #canvas {
   background-image: url('/assets/floor.webp');
   border-radius: 16px;
+  height: 100%;
+  width: 100%;
 }

@@ -14,6 +14,8 @@ import { ItemFormOptions, ItemType } from './types';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ConfirmationService } from 'primeng/api';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { TableNode } from './nodes/table';
+import { CircleNode } from './nodes/circle';
 import Konva from 'konva';
 
 @Component({
@@ -68,9 +70,14 @@ export class MapComponent implements AfterContentInit, OnChanges {
         focusElement.removeFocus();
       }
     });
+    this.load();
   }
 
   ngOnChanges() {
+    this.load();
+  }
+
+  private load() {
     if (this.locations.length > 0 && this.tables && this.canvas) {
       this.locations.forEach((l) =>
         this.canvas.add(new Konva.Layer({ visible: false, id: l.id }))
@@ -143,9 +150,6 @@ export class MapComponent implements AfterContentInit, OnChanges {
     this.formOptions = undefined;
     this.form = undefined;
     if (this.selectedItem) {
-      this.selected.emit(
-        this.mapService.convertToItems([this.selectedItem])[0]
-      );
       this.form = new FormGroup({});
       this.formOptions = this.selectedItem.getEditOptions();
       this.formOptions.forEach((el) => {
@@ -154,6 +158,14 @@ export class MapComponent implements AfterContentInit, OnChanges {
       this.form.valueChanges.subscribe((data) => {
         this.selectedItem?.setEditOptions(data);
       });
+      if (
+        this.selectedItem instanceof TableNode ||
+        this.selectedItem instanceof CircleNode
+      ) {
+        this.selected.emit(
+          this.mapService.convertToItems([this.selectedItem])[0]
+        );
+      }
     }
   }
 

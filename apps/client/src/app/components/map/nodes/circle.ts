@@ -12,7 +12,7 @@ export type CircleOptions = {
   y: number;
 };
 
-export class Circle extends Node {
+export class CircleNode extends Node {
   private options: CircleOptions;
 
   constructor(options: CircleOptions) {

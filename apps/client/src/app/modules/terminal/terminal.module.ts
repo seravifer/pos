@@ -8,24 +8,31 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CalculatorComponent } from './components/calculator/calculator.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { TablesComponent } from './components/tables/tables.component';
 import { MapModule } from '@pos/client/components/map/map.module';
-import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { TimeComponent } from './components/time/time.component';
+import { SelectPipe } from '@pos/client/pipes/select.pipe';
+import { PeopleComponent } from './components/people/people.component';
+import { CalculatorModule } from '@pos/client/components/calculator/calculator.module';
 
 const routes: Routes = [{ path: '', component: TerminalComponent }];
 
 @NgModule({
   declarations: [
     TerminalComponent,
-    CalculatorComponent,
     CheckoutComponent,
     TablesComponent,
+    TimeComponent,
+    PeopleComponent,
   ],
+  providers: [DialogService],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    SelectPipe,
+    CalculatorModule,
     MapModule,
     FormsModule,
     ReactiveFormsModule,

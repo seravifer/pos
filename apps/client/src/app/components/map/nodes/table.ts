@@ -13,7 +13,7 @@ export type TableOptions = {
   y: number;
 };
 
-export class Table extends Node {
+export class TableNode extends Node {
   private options: TableOptions;
 
   constructor(options: TableOptions) {

@@ -34,7 +34,7 @@ export class LayoutComponent {
     },
     {
       label: 'Mapa del local',
-      icon: 'pi pi-sitemap',
+      icon: 'pi pi-table',
       routerLink: '/admin/map-editor',
     },
     {

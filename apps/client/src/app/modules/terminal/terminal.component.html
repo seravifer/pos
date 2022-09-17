@@ -1,10 +1,13 @@
-<main>
-  <div class="bills">
-    <div class="bill" *ngFor="let bill of bills" (click)="selectBill(bill)">
-      {{ bill.id }}
-    </div>
-    <div class="add" (click)="newBill()"><i class="pi pi-plus"></i></div>
-  </div>
+<header>
+  <button
+    pButton
+    label="Mesas"
+    icon="pi pi-table"
+    *ngIf="pageShowing === 'bill'"
+    (click)="pageShowing = 'map'"></button>
+  <div class="time"><pos-time></pos-time></div>
+</header>
+<main *ngIf="pageShowing === 'bill'">
   <div class="items">
     <div class="categories">
       <div
@@ -33,11 +36,16 @@
     </ng-container>
   </div>
   <div class="summary">
-    <div class="list not-selected" *ngIf="!selectedBill">
-      Seleccione una comanda
-    </div>
     <ng-container *ngIf="selectedBill">
-      <div class="table"># Mesa 1</div>
+      <div class="table">
+        <div class="name">
+          # {{ (selectedBill.tableId | select: tables)?.name }}
+        </div>
+        <div class="people" (click)="changePeople()">
+          <i class="pi pi-user"></i>
+          {{ selectedBill.people ?? '-' }}
+        </div>
+      </div>
       <div class="list">
         <ng-container *ngFor="let item of selectedBill.products">
           <div class="list-item">
@@ -73,6 +81,10 @@
 
       <div class="price-summary">
         <div class="price-summary__item">
+          <div>Pagado</div>
+          <div>- {{ selectedBill.paid | currency: 'EUR' }}</div>
+        </div>
+        <div class="price-summary__item">
           <div>Subtotal</div>
           <div>{{ selectedBill.total * 0.9 | currency: 'EUR' }}</div>
         </div>
@@ -82,7 +94,9 @@
         </div>
         <div class="price-summary__item price-summary__item--total">
           <div>Total</div>
-          <div>{{ selectedBill.total | currency: 'EUR' }}</div>
+          <div>
+            {{ selectedBill.total - selectedBill.paid | currency: 'EUR' }}
+          </div>
         </div>
       </div>
 
@@ -96,7 +110,7 @@
           *ngIf="selectedBill.total === selectedBill.paid"
           (click)="closeBill()"
           class="p-button-lg"
-          label="Cobrar"></button>
+          label="Cerrar mesa"></button>
         <button
           pButton
           *ngIf="selectedBill.total !== selectedBill.paid"
@@ -105,5 +119,14 @@
           label="Cobrar"></button>
       </div>
     </ng-container>
+  </div>
+</main>
+<main *ngIf="pageShowing === 'map'">
+  <div class="map">
+    <pos-map
+      [editorMode]="false"
+      [locations]="locations"
+      [tables]="tables"
+      (selected)="onSelectTable($event)"></pos-map>
   </div>
 </main>

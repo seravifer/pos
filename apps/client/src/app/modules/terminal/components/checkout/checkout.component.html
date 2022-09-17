@@ -12,7 +12,7 @@
 <div class="price-summary">
   <div class="price-summary__item">
     <div>Total</div>
-    <div>{{ bill?.total | currency: 'EUR' }}</div>
+    <div>{{ bill.total - bill.paid | currency: 'EUR' }}</div>
   </div>
   <div class="price-summary__item">
     <div>A pagar</div>
@@ -29,6 +29,7 @@
   <button
     pButton
     class="p-button-success p-button-lg"
+    [disabled]="payment === 0 || bill.total - bill.paid - payment < 0"
     (click)="confirm()"
     label="Confirmar"></button>
 </div>

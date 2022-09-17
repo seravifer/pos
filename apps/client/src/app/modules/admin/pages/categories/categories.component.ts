@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoriesService } from '@pos/client/services/categories.service';
-import { Category } from '@pos/models';
+import { Category, ICONS } from '@pos/models';
 import { MessageService, ConfirmationService } from 'primeng/api';
 
 @Component({
@@ -23,15 +23,7 @@ export class CategoriesComponent implements OnInit {
     '#e76f51ff',
   ];
 
-  public ICONS = [
-    'icons8-banana-split-50.png',
-    'icons8-cherry-cheesecake-50.png',
-    'icons8-chocolate-bar-50.png',
-    'icons8-ice-cream-cone-50.png',
-    'icons8-jelly-50.png',
-    'icons8-pizza-50.png',
-    'icons8-strawberry-cheesecake-50.png',
-  ];
+  public ICONS = ICONS;
 
   constructor(
     private categoriesService: CategoriesService,
