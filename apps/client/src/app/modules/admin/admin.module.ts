@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { LayoutComponent } from './components/layout/layout.component';
+import { ButtonModule } from 'primeng/button';
 
 const routes: Routes = [
   {
@@ -64,6 +65,6 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [LayoutComponent],
-  imports: [CommonModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, RouterModule.forChild(routes), ButtonModule],
 })
 export class AdminModule {}

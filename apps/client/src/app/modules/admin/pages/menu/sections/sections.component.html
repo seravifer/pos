@@ -1,16 +1,16 @@
-<input type="text" [(ngModel)]="section.name" pInputText placeholder="Nombre" />
+<div class="actions">
+  <input
+    type="text"
+    [(ngModel)]="section.name"
+    pInputText
+    placeholder="Nombre" />
+  <button pButton (click)="onSave()">Guardar</button>
+</div>
 
-<button pButton (click)="onSave()">Guardar</button>
-<button pButton (click)="onDelete()">Borrar</button>
-
-<p-dropdown
-  [options]="categories"
-  [(ngModel)]="selectedCategory"
-  optionLabel="name"
-></p-dropdown>
 <p-pickList
   [source]="selectedCategory?.products ?? [] | filterList: products"
   [target]="products"
+  [responsive]="true"
   sourceHeader="Disponible"
   targetHeader="Seleccionados"
   [dragdrop]="true"
@@ -19,22 +19,24 @@
   [targetStyle]="{ height: '30rem' }"
   filterBy="name"
   sourceFilterPlaceholder="Search by name"
-  targetFilterPlaceholder="Search by name"
->
+  targetFilterPlaceholder="Search by name">
   <ng-template pTemplate="sourceFilter" let-options="options">
     <div class="p-picklist-filter">
+      <p-dropdown
+        [options]="categories"
+        [(ngModel)]="selectedCategory"
+        class="dropdown"
+        optionLabel="name"></p-dropdown>
       <input
         [(ngModel)]="sourceFilterValue"
         type="text"
         (keyup)="options.filter($any($event.target)?.value)"
         role="textbox"
-        class="p-picklist-filter-input p-inputtext p-component"
-      />
+        class="p-picklist-filter-input p-inputtext p-component" />
       <span
         *ngIf="sourceFilterValue"
         class="p-picklist-filter-icon pi pi-times"
-        (click)="options.reset(); sourceFilterValue = ''"
-      ></span>
+        (click)="options.reset(); sourceFilterValue = ''"></span>
     </div>
   </ng-template>
   <ng-template let-product pTemplate="item">

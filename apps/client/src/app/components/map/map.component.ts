@@ -1,6 +1,5 @@
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -13,32 +12,39 @@ import { Location, Table } from '@pos/models';
 import { v4 as uuid } from 'uuid';
 import { ItemFormOptions, ItemType } from './types';
 import { FormGroup, FormControl } from '@angular/forms';
+import { ConfirmationService } from 'primeng/api';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import Konva from 'konva';
 
 @Component({
   selector: 'pos-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapComponent implements AfterContentInit, OnChanges {
   @Input() locations: Partial<Location>[] = [];
   @Input() tables: Table[] = [];
+  @Input() editorMode = false;
 
   @Output() selected = new EventEmitter<Table>();
-  @Output() save = new EventEmitter<Table[]>();
-  @Output() createLocation = new EventEmitter<Partial<Location>>();
+  @Output() save = new EventEmitter<{
+    tables: Table[];
+    locations: Partial<Location>[];
+  }>();
 
   private canvas!: Konva.Stage;
   private activeLayer?: Konva.Layer;
-  private layers: Konva.Layer[] = [];
 
   public selectedItem?: Node;
+  public selectedLocation?: Partial<Location>;
 
   public form?: FormGroup;
   public formOptions?: ItemFormOptions[];
 
-  constructor(private mapService: MapService) {}
+  constructor(
+    private mapService: MapService,
+    private confirmationService: ConfirmationService
+  ) {}
 
   ngAfterContentInit(): void {
     Konva.hitOnDragEnabled = true;
@@ -66,42 +72,62 @@ export class MapComponent implements AfterContentInit, OnChanges {
 
   ngOnChanges() {
     if (this.locations.length > 0 && this.tables && this.canvas) {
-      this.layers = this.locations.map(
-        (l) => new Konva.Layer({ visible: false, id: l.id })
+      this.locations.forEach((l) =>
+        this.canvas.add(new Konva.Layer({ visible: false, id: l.id }))
       );
-      this.layers.forEach((l) => this.canvas.add(l));
-      this.activeLayer = this.layers[0];
-      this.activeLayer.show();
+      this.changeLocation(this.locations[0]);
 
       this.tables.forEach((t) => {
         const node = this.mapService.parseItems([t]);
-        const layer = this.layers.find((l) => l.id() === t.locationId);
+        const layer = this.canvas
+          .getLayers()
+          .find((l) => l.id() === t.locationId);
         layer?.add(...node);
       });
     }
   }
 
-  onChangeLocation(id: string) {
+  changeLocation(location: Partial<Location>) {
     this.activeLayer?.hide();
-    this.activeLayer = this.layers.find((l) => l.id() === id);
+    this.canvas.getLayer();
+    this.activeLayer = this.canvas
+      .getLayers()
+      .find((l) => l.id() === location.id);
     this.activeLayer?.show();
+    this.selectedLocation = location;
   }
 
-  onCreateLocation() {
-    const newLocation = { id: uuid(), name: 'test' };
+  createLocation() {
+    const newLocation = { id: uuid(), name: 'Nueva localización' };
     this.locations.push(newLocation);
-    this.layers.push(new Konva.Layer({ visible: false, id: newLocation.id }));
-    this.onChangeLocation(newLocation.id);
-    this.createLocation.emit(newLocation);
+    this.canvas.add(new Konva.Layer({ visible: false, id: newLocation.id }));
+    this.changeLocation(newLocation);
   }
 
-  onDeleteLocation() {
-    // TODO
+  deleteLocation(event: Event) {
+    this.confirmationService.confirm({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      target: event.target!,
+      message: '¿Estas seguro que quieres eliminar esta localización?',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.locations = this.locations.filter(
+          (l) => l.id !== this.selectedLocation?.id
+        );
+        this.activeLayer?.destroy();
+        this.changeLocation(this.locations[0]);
+      },
+    });
+  }
+
+  orderLocation(event: CdkDragDrop<any[]>) {
+    moveItemInArray(this.locations, event.previousIndex, event.currentIndex);
   }
 
   addItem(type: ItemType) {
+    if (!this.activeLayer) return;
     const node = this.mapService.createItem(type);
-    this.activeLayer?.add(node);
+    this.activeLayer.add(node);
     this.onSelect(node as Node);
   }
 
@@ -132,11 +158,13 @@ export class MapComponent implements AfterContentInit, OnChanges {
   }
 
   onSave() {
-    const tables = this.layers.flatMap((l) =>
-      this.mapService
-        .convertToItems(l.children)
-        .map((t) => ({ ...t, locationId: l.id() }))
-    );
-    this.save.emit(tables);
+    const tables = this.canvas
+      .getLayers()
+      .flatMap((l) =>
+        this.mapService
+          .convertToItems(l.children)
+          .map((t) => ({ ...t, locationId: l.id() }))
+      );
+    this.save.emit({ tables, locations: this.locations });
   }
 }

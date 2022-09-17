@@ -28,11 +28,23 @@ export class MapEditorComponent implements OnInit {
     });
   }
 
-  onCreateLocation(location: Partial<Location>) {
-    this.locationsService.createLocation(location).subscribe();
-  }
-
-  onSave(tables: Table[]) {
+  onSave({
+    tables,
+    locations,
+  }: {
+    tables: Table[];
+    locations: Partial<Location>[];
+  }) {
     this.tableService.createOrUpdateTables(tables).subscribe();
+    locations.forEach((location, position) => {
+      this.locationsService
+        .updateLocation({ ...location, position })
+        .subscribe();
+    });
+    this.locations
+      .filter((l) => !locations.find((l2) => l2.id === l.id))
+      .forEach((l) => {
+        this.locationsService.deleteLocation(l.id as string).subscribe();
+      });
   }
 }

@@ -1,4 +1,15 @@
-<header></header>
+<nav>
+  <button
+    *ngFor="let option of menu"
+    pButton
+    type="button"
+    class="p-button-lg"
+    [label]="option.label"
+    [icon]="option.icon"
+    [routerLink]="[option.routerLink]"
+    [routerLinkActiveOptions]="{ exact: true }"
+    routerLinkActive="active"></button>
+</nav>
 <main>
   <router-outlet></router-outlet>
 </main>

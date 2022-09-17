@@ -14,6 +14,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TableModule } from 'primeng/table';
 import { FilterListPipe } from './sections/filter-list.pipe';
+import { TagModule } from 'primeng/tag';
 
 const routes: Routes = [
   { path: '', component: MenuComponent },
@@ -43,6 +44,7 @@ const routes: Routes = [
     TabViewModule,
     TableModule,
     CheckboxModule,
+    TagModule,
   ],
 })
 export class MenuModule {}

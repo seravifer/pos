@@ -20,7 +20,7 @@ export class MapService {
     table: () =>
       new Table({
         id: uuid(),
-        text: '123',
+        text: 'Mesa X',
         height: 100,
         width: 100,
         chairs: 4,
@@ -32,7 +32,7 @@ export class MapService {
       new Circle({
         id: uuid(),
         chairs: 4,
-        text: '123',
+        text: 'Mesa X',
         height: 100,
         rotation: 0,
         x: 100,
@@ -41,7 +41,7 @@ export class MapService {
     text: () =>
       new Text({
         id: uuid(),
-        text: 'Your text!',
+        text: 'Tu texto',
         x: 100,
         y: 100,
         rotation: 0,

@@ -1,9 +1,36 @@
-header {
-  height: 72px;
+:host {
+  display: flex;
+  gap: 20px;
+  width: 100vw;
+  height: 100vh;
+  padding: 20px;
+}
+
+nav {
+  flex: 0 0 auto;
+  height: 100%;
+  width: 300px;
   background-color: #fff;
+  border-radius: 16px;
+  padding: 20px;
+
+  .p-button {
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: left;
+
+    &:not(.active) {
+      background-color: transparent;
+      color: var(--blue-500);
+      border-color: transparent;
+    }
+  }
 }
 
 main {
-  margin: 30px;
+  height: 100%;
+  width: 100%;
   background-color: #fff;
+  border-radius: 16px;
+  padding: 20px;
 }

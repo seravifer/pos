@@ -1,16 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FormArray,
-  FormControl,
-  FormGroup,
-  UntypedFormArray,
-  UntypedFormControl,
-  UntypedFormGroup,
-} from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenusService } from '@pos/client/services/menu.service';
-import { Menu, Section } from '@pos/models';
-import { ControlsOf } from '@pos/client/utils/form-types';
+import { Section } from '@pos/models';
 import { SectionsService } from '@pos/client/services/sections.service';
 
 @Component({
@@ -23,10 +15,11 @@ export class GroupComponent implements OnInit {
 
   public sections: Section[] = [];
 
-  public form = new UntypedFormGroup({
-    name: new UntypedFormControl(),
-    active: new UntypedFormControl(true, { nonNullable: true }),
-    sections: new UntypedFormArray([]),
+  public form = new FormGroup({
+    name: new FormControl('', { nonNullable: true }),
+    price: new FormControl(0, { nonNullable: true }),
+    active: new FormControl(true, { nonNullable: true }),
+    sections: new FormArray([]),
   });
 
   get sectionsForm() {
@@ -48,9 +41,13 @@ export class GroupComponent implements OnInit {
         sections.forEach((section) => {
           this.sectionsForm.push(
             new FormGroup({
-              name: new FormControl(section.name),
-              sectionId: new FormControl(section.sectionId),
-              maxProducts: new FormControl(section.maxProducts),
+              name: new FormControl(section.name, { nonNullable: true }),
+              sectionId: new FormControl(section.sectionId, {
+                nonNullable: true,
+              }),
+              maxProducts: new FormControl(section.maxProducts, {
+                nonNullable: true,
+              }),
             })
           );
         });
@@ -61,17 +58,21 @@ export class GroupComponent implements OnInit {
     });
   }
 
-  onAdd() {
+  add() {
     this.sectionsForm.push(
       new FormGroup({
-        name: new FormControl(),
+        name: new FormControl('', { nonNullable: true }),
         sectionId: new FormControl(),
-        maxProducts: new FormControl(),
+        maxProducts: new FormControl(1, { nonNullable: true }),
       })
     );
   }
 
-  onSectionChange(sectionId: string, index: number) {
+  deleteSection(index: number) {
+    this.sectionsForm.removeAt(index);
+  }
+
+  sectionChange(sectionId: string, index: number) {
     const section = this.sections.find((s) => s.id === sectionId);
     const control = this.sectionsForm.controls[index] as FormGroup;
     const value = control.get('name')?.value;
@@ -82,13 +83,13 @@ export class GroupComponent implements OnInit {
     }
   }
 
-  onSave() {
+  save() {
     if (this.id) {
       this.menusService
-        .updateMenu({ id: this.id, ...this.form.value })
+        .updateMenu({ id: this.id, ...this.form.getRawValue() })
         .subscribe();
     } else {
-      this.menusService.createMenu(this.form.value).subscribe((res) => {
+      this.menusService.createMenu(this.form.getRawValue()).subscribe((res) => {
         this.router.navigate([res.id], {
           relativeTo: this.route,
           replaceUrl: true,

@@ -1,6 +1,6 @@
 <main>
   <div class="bills">
-    <div class="bill" *ngFor="let bill of bills" (click)="onSelectBill(bill)">
+    <div class="bill" *ngFor="let bill of bills" (click)="selectBill(bill)">
       {{ bill.id }}
     </div>
     <div class="add" (click)="newBill()"><i class="pi pi-plus"></i></div>
@@ -9,7 +9,7 @@
     <div class="categories">
       <div
         class="category item"
-        (click)="onSelectCategory(category)"
+        (click)="selectCategory(category)"
         *ngFor="let category of categories"
         [style.background-color]="category.color">
         <img [src]="'/assets/icons/' + category.icon" />

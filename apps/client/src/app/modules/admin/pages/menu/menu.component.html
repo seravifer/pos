@@ -1,52 +1,61 @@
 <p-tabView>
   <p-tabPanel header="Menus">
-    <button pButton [routerLink]="['/admin/menu/group']">Crear menu</button>
+    <button pButton class="new" [routerLink]="['/admin/menu/group']">
+      Crear menu
+    </button>
     <p-table [value]="(menu$ | async) ?? []" responsiveLayout="scroll">
       <ng-template pTemplate="header">
         <tr>
-          <th>ID</th>
           <th>Name</th>
+          <th>Estado</th>
+          <th>Precio</th>
           <th>Opciones</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-menu>
         <tr>
-          <td>{{ menu.id }}</td>
           <td>{{ menu.name }}</td>
+          <td>
+            <p-tag
+              *ngIf="menu.active"
+              severity="success"
+              value="Activado"></p-tag>
+            <p-tag
+              *ngIf="!menu.active"
+              severity="warning"
+              value="Desactivado"></p-tag>
+          </td>
+          <td>{{ menu.price | currency: 'EUR' }}</td>
           <td>
             <button
               pButton
               pRipple
               icon="pi pi-pencil"
               class="p-button-rounded p-button-success p-mr-2"
-              [routerLink]="['/admin/menu/group', menu.id]"
-            ></button>
+              [routerLink]="['/admin/menu/group', menu.id]"></button>
             <button
               pButton
               pRipple
               icon="pi pi-trash"
-              class="p-button-rounded p-button-warning"
-            ></button>
+              class="p-button-rounded p-button-warning"></button>
           </td>
         </tr>
       </ng-template>
     </p-table>
   </p-tabPanel>
   <p-tabPanel header="Secciones">
-    <button pButton [routerLink]="['/admin/menu/section']">
+    <button pButton class="new" [routerLink]="['/admin/menu/section']">
       Crear sección
     </button>
     <p-table [value]="(sections$ | async) ?? []" responsiveLayout="scroll">
       <ng-template pTemplate="header">
         <tr>
-          <th>ID</th>
           <th>Name</th>
           <th>Opciones</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-section>
         <tr>
-          <td>{{ section.id }}</td>
           <td>{{ section.name }}</td>
           <td>
             <button
@@ -54,14 +63,12 @@
               pRipple
               icon="pi pi-pencil"
               class="p-button-rounded p-button-success p-mr-2"
-              [routerLink]="['/admin/menu/section', section.id]"
-            ></button>
+              [routerLink]="['/admin/menu/section', section.id]"></button>
             <button
               pButton
               pRipple
               icon="pi pi-trash"
-              class="p-button-rounded p-button-warning"
-            ></button>
+              class="p-button-rounded p-button-warning"></button>
           </td>
         </tr>
       </ng-template>

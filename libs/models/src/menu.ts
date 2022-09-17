@@ -3,6 +3,7 @@ import { Product, Section } from '.';
 export type MenuDto = {
   name: string;
   active: boolean;
+  price: number;
   sections: MenuSectionDto[];
 };
 

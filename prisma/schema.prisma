@@ -16,7 +16,7 @@ model Bill {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
   closedAt  DateTime?
-  table     Table?        @relation(fields: [tableId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  table     Table?        @relation(fields: [tableId], references: [id], onDelete: SetNull, onUpdate: NoAction)
   products  BillProduct[]
 
   @@map("bill")
@@ -89,7 +89,7 @@ model Table {
   type       String
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
-  location   Location? @relation(fields: [locationId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  location   Location? @relation(fields: [locationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   bills      Bill[]
 
   @@map("table")
@@ -98,6 +98,7 @@ model Table {
 model Location {
   id        String   @id @default(uuid())
   name      String
+  position  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tables    Table[]
@@ -109,6 +110,7 @@ model Menu {
   id          String        @id @default(uuid())
   name        String
   active      Boolean       @default(true)
+  price       Float         @default(0)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   menuSection MenuSection[]

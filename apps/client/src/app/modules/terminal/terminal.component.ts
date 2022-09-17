@@ -18,22 +18,21 @@ import { CheckoutComponent } from './components/checkout/checkout.component';
   providers: [DialogService],
 })
 export class TerminalComponent implements OnInit {
-  public bills: BillWithProducts[] = [];
-  public selectedBill: BillWithProducts | null = null;
-
   public categories: CategoryWithProducts[] = [];
-  public selectedCategory: CategoryWithProducts | null = null;
+  public bills: BillWithProducts[] = [];
 
+  public selectedBill: BillWithProducts | null = null;
   public selectedItem: IBillProduct | null = null;
-  public selectedItemId: string | null = null;
+
+  public selectedCategory: CategoryWithProducts | null = null;
 
   constructor(
     private productsService: ProductsService,
     private billService: BillsService,
-    public dialogService: DialogService
+    private dialogService: DialogService
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.productsService.getAllProducts().subscribe((categories) => {
       this.categories = categories;
       this.selectedCategory = categories[0];
@@ -50,11 +49,11 @@ export class TerminalComponent implements OnInit {
     });
   }
 
-  onSelectBill(bill: BillWithProducts) {
+  selectBill(bill: BillWithProducts) {
     this.selectedBill = bill;
   }
 
-  onSelectCategory(category: CategoryWithProducts) {
+  selectCategory(category: CategoryWithProducts) {
     this.selectedCategory = category;
   }
 

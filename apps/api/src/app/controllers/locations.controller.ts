@@ -4,11 +4,11 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
 import { DBService } from '../services/db.service';
+import { Location } from '@pos/models';
 
 @Controller('locations')
 export class LocationsController {
@@ -20,7 +20,7 @@ export class LocationsController {
   }
 
   @Post()
-  create(@Body() data: any) {
+  create(@Body() data: Location) {
     return this.dbService.location.create({ data });
   }
 
@@ -30,10 +30,11 @@ export class LocationsController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() data: any) {
-    return this.dbService.location.update({
+  update(@Param('id') id: string, @Body() data: Location) {
+    return this.dbService.location.upsert({
       where: { id },
-      data,
+      create: data,
+      update: data,
     });
   }
 

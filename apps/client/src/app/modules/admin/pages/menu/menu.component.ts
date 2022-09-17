@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MenusService } from '@pos/client/services/menu.service';
 import { SectionsService } from '@pos/client/services/sections.service';
 

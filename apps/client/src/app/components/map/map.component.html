@@ -1,62 +1,106 @@
 <div class="actions">
-  <button pButton (click)="addItem('table')" type="button">Mesa</button>
-  <button pButton (click)="addItem('text')" type="button">Texto</button>
-  <button pButton (click)="addItem('circle')" type="button">Redonda</button>
-  <button pButton (click)="onSave()" type="button" class="p-button-success">
-    Guardar
-  </button>
-  <hr />
-  <form *ngIf="form" [formGroup]="form">
-    <div *ngFor="let option of formOptions">
-      <div [ngSwitch]="option.type">
-        <ng-container *ngSwitchCase="'text'">
-          <label>{{ option['name'] }}</label>
-          <input [formControlName]="option.key" type="text" pInputText />
-        </ng-container>
-
-        <ng-container *ngSwitchCase="'number'">
-          <label>{{ option['name'] }}</label>
-          <p-inputNumber
-            [formControlName]="option.key"
-            [step]="option['step'] ?? 1"
-            [min]="option['min'] ?? 0"
-            [max]="option['max']"
-            [showButtons]="true"
-            buttonLayout="horizontal"
-            spinnerMode="horizontal"
-            decrementButtonClass="p-button-danger"
-            incrementButtonClass="p-button-success"
-            incrementButtonIcon="pi pi-plus"
-            decrementButtonIcon="pi pi-minus"></p-inputNumber>
-        </ng-container>
-      </div>
-    </div>
-  </form>
-  <hr />
-
   <button
-    *ngIf="selectedItem"
     pButton
-    (click)="onDelete()"
+    (click)="addItem('table')"
     type="button"
-    class="p-button-danger">
-    Eliminar
+    icon="pi pi-stop"
+    label="Mesa"></button>
+  <button
+    pButton
+    (click)="addItem('circle')"
+    type="button"
+    icon="pi pi-circle"
+    label="Redonda"></button>
+  <div class="separator"></div>
+  <button
+    pButton
+    (click)="addItem('text')"
+    type="button"
+    icon="pi pi-pencil"
+    label="Texto"></button>
+  <button
+    pButton
+    (click)="onSave()"
+    type="button"
+    class="p-button-success save">
+    Guardar
   </button>
 </div>
 
 <div class="map-container">
-  <div class="locations">
-    <div
-      class="location"
-      *ngFor="let location of locations"
-      (click)="onChangeLocation(location.id!)">
-      <button pButton>{{ location.name }}</button>
-    </div>
-    <button pButton (click)="onCreateLocation()">
-      <i class="pi pi-plus"></i>
-    </button>
-  </div>
   <div class="map">
     <div id="canvas"></div>
+    <div class="location-name" *ngIf="selectedLocation">
+      <input type="text" pInputText [(ngModel)]="selectedLocation.name" />
+      <button
+        pButton
+        icon="pi pi-trash"
+        class="p-button-rounded p-button-text p-button-icon-only p-button-danger"
+        (click)="deleteLocation($event)"></button>
+      <p-confirmPopup></p-confirmPopup>
+    </div>
+    <div class="options" *ngIf="form">
+      <form [formGroup]="form">
+        <div *ngFor="let option of formOptions">
+          <div [ngSwitch]="option.type" class="item">
+            <ng-container *ngSwitchCase="'text'">
+              <label>{{ option['name'] }}</label>
+              <input [formControlName]="option.key" type="text" pInputText />
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'number'">
+              <label>{{ option['name'] }}</label>
+              <p-inputNumber
+                [formControlName]="option.key"
+                [step]="option['step'] ?? 1"
+                [min]="option['min'] ?? 0"
+                [max]="option['max']"
+                [showButtons]="true"
+                buttonLayout="horizontal"
+                spinnerMode="horizontal"
+                decrementButtonClass="p-button-danger"
+                incrementButtonClass="p-button-success"
+                incrementButtonIcon="pi pi-plus"
+                decrementButtonIcon="pi pi-minus"></p-inputNumber>
+            </ng-container>
+          </div>
+        </div>
+
+        <button
+          *ngIf="selectedItem"
+          pButton
+          (click)="onDelete()"
+          type="button"
+          class="delete p-button-danger">
+          Eliminar
+        </button>
+      </form>
+    </div>
+  </div>
+  <div
+    class="locations"
+    cdkDropList
+    cdkDropListOrientation="horizontal"
+    (cdkDropListDropped)="orderLocation($event)">
+    <div
+      class="location"
+      cdkDrag
+      *ngFor="let location of locations"
+      (click)="changeLocation(location!)">
+      <button
+        pButton
+        [class]="{
+          'p-button-outlined': location.id !== selectedLocation?.id,
+          'location-button': true
+        }">
+        {{ location.name }}
+      </button>
+    </div>
+    <button
+      pButton
+      (click)="createLocation()"
+      class="p-button-secondary"
+      icon="pi pi-plus"
+      label="Nueva localización"></button>
   </div>
 </div>

@@ -1,34 +1,37 @@
 <div [formGroup]="form">
   <div class="options">
     <input pInputText type="text" placeholder="Nombre" formControlName="name" />
+    <p-inputNumber
+      placeholder="Precio"
+      [min]="0"
+      mode="currency"
+      currency="EUR"
+      locale="es-ES"
+      formControlName="price"></p-inputNumber>
     <p-checkbox
       label="Activado"
       [binary]="true"
-      [formControl]="$any(form.get('active'))"
-    ></p-checkbox>
-    <button pButton class="left" (click)="onSave()">Guardar</button>
+      [formControl]="$any(form.get('active'))"></p-checkbox>
+    <button pButton class="left" (click)="save()">Guardar</button>
   </div>
 
   <div class="groups" formArrayName="sections">
     <div
       class="group"
       *ngFor="let sectionsForm of sectionsForm.controls; let i = index"
-      [formGroupName]="i"
-    >
+      [formGroupName]="i">
       <input
         type="text"
         formControlName="name"
         pInputText
-        placeholder="Nombre de la sección"
-      />
+        placeholder="Nombre de la sección" />
       <p-dropdown
         [options]="sections"
         optionLabel="name"
         optionValue="id"
         placeholder="Selecciona una sección"
         formControlName="sectionId"
-        (onChange)="onSectionChange($event.value, i)"
-      ></p-dropdown>
+        (onChange)="sectionChange($event.value, i)"></p-dropdown>
       <p-inputNumber
         formControlName="maxProducts"
         [min]="0"
@@ -38,10 +41,16 @@
         decrementButtonClass="p-button-danger"
         incrementButtonClass="p-button-success"
         incrementButtonIcon="pi pi-plus"
-        decrementButtonIcon="pi pi-minus"
-      ></p-inputNumber>
+        decrementButtonIcon="pi pi-minus"></p-inputNumber>
+
+      <button
+        pButton
+        type="button"
+        label="Eliminar"
+        (click)="deleteSection(i)"
+        class="p-button-text p-button-danger"></button>
     </div>
-    <div class="add" (click)="onAdd()">
+    <div class="add" (click)="add()">
       <i class="pi pi-plus"></i>
     </div>
   </div>
