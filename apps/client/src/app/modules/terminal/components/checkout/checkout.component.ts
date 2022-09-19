@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Bill } from '@pos/models';
+import { IBill } from '@pos/models';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 @Component({
@@ -8,7 +8,7 @@ import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
   styleUrls: ['./checkout.component.scss'],
 })
 export class CheckoutComponent implements OnInit {
-  public bill!: Bill;
+  public bill!: IBill;
 
   public payment = 0;
   public type: 'cash' | 'card' = 'cash';
@@ -23,7 +23,7 @@ export class CheckoutComponent implements OnInit {
     public config: DynamicDialogConfig
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.bill = this.config.data.bill;
   }
 

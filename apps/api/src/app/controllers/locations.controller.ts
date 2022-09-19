@@ -8,7 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { DBService } from '../services/db.service';
-import { Location } from '@pos/models';
+import { ILocation } from '@pos/models';
 
 @Controller('locations')
 export class LocationsController {
@@ -20,7 +20,7 @@ export class LocationsController {
   }
 
   @Post()
-  create(@Body() data: Location) {
+  create(@Body() data: ILocation) {
     return this.dbService.location.create({ data });
   }
 
@@ -30,7 +30,7 @@ export class LocationsController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() data: Location) {
+  update(@Param('id') id: string, @Body() data: ILocation) {
     return this.dbService.location.upsert({
       where: { id },
       create: data,

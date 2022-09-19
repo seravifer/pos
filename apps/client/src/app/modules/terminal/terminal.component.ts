@@ -1,15 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { BillsService } from '@pos/client/services/bill.service';
+import { CategoriesService } from '@pos/client/services/categories.service';
 import { LocationsService } from '@pos/client/services/locations.service';
-import { ProductsService } from '@pos/client/services/products.service';
+import { MenusService } from '@pos/client/services/menu.service';
+import { SectionsService } from '@pos/client/services/sections.service';
 import { TableService } from '@pos/client/services/table.service';
 import {
-  BillWithProducts,
-  IBillProduct,
-  CategoryWithProducts,
-  Product,
-  Table,
-  Location,
+  IBill,
+  IBillItem,
+  ICategory,
+  IProduct,
+  ITable,
+  ILocation,
+  IMenu,
+  ISection,
 } from '@pos/models';
 import { DialogService } from 'primeng/dynamicdialog';
 import { combineLatest } from 'rxjs';
@@ -23,42 +27,50 @@ import { PeopleComponent } from './components/people/people.component';
   styleUrls: ['./terminal.component.scss'],
 })
 export class TerminalComponent implements OnInit {
-  public categories: CategoryWithProducts[] = [];
-  public bills: BillWithProducts[] = [];
-  public locations: Location[] = [];
-  public tables: Table[] = [];
+  public categories: ICategory[] = [];
+  public bills: IBill[] = [];
+  public locations: ILocation[] = [];
+  public tables: ITable[] = [];
+  public menus: IMenu[] = [];
+  public sections: ISection[] = [];
 
-  public selectedBill: BillWithProducts | null = null;
-  public selectedItem: IBillProduct | null = null;
-  public selectedCategory: CategoryWithProducts | null = null;
+  public selectedBill: IBill | null = null;
+  public selectedCategory: ICategory | null = null;
+  public selectedMenus = false;
+
   public pageShowing: 'bill' | 'map' = 'map';
 
   constructor(
-    private productsService: ProductsService,
+    private categoriesService: CategoriesService,
     private billService: BillsService,
     private tableService: TableService,
     private locationsService: LocationsService,
+    private menuService: MenusService,
+    private sectionService: SectionsService,
     private dialogService: DialogService
   ) {}
 
   ngOnInit() {
-    this.productsService.getAllProducts().subscribe((categories) => {
-      this.categories = categories;
-      this.selectedCategory = categories[0];
-    });
-    this.billService.getBills().subscribe((bills) => {
-      this.bills = bills;
-    });
     combineLatest({
+      categories: this.categoriesService.getAllProducts(),
+      bills: this.billService.getBills(),
       locations: this.locationsService.getLocations(),
       tables: this.tableService.getTables(),
-    }).subscribe(({ locations, tables }) => {
-      this.locations = locations;
-      this.tables = tables;
-    });
+      menus: this.menuService.getMenus(),
+      sections: this.sectionService.getSections(),
+    }).subscribe(
+      ({ locations, tables, categories, bills, menus, sections }) => {
+        this.categories = categories;
+        this.bills = bills;
+        this.locations = locations;
+        this.tables = tables;
+        this.menus = menus;
+        this.sections = sections;
+      }
+    );
   }
 
-  onSelectTable(table: Table) {
+  onSelectTable(table: ITable) {
     const bill = this.bills.find((b) => b.tableId === table.id);
     if (bill) {
       this.selectedBill = bill;
@@ -75,15 +87,25 @@ export class TerminalComponent implements OnInit {
     this.pageShowing = 'bill';
   }
 
-  selectBill(bill: BillWithProducts) {
+  selectBill(bill: IBill) {
     this.selectedBill = bill;
   }
 
-  selectCategory(category: CategoryWithProducts) {
+  selectCategory(category: ICategory) {
     this.selectedCategory = category;
+    this.selectedMenus = false;
   }
 
-  onSelectProduct(product: Product) {
+  selectMenu() {
+    this.selectedCategory = null;
+    this.selectedMenus = true;
+  }
+
+  onSelectMenu(data: any) {
+    console.log(data);
+  }
+
+  onSelectProduct(product: IProduct) {
     if (!this.selectedBill) {
       return;
     }
@@ -92,11 +114,9 @@ export class TerminalComponent implements OnInit {
     );
     if (exists) {
       exists.quantity++;
-      this.billService
-        .updateBillProduct(this.selectedBill.id, exists)
-        .subscribe();
+      this.billService.updateBillItem(this.selectedBill.id, exists).subscribe();
     } else {
-      const newProduct: IBillProduct = {
+      const newProduct: IBillItem = {
         id: uuid(),
         name: product.name,
         productId: product.id,
@@ -105,13 +125,13 @@ export class TerminalComponent implements OnInit {
       };
       this.selectedBill.products.push(newProduct);
       this.billService
-        .updateBillProduct(this.selectedBill.id, newProduct)
+        .updateBillItem(this.selectedBill.id, newProduct)
         .subscribe();
     }
     this.calcTotal();
   }
 
-  changeQuantity(product: IBillProduct, quantity: number) {
+  changeQuantity(product: IBillItem, quantity: number) {
     if (!this.selectedBill) {
       return;
     }
@@ -121,11 +141,11 @@ export class TerminalComponent implements OnInit {
         (val) => val.productId !== product.productId
       );
       this.billService
-        .deleteBillProduct(this.selectedBill.id, product)
+        .deleteBillItem(this.selectedBill.id, product)
         .subscribe();
     } else {
       this.billService
-        .updateBillProduct(this.selectedBill.id, product)
+        .updateBillItem(this.selectedBill.id, product)
         .subscribe();
     }
     this.calcTotal();
@@ -142,14 +162,14 @@ export class TerminalComponent implements OnInit {
       .onClose.subscribe((people: number) => {
         if (!people || !this.selectedBill) return;
         this.selectedBill.people = people;
-        this.billService.updateBill(this.selectedBill).subscribe();
+        this.updateBill();
       });
   }
 
   closeBill() {
     if (!this.selectedBill) return;
     this.selectedBill.closedAt = new Date();
-    this.billService.updateBill(this.selectedBill).subscribe();
+    this.updateBill();
     this.bills = this.bills.filter((val) => !val.closedAt);
     this.selectedBill = null;
     this.pageShowing = 'map';
@@ -166,7 +186,7 @@ export class TerminalComponent implements OnInit {
       .onClose.subscribe((payment: number) => {
         if (!payment || !this.selectedBill) return;
         this.selectedBill.paid = this.selectedBill.paid + payment;
-        this.billService.updateBill(this.selectedBill).subscribe();
+        this.updateBill();
       });
   }
 
@@ -178,6 +198,14 @@ export class TerminalComponent implements OnInit {
       (acc, cur) => acc + cur.price * cur.quantity,
       0
     );
-    this.billService.updateBill(this.selectedBill).subscribe();
+    this.updateBill();
+  }
+
+  updateBill() {
+    if (!this.selectedBill) {
+      return;
+    }
+    const { products, ...bill } = this.selectedBill;
+    this.billService.updateBill(bill).subscribe();
   }
 }

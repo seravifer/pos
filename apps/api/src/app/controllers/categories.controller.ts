@@ -18,14 +18,23 @@ export class CategoriesController {
     return this.dbService.category.findMany();
   }
 
-  @Post()
-  create(@Body() data: any) {
-    return this.dbService.category.create({ data });
+  @Get('/products')
+  getAll() {
+    return this.dbService.category.findMany({
+      include: {
+        products: true,
+      },
+    });
   }
 
   @Get(':id')
   getById(@Param('id') id: string) {
     return this.dbService.category.findUnique({ where: { id } });
+  }
+
+  @Post()
+  create(@Body() data: any) {
+    return this.dbService.category.create({ data });
   }
 
   @Put(':id')

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Category, Product } from '@pos/models';
+import { ICategory, IProduct } from '@pos/models';
 import { ProductsService } from '@pos/client/services/products.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CategoriesService } from '@pos/client/services/categories.service';
@@ -10,10 +10,10 @@ import { CategoriesService } from '@pos/client/services/categories.service';
   styleUrls: ['./products.component.scss'],
 })
 export class ProductsComponent implements OnInit {
-  products: Product[] = [];
-  categories: Category[] = [];
-  product: Partial<Product> = {};
-  selectedProducts!: Product[] | null;
+  products: IProduct[] = [];
+  categories: ICategory[] = [];
+  product: Partial<IProduct> = {};
+  selectedProducts: IProduct[] | null = null;
   productDialog = false;
   submitted = false;
 
@@ -46,7 +46,7 @@ export class ProductsComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.selectedProducts?.forEach((product) => {
-          this.productsService.deleteProduct(product).subscribe();
+          this.productsService.deleteProduct(product.id).subscribe();
         });
         this.products = this.products.filter(
           (val) => !this.selectedProducts?.includes(val)
@@ -62,18 +62,18 @@ export class ProductsComponent implements OnInit {
     });
   }
 
-  editProduct(product: Product) {
+  editProduct(product: IProduct) {
     this.product = { ...product };
     this.productDialog = true;
   }
 
-  deleteProduct(product: Product) {
+  deleteProduct(product: IProduct) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete ' + product.name + '?',
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.productsService.deleteProduct(product).subscribe();
+        this.productsService.deleteProduct(product.id).subscribe();
         this.products = this.products.filter((val) => val.id !== product.id);
         this.product = {};
 
@@ -98,8 +98,10 @@ export class ProductsComponent implements OnInit {
     if (this.product?.name?.trim()) {
       if (this.product.id) {
         this.products[this.findIndexById(this.product.id)] = this
-          .product as Product;
-        this.productsService.updateProduct(this.product as Product).subscribe();
+          .product as IProduct;
+        this.productsService
+          .updateProduct(this.product as IProduct)
+          .subscribe();
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',
@@ -107,8 +109,10 @@ export class ProductsComponent implements OnInit {
           life: 3000,
         });
       } else {
-        this.products.push(this.product as Product);
-        this.productsService.createProduct(this.product as Product).subscribe();
+        this.products.push(this.product as IProduct);
+        this.productsService
+          .createProduct(this.product as IProduct)
+          .subscribe();
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',

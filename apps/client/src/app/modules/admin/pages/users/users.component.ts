@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService } from '@pos/client/services/users.service';
-import { User } from '@pos/models';
+import { IUser } from '@pos/models';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
@@ -9,9 +9,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements OnInit {
-  users: User[] = [];
-  user: Partial<User> = {};
-  selectedUsers!: User[] | null;
+  users: IUser[] = [];
+  user: Partial<IUser> = {};
+  selectedUsers: IUser[] | null = null;
   userDialog = false;
   submitted = false;
 
@@ -54,12 +54,12 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  editUser(user: User) {
+  editUser(user: IUser) {
     this.user = { ...user };
     this.userDialog = true;
   }
 
-  deleteUser(user: User) {
+  deleteUser(user: IUser) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete ' + user.name + '?',
       header: 'Confirm',
@@ -89,8 +89,8 @@ export class UsersComponent implements OnInit {
 
     if (this.user?.name?.trim()) {
       if (this.user.id) {
-        this.users[this.findIndexById(this.user.id)] = this.user as User;
-        this.usersService.updateUser(this.user as User).subscribe();
+        this.users[this.findIndexById(this.user.id)] = this.user as IUser;
+        this.usersService.updateUser(this.user as IUser).subscribe();
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',
@@ -98,8 +98,8 @@ export class UsersComponent implements OnInit {
           life: 3000,
         });
       } else {
-        this.users.push(this.user as User);
-        this.usersService.createUser(this.user as User).subscribe();
+        this.users.push(this.user as IUser);
+        this.usersService.createUser(this.user as IUser).subscribe();
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',

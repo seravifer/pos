@@ -7,7 +7,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { MenuDto } from '@pos/models';
+import { INewMenu } from '@pos/models';
 import { DBService } from '../services/db.service';
 
 @Controller('menus')
@@ -15,14 +15,30 @@ export class MenusController {
   constructor(private readonly dbService: DBService) {}
 
   @Get()
-  get() {
-    return this.dbService.menu.findMany();
+  async get() {
+    const menus = await this.dbService.menu.findMany({
+      include: {
+        menuSection: true,
+      },
+    });
+    return menus.map((menu) => {
+      const { menuSection, ...section } = menu;
+      return {
+        ...section,
+        sections: menuSection.map((el) => {
+          return {
+            sectionId: el.sectionId,
+            name: el.name,
+            maxProducts: el.maxProducts,
+          };
+        }),
+      };
+    });
   }
 
   @Post()
-  create(@Body() data: MenuDto) {
+  create(@Body() data: INewMenu) {
     const { sections, ...menu } = data;
-    console.log(menu);
     return this.dbService.menu.create({
       data: {
         ...menu,
@@ -65,7 +81,7 @@ export class MenusController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() data: MenuDto) {
+  update(@Param('id') id: string, @Body() data: INewMenu) {
     const { sections, ...menu } = data;
     const deleteRelation = this.dbService.menuSection.deleteMany({
       where: {

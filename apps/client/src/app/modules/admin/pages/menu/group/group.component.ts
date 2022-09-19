@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenusService } from '@pos/client/services/menu.service';
-import { Section } from '@pos/models';
+import { ISection } from '@pos/models';
 import { SectionsService } from '@pos/client/services/sections.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { SectionsService } from '@pos/client/services/sections.service';
 export class GroupComponent implements OnInit {
   public id = this.route.snapshot.params['id'];
 
-  public sections: Section[] = [];
+  public sections: ISection[] = [];
 
   public form = new FormGroup({
     name: new FormControl('', { nonNullable: true }),

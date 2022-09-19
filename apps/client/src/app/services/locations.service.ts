@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Location } from '@pos/models';
+import { ILocation } from '@pos/models';
 import { environment } from '@pos/client/environment';
 import { map } from 'rxjs';
 
@@ -12,22 +12,25 @@ export class LocationsService {
 
   getLocations() {
     return this.http
-      .get<Location[]>(`${environment.apiUrl}/locations`)
+      .get<ILocation[]>(`${environment.apiUrl}/locations`)
       .pipe(
         map((locations) => locations.sort((a, b) => a.position - b.position))
       );
   }
 
-  createLocation(product: Partial<Location>) {
-    return this.http.post<Location>(`${environment.apiUrl}/locations`, product);
+  createLocation(product: Partial<ILocation>) {
+    return this.http.post<ILocation>(
+      `${environment.apiUrl}/locations`,
+      product
+    );
   }
 
   getLocation(id: string) {
-    return this.http.get<Location>(`${environment.apiUrl}/locations/${id}`);
+    return this.http.get<ILocation>(`${environment.apiUrl}/locations/${id}`);
   }
 
-  updateLocation(product: Partial<Location>) {
-    return this.http.put<Location>(
+  updateLocation(product: Partial<ILocation>) {
+    return this.http.put<ILocation>(
       `${environment.apiUrl}/locations/${product.id}`,
       product
     );

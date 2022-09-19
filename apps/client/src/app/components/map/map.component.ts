@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { Node } from './nodes/node';
 import { MapService } from './map.service';
-import { Location, Table } from '@pos/models';
+import { ILocation, ITable } from '@pos/models';
 import { v4 as uuid } from 'uuid';
 import { ItemFormOptions, ItemType } from './types';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -24,21 +24,21 @@ import Konva from 'konva';
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements AfterContentInit, OnChanges {
-  @Input() locations: Partial<Location>[] = [];
-  @Input() tables: Table[] = [];
+  @Input() locations: Partial<ILocation>[] = [];
+  @Input() tables: ITable[] = [];
   @Input() editorMode = false;
 
-  @Output() selected = new EventEmitter<Table>();
+  @Output() selected = new EventEmitter<ITable>();
   @Output() save = new EventEmitter<{
-    tables: Table[];
-    locations: Partial<Location>[];
+    tables: ITable[];
+    locations: Partial<ILocation>[];
   }>();
 
   private canvas!: Konva.Stage;
   private activeLayer?: Konva.Layer;
 
   public selectedItem?: Node;
-  public selectedLocation?: Partial<Location>;
+  public selectedLocation?: Partial<ILocation>;
 
   public form?: FormGroup;
   public formOptions?: ItemFormOptions[];
@@ -94,7 +94,7 @@ export class MapComponent implements AfterContentInit, OnChanges {
     }
   }
 
-  changeLocation(location: Partial<Location>) {
+  changeLocation(location: Partial<ILocation>) {
     this.activeLayer?.hide();
     this.canvas.getLayer();
     this.activeLayer = this.canvas

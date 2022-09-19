@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LocationsService } from '@pos/client/services/locations.service';
 import { TableService } from '@pos/client/services/table.service';
-import { Table, Location } from '@pos/models';
+import { ITable, ILocation } from '@pos/models';
 import { combineLatest } from 'rxjs';
 
 @Component({
@@ -10,8 +10,8 @@ import { combineLatest } from 'rxjs';
   styleUrls: ['./map-editor.component.scss'],
 })
 export class MapEditorComponent implements OnInit {
-  public locations: Partial<Location>[] = [];
-  public tables: Table[] = [];
+  public locations: Partial<ILocation>[] = [];
+  public tables: ITable[] = [];
 
   constructor(
     private tableService: TableService,
@@ -32,8 +32,8 @@ export class MapEditorComponent implements OnInit {
     tables,
     locations,
   }: {
-    tables: Table[];
-    locations: Partial<Location>[];
+    tables: ITable[];
+    locations: Partial<ILocation>[];
   }) {
     this.tableService.createOrUpdateTables(tables).subscribe();
     locations.forEach((location, position) => {

@@ -18,15 +18,6 @@ export class ProductsController {
     return this.dbService.product.findMany();
   }
 
-  @Get('/all')
-  getAll() {
-    return this.dbService.category.findMany({
-      include: {
-        products: true,
-      },
-    });
-  }
-
   @Post()
   create(@Body() data: any) {
     return this.dbService.product.create({ data });

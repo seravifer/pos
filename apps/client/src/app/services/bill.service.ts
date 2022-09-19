@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Bill, BillWithProducts, IBillProduct } from '@pos/models';
+import { IBill, IBillItem, INewBill } from '@pos/models';
 import { environment } from '@pos/client/environment';
-import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,64 +10,41 @@ export class BillsService {
   constructor(private http: HttpClient) {}
 
   getBills() {
-    return this.http
-      .get<BillWithProducts[]>(`${environment.apiUrl}/bills`)
-      .pipe(
-        map((bills: BillWithProducts[]) => {
-          return bills.map((bill: BillWithProducts) => {
-            return {
-              ...bill,
-              products: bill.products.map((product: any) => {
-                return {
-                  ...product,
-                  name: product.product.name,
-                };
-              }),
-            };
-          });
-        })
-      );
-  }
-
-  createBill(bill: Partial<Bill>) {
-    return this.http.post<BillWithProducts>(
-      `${environment.apiUrl}/bills`,
-      bill
-    );
+    return this.http.get<IBill[]>(`${environment.apiUrl}/bills`);
   }
 
   getBill(id: string) {
-    return this.http.get<BillWithProducts>(`${environment.apiUrl}/bills/${id}`);
+    return this.http.get<IBill>(`${environment.apiUrl}/bills/${id}`);
   }
 
-  updateBill(bill: BillWithProducts) {
-    const { products, ...billData } = bill;
-    return this.http.put<BillWithProducts>(
-      `${environment.apiUrl}/bills/${bill.id}`,
-      billData
-    );
+  createBill(bill: INewBill) {
+    return this.http.post<IBill>(`${environment.apiUrl}/bills`, bill);
   }
 
-  deleteBill(bill: BillWithProducts) {
+  updateBill(bill: INewBill) {
+    return this.http.put<IBill>(`${environment.apiUrl}/bills/${bill.id}`, bill);
+  }
+
+  deleteBill(bill: IBill) {
     return this.http.delete(`${environment.apiUrl}/bills/${bill.id}`);
   }
 
-  getBillProducts(id: string) {
-    return this.http.get<IBillProduct[]>(
-      `${environment.apiUrl}/bills/${id}/products`
+  getBillItems(id: string) {
+    return this.http.get<IBillItem[]>(
+      `${environment.apiUrl}/bills/${id}/items`
     );
   }
 
-  updateBillProduct(id: string, product: IBillProduct) {
-    return this.http.post<Bill>(
-      `${environment.apiUrl}/bills/${id}/products`,
+  updateBillItem(id: string, product: IBillItem) {
+    return this.http.post<IBill>(
+      `${environment.apiUrl}/bills/${id}/items`,
       product
     );
   }
 
-  deleteBillProduct(id: string, product: IBillProduct) {
+  deleteBillItem(id: string, product: IBillItem) {
     return this.http.delete(
-      `${environment.apiUrl}/bills/${id}/products/${product.id}`
+      `${environment.apiUrl}/bills/${id}/items/${product.id}`
     );
   }
 }

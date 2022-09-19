@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Table as ITable } from '@pos/models';
+import { ITable } from '@pos/models';
 import { v4 as uuid } from 'uuid';
 import { TableNode } from './nodes/table';
 import { TextNode } from './nodes/text';
 import { Node } from './nodes/node';
 import { CircleNode } from './nodes/circle';
-import Konva from 'konva';
 import { ItemType } from './types';
+import Konva from 'konva';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {

@@ -72,11 +72,11 @@ main {
 
   .categories {
     display: flex;
-    height: 240px;
+    flex-wrap: wrap;
     gap: 20px;
-    padding-bottom: 20px;
+    padding-bottom: 40px;
     border-bottom: 1px solid #ccc;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 
     .item {
       display: flex;

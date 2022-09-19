@@ -7,7 +7,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Table } from '@pos/models';
+import { ITable } from '@pos/models';
 import { DBService } from '../services/db.service';
 
 @Controller('tables')
@@ -20,7 +20,7 @@ export class TablesController {
   }
 
   @Post()
-  createOrUpdate(@Body() table: Table) {
+  createOrUpdate(@Body() table: ITable) {
     return this.dbService.table.upsert({
       where: {
         id: table.id,
@@ -31,7 +31,7 @@ export class TablesController {
   }
 
   @Post('/_bulk')
-  createOrUpdateAll(@Body() tables: Table[]) {
+  createOrUpdateAll(@Body() tables: ITable[]) {
     const deleteAll = this.dbService.table.deleteMany({
       where: {
         id: {
@@ -57,7 +57,7 @@ export class TablesController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() data: Table) {
+  update(@Param('id') id: string, @Body() data: ITable) {
     return this.dbService.table.update({
       where: { id },
       data,

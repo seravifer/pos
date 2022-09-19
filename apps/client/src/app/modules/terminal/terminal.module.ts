@@ -16,6 +16,7 @@ import { TimeComponent } from './components/time/time.component';
 import { SelectPipe } from '@pos/client/pipes/select.pipe';
 import { PeopleComponent } from './components/people/people.component';
 import { CalculatorModule } from '@pos/client/components/calculator/calculator.module';
+import { MenusComponent } from './components/menus/menus.component';
 
 const routes: Routes = [{ path: '', component: TerminalComponent }];
 
@@ -26,6 +27,7 @@ const routes: Routes = [{ path: '', component: TerminalComponent }];
     TablesComponent,
     TimeComponent,
     PeopleComponent,
+    MenusComponent,
   ],
   providers: [DialogService],
   imports: [

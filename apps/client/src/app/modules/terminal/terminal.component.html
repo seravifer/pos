@@ -18,6 +18,10 @@
         <img [src]="'/assets/icons/' + category.icon" />
         <div>{{ category.name }}</div>
       </div>
+      <div class="category item" (click)="selectMenu()">
+        <img [src]="'/assets/icons/a'" />
+        <div>Menus</div>
+      </div>
     </div>
     <ng-container *ngIf="selectedCategory">
       <h2>{{ selectedCategory.name }}</h2>
@@ -33,6 +37,12 @@
           <div class="price">{{ product.price | currency: 'EUR' }}</div>
         </div>
       </div>
+    </ng-container>
+    <ng-container *ngIf="selectedMenus">
+      <pos-menus
+        [menus]="menus"
+        [sections]="sections"
+        (selectedItems)="onSelectMenu($event)"></pos-menus>
     </ng-container>
   </div>
   <div class="summary">

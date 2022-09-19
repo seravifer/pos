@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Bill } from '@pos/models';
+import { IBill } from '@pos/models';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 @Component({
@@ -8,7 +8,7 @@ import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
   styleUrls: ['./people.component.scss'],
 })
 export class PeopleComponent implements OnInit {
-  public bill!: Bill;
+  public bill!: IBill;
   public people = 0;
 
   constructor(

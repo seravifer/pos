@@ -7,7 +7,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { SectionWithProducts } from '@pos/models';
+import { ISection } from '@pos/models';
 import { DBService } from '@pos/api/services/db.service';
 
 @Controller('sections')
@@ -15,12 +15,27 @@ export class SectionsController {
   constructor(private readonly dbService: DBService) {}
 
   @Get()
-  getAll() {
-    return this.dbService.section.findMany();
+  async getAll() {
+    const sections = await this.dbService.section.findMany({
+      include: {
+        sectionProduct: {
+          select: {
+            product: true,
+          },
+        },
+      },
+    });
+    return sections.map((section) => {
+      const { sectionProduct, ...sectionData } = section;
+      return {
+        ...sectionData,
+        products: sectionProduct.map((el) => el.product),
+      };
+    });
   }
 
   @Post()
-  create(@Body() data: SectionWithProducts) {
+  create(@Body() data: ISection) {
     const { products, ...section } = data;
     return this.dbService.section.create({
       data: {
@@ -39,7 +54,7 @@ export class SectionsController {
   }
 
   @Get(':id')
-  async getById(@Param('id') id: string): Promise<SectionWithProducts> {
+  async getById(@Param('id') id: string): Promise<ISection> {
     const data = await this.dbService.section.findUnique({
       where: { id },
       include: {
@@ -58,7 +73,7 @@ export class SectionsController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() data: SectionWithProducts) {
+  async update(@Param('id') id: string, @Body() data: ISection) {
     const { products, ...section } = data;
     const deleteRelation = this.dbService.sectionProduct.deleteMany({
       where: {

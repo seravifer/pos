@@ -6,7 +6,7 @@ import { BillsController } from './controllers/bills.controller';
 import { UsersController } from './controllers/users.controller';
 import { TablesController } from './controllers/tables.controller';
 import { LocationsController } from './controllers/locations.controller';
-import { BillProductsController } from './controllers/bill-products.controller';
+import { BillItemsController } from './controllers/bill-items.controller';
 import { MenusController } from './controllers/menu.controller';
 import { SectionsController } from './controllers/sections.controller';
 
@@ -19,7 +19,7 @@ import { SectionsController } from './controllers/sections.controller';
     UsersController,
     TablesController,
     LocationsController,
-    BillProductsController,
+    BillItemsController,
     MenusController,
     SectionsController,
   ],

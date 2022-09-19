@@ -1,0 +1,28 @@
+<div class="products">
+  <div class="item" *ngFor="let menu of menus" (click)="selectMenu(menu)">
+    <div class="color"></div>
+    <div>{{ menu.name }}</div>
+    <div class="price">{{ menu.price | currency: 'EUR' }}</div>
+  </div>
+</div>
+
+<div class="products">
+  <div
+    class="item"
+    *ngFor="let section of menuSections"
+    (click)="selectSection(section)">
+    <div class="color"></div>
+    <div>{{ section.name }}</div>
+  </div>
+</div>
+
+<div class="products">
+  <div
+    class="item"
+    *ngFor="let product of sectionProducts"
+    (click)="selectProduct(product)">
+    <div class="color"></div>
+    <div>{{ product.name }}</div>
+    <div *ngIf="isProductSelected(product)"><i class="pi pi-check"></i></div>
+  </div>
+</div>

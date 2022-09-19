@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoriesService } from '@pos/client/services/categories.service';
-import { Category, ICONS } from '@pos/models';
+import { ICategory, ICONS } from '@pos/models';
 import { MessageService, ConfirmationService } from 'primeng/api';
 
 @Component({
@@ -9,9 +9,9 @@ import { MessageService, ConfirmationService } from 'primeng/api';
   styleUrls: ['./categories.component.scss'],
 })
 export class CategoriesComponent implements OnInit {
-  public categories: Category[] = [];
-  public category: Partial<Category> = {};
-  public selectedCategories!: Category[] | null;
+  public categories: ICategory[] = [];
+  public category: Partial<ICategory> = {};
+  public selectedCategories: ICategory[] | null = null;
   public categoryDialog = false;
   public submitted = false;
 
@@ -66,12 +66,12 @@ export class CategoriesComponent implements OnInit {
     });
   }
 
-  editCategory(category: Category) {
+  editCategory(category: ICategory) {
     this.category = { ...category, icon: category.icon ?? this.ICONS[0] };
     this.categoryDialog = true;
   }
 
-  deleteCategory(product: Category) {
+  deleteCategory(product: ICategory) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete ' + product.name + '?',
       header: 'Confirm',
@@ -104,9 +104,9 @@ export class CategoriesComponent implements OnInit {
     if (this.category?.name?.trim()) {
       if (this.category.id) {
         this.categories[this.findIndexById(this.category.id)] = this
-          .category as Category;
+          .category as ICategory;
         this.categoriesService
-          .updateCategory(this.category as Category)
+          .updateCategory(this.category as ICategory)
           .subscribe();
         this.messageService.add({
           severity: 'success',
@@ -115,9 +115,9 @@ export class CategoriesComponent implements OnInit {
           life: 3000,
         });
       } else {
-        this.categories.push(this.category as Category);
+        this.categories.push(this.category as ICategory);
         this.categoriesService
-          .createCategory(this.category as Category)
+          .createCategory(this.category as ICategory)
           .subscribe();
         this.messageService.add({
           severity: 'success',

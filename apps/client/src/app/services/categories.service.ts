@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Category } from '@pos/models';
+import { ICategory } from '@pos/models';
 import { environment } from '@pos/client/environment';
 
 @Injectable({
@@ -10,28 +10,32 @@ export class CategoriesService {
   constructor(private http: HttpClient) {}
 
   getCategories() {
-    return this.http.get<Category[]>(`${environment.apiUrl}/categories`);
+    return this.http.get<ICategory[]>(`${environment.apiUrl}/categories`);
   }
 
-  createCategory(product: Category) {
-    return this.http.post<Category>(
+  getAllProducts() {
+    return this.http.get<ICategory[]>(`${environment.apiUrl}/categories/all`);
+  }
+
+  createCategory(product: ICategory) {
+    return this.http.post<ICategory>(
       `${environment.apiUrl}/categories`,
       product
     );
   }
 
   getCategory(id: string) {
-    return this.http.get<Category>(`${environment.apiUrl}/categories/${id}`);
+    return this.http.get<ICategory>(`${environment.apiUrl}/categories/${id}`);
   }
 
-  updateCategory(product: Category) {
-    return this.http.put<Category>(
+  updateCategory(product: ICategory) {
+    return this.http.put<ICategory>(
       `${environment.apiUrl}/categories/${product.id}`,
       product
     );
   }
 
-  deleteCategory(product: Category) {
+  deleteCategory(product: ICategory) {
     return this.http.delete(`${environment.apiUrl}/categories/${product.id}`);
   }
 }

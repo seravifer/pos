@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Table } from '@pos/models';
+import { ITable } from '@pos/models';
 import { environment } from '@pos/client/environment';
 import { map } from 'rxjs';
 
@@ -12,13 +12,13 @@ export class TableService {
 
   getTables() {
     return this.http
-      .get<Table[]>(`${environment.apiUrl}/tables`)
+      .get<ITable[]>(`${environment.apiUrl}/tables`)
       .pipe(map((tables) => tables.map((item) => this.parseTable(item))));
   }
 
-  createOrUpdateTables(item: Table[]) {
+  createOrUpdateTables(item: ITable[]) {
     const data = item.map((item) => this.stringifyTable(item));
-    return this.http.post<Table>(`${environment.apiUrl}/tables/_bulk`, data);
+    return this.http.post<ITable>(`${environment.apiUrl}/tables/_bulk`, data);
   }
 
   deleteTables(ids: string[]) {
@@ -29,18 +29,18 @@ export class TableService {
 
   getTable(id: string) {
     return this.http
-      .get<Table>(`${environment.apiUrl}/tables/${id}`)
+      .get<ITable>(`${environment.apiUrl}/tables/${id}`)
       .pipe(map((item) => this.parseTable(item)));
   }
 
-  updateTable(item: Table) {
-    return this.http.put<Table>(
+  updateTable(item: ITable) {
+    return this.http.put<ITable>(
       `${environment.apiUrl}/tables/${item.id}`,
       this.stringifyTable(item)
     );
   }
 
-  deleteTable(item: Table | string) {
+  deleteTable(item: ITable | string) {
     return this.http.delete(
       `${environment.apiUrl}/tables/${
         typeof item === 'string' ? item : item.id
@@ -48,7 +48,7 @@ export class TableService {
     );
   }
 
-  parseTable(item: Table) {
+  parseTable(item: ITable) {
     const { options, ...data } = item;
     return {
       ...data,
@@ -56,7 +56,7 @@ export class TableService {
     };
   }
 
-  stringifyTable(item: Partial<Table>) {
+  stringifyTable(item: Partial<ITable>) {
     const { options, ...data } = item;
     return {
       ...data,

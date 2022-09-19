@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductsService } from '@pos/client/services/products.service';
+import { CategoriesService } from '@pos/client/services/categories.service';
 import { SectionsService } from '@pos/client/services/sections.service';
-import { CategoryWithProducts, Product, Section } from '@pos/models';
+import { ICategory, IProduct, ISection } from '@pos/models';
 
 @Component({
   selector: 'pos-sections',
@@ -11,16 +11,16 @@ import { CategoryWithProducts, Product, Section } from '@pos/models';
 })
 export class SectionsComponent implements OnInit {
   public sourceFilterValue = '';
-  public categories: CategoryWithProducts[] = [];
-  public selectedCategory: CategoryWithProducts | null = null;
-  public products: Product[] = [];
+  public categories: ICategory[] = [];
+  public selectedCategory: ICategory | null = null;
+  public products: IProduct[] = [];
 
   public id = this.route.snapshot.params['id'];
 
-  public section: Partial<Section> = {};
+  public section: Partial<ISection> = {};
 
   constructor(
-    private productsService: ProductsService,
+    private categoriesService: CategoriesService,
     private sectionsService: SectionsService,
     private route: ActivatedRoute,
     private router: Router
@@ -33,7 +33,7 @@ export class SectionsComponent implements OnInit {
         this.products = section.products;
       });
     }
-    this.productsService.getAllProducts().subscribe((categories) => {
+    this.categoriesService.getAllProducts().subscribe((categories) => {
       this.categories = categories;
       this.selectedCategory = categories[0];
     });
