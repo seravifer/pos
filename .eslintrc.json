@@ -31,8 +31,7 @@
               }
             ]
           }
-        ],
-        "@angular-eslint/no-output-native": "off"
+        ]
       }
     },
     {

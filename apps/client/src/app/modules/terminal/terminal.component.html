@@ -1,13 +1,15 @@
 <header>
-  <button
-    pButton
-    label="Mesas"
-    icon="pi pi-table"
-    *ngIf="pageShowing === 'bill'"
-    (click)="pageShowing = 'map'"></button>
   <div class="time"><pos-time></pos-time></div>
 </header>
 <main *ngIf="pageShowing === 'bill'">
+  <div class="options">
+    <button
+      pButton
+      label="Mesas"
+      icon="pi pi-table"
+      class="p-button-lg"
+      (click)="pageShowing = 'map'"></button>
+  </div>
   <div class="items">
     <div class="categories">
       <div
@@ -19,7 +21,7 @@
         <div>{{ category.name }}</div>
       </div>
       <div class="category item" (click)="selectMenu()">
-        <img [src]="'/assets/icons/a'" />
+        <img [src]="'/assets/icons/restaurant-menu.png'" />
         <div>Menus</div>
       </div>
     </div>
@@ -28,11 +30,9 @@
       <div class="products">
         <div
           class="item"
-          (click)="onSelectProduct(product)"
+          (click)="selectProduct(product)"
           *ngFor="let product of selectedCategory.products">
-          <div
-            class="color"
-            [style.background-color]="selectedCategory.color"></div>
+          <div class="color" [style.background-color]="selectedCategory.color"></div>
           <div>{{ product.name }}</div>
           <div class="price">{{ product.price | currency: 'EUR' }}</div>
         </div>
@@ -48,16 +48,14 @@
   <div class="summary">
     <ng-container *ngIf="selectedBill">
       <div class="table">
-        <div class="name">
-          # {{ (selectedBill.tableId | select: tables)?.name }}
-        </div>
+        <div class="name"># {{ (selectedBill.tableId | select: tables)?.name }}</div>
         <div class="people" (click)="changePeople()">
           <i class="pi pi-user"></i>
           {{ selectedBill.people ?? '-' }}
         </div>
       </div>
       <div class="list">
-        <ng-container *ngFor="let item of selectedBill.products">
+        <ng-container *ngFor="let item of selectedBill.billItems">
           <div class="list-item">
             <div class="info">
               <div class="name">{{ item.name }}</div>
@@ -65,7 +63,21 @@
                 {{ item.quantity * item.price | currency: 'EUR' }}
               </div>
             </div>
-            <div class="change-quantity">
+            <div class="menu" *ngIf="item.menuId">
+              <div class="menu-section" *ngFor="let section of item.sections">
+                <div class="section-name">{{ section.section.name }}</div>
+                <div class="section-list" *ngFor="let item of section.products">
+                  <div class="section-list__name">{{ item.name }}</div>
+                  <div class="section-list__price">+ {{ item.supplement | currency: 'EUR' }}</div>
+                </div>
+              </div>
+              <button
+                pButton
+                label="Eliminar"
+                (click)="changeQuantity(item, -1)"
+                class="p-button-text p-button-danger"></button>
+            </div>
+            <div class="change-quantity" *ngIf="item.productId">
               <div class="quantity">
                 <button
                   pButton
@@ -111,10 +123,7 @@
       </div>
 
       <div class="actions">
-        <button
-          pButton
-          class="p-button-outlined p-button-lg"
-          label="Imprimir ticket"></button>
+        <button pButton class="p-button-outlined p-button-lg" label="Imprimir ticket"></button>
         <button
           pButton
           *ngIf="selectedBill.total === selectedBill.paid"
@@ -137,6 +146,6 @@
       [editorMode]="false"
       [locations]="locations"
       [tables]="tables"
-      (selected)="onSelectTable($event)"></pos-map>
+      (selected)="selectTable($event)"></pos-map>
   </div>
 </main>

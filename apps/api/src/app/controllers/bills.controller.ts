@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { IBill, INewBill } from '@pos/models';
 import { Bill } from '@prisma/client';
 import { DBService } from '../services/db.service';
@@ -22,11 +14,30 @@ export class BillsController {
         closedAt: null,
       },
       include: {
-        products: {
+        billItems: {
           include: {
             product: {
               select: {
                 name: true,
+              },
+            },
+            menu: {
+              select: {
+                name: true,
+              },
+            },
+            billSubItem: {
+              include: {
+                product: {
+                  select: {
+                    name: true,
+                  },
+                },
+                section: {
+                  select: {
+                    name: true,
+                  },
+                },
               },
             },
           },
@@ -34,17 +45,30 @@ export class BillsController {
       },
     });
     return data.map((bill) => {
-      const { products, ...rest } = bill;
+      const { billItems, ...data } = bill;
       return {
-        ...rest,
-        products: products.map((product) => {
-          const {
-            product: { name },
-            ...rest
-          } = product;
+        ...data,
+        billItems: billItems.map((item) => {
+          const { product, menu, billSubItem, ...billItemData } = item;
           return {
-            ...rest,
-            name,
+            ...billItemData,
+            name: product?.name ?? menu?.name,
+            sections: billSubItem.map((subitem) => {
+              return {
+                id: subitem.id,
+                section: {
+                  id: subitem.sectionId,
+                  name: subitem.section.name,
+                },
+                products: [
+                  {
+                    id: subitem.productId,
+                    name: subitem.product.name,
+                    supplement: subitem.supplement,
+                  },
+                ],
+              };
+            }),
           };
         }),
       };

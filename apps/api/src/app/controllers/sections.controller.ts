@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { ISection } from '@pos/models';
 import { DBService } from '@pos/api/services/db.service';
 
@@ -19,7 +11,7 @@ export class SectionsController {
     const sections = await this.dbService.section.findMany({
       include: {
         sectionProduct: {
-          select: {
+          include: {
             product: true,
           },
         },
@@ -29,7 +21,12 @@ export class SectionsController {
       const { sectionProduct, ...sectionData } = section;
       return {
         ...sectionData,
-        products: sectionProduct.map((el) => el.product),
+        products: sectionProduct.map((el) => {
+          return {
+            supplement: el.supplement,
+            ...el.product,
+          };
+        }),
       };
     });
   }
@@ -59,7 +56,7 @@ export class SectionsController {
       where: { id },
       include: {
         sectionProduct: {
-          select: {
+          include: {
             product: true,
           },
         },
@@ -68,7 +65,12 @@ export class SectionsController {
     const { sectionProduct, ...section } = data;
     return {
       ...section,
-      products: sectionProduct.map((el) => el.product),
+      products: sectionProduct.map((el) => {
+        return {
+          supplement: el.supplement,
+          ...el.product,
+        };
+      }),
     };
   }
 
@@ -93,11 +95,7 @@ export class SectionsController {
       data: section,
     });
 
-    return this.dbService.$transaction([
-      deleteRelation,
-      createRelation,
-      updateSection,
-    ]);
+    return this.dbService.$transaction([deleteRelation, createRelation, updateSection]);
   }
 
   @Delete(':id')

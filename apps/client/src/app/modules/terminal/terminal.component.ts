@@ -14,6 +14,8 @@ import {
   ILocation,
   IMenu,
   ISection,
+  IBillMenu,
+  INewBillProduct,
 } from '@pos/models';
 import { DialogService } from 'primeng/dynamicdialog';
 import { combineLatest } from 'rxjs';
@@ -56,21 +58,21 @@ export class TerminalComponent implements OnInit {
       bills: this.billService.getBills(),
       locations: this.locationsService.getLocations(),
       tables: this.tableService.getTables(),
-      menus: this.menuService.getMenus(),
+      menus: this.menuService.getMenus({
+        isActive: true,
+      }),
       sections: this.sectionService.getSections(),
-    }).subscribe(
-      ({ locations, tables, categories, bills, menus, sections }) => {
-        this.categories = categories;
-        this.bills = bills;
-        this.locations = locations;
-        this.tables = tables;
-        this.menus = menus;
-        this.sections = sections;
-      }
-    );
+    }).subscribe(({ locations, tables, categories, bills, menus, sections }) => {
+      this.categories = categories;
+      this.bills = bills;
+      this.locations = locations;
+      this.tables = tables;
+      this.menus = menus;
+      this.sections = sections;
+    });
   }
 
-  onSelectTable(table: ITable) {
+  selectTable(table: ITable) {
     const bill = this.bills.find((b) => b.tableId === table.id);
     if (bill) {
       this.selectedBill = bill;
@@ -81,7 +83,7 @@ export class TerminalComponent implements OnInit {
         })
         .subscribe((bill) => {
           this.bills.push(bill);
-          this.selectedBill = { ...bill, products: [] };
+          this.selectedBill = { ...bill, billItems: [] };
         });
     }
     this.pageShowing = 'bill';
@@ -101,32 +103,41 @@ export class TerminalComponent implements OnInit {
     this.selectedMenus = true;
   }
 
-  onSelectMenu(data: any) {
-    console.log(data);
-  }
-
-  onSelectProduct(product: IProduct) {
+  onSelectMenu(data: IBillMenu) {
     if (!this.selectedBill) {
       return;
     }
-    const exists = this.selectedBill.products.find(
-      (val) => val.productId === product.id
-    );
-    if (exists) {
-      exists.quantity++;
-      this.billService.updateBillItem(this.selectedBill.id, exists).subscribe();
+    this.billService.updateBillItem(this.selectedBill.id, data).subscribe();
+    let item = this.selectedBill.billItems.find((val) => val.id === data.id);
+    if (item) {
+      item = data;
     } else {
-      const newProduct: IBillItem = {
+      this.selectedBill.billItems.push(data);
+    }
+    this.calcTotal();
+  }
+
+  selectProduct(selectedProduct: IProduct) {
+    if (!this.selectedBill) {
+      return;
+    }
+    const product = this.selectedBill.billItems.find((val) => val.productId === selectedProduct.id);
+    if (product) {
+      product.quantity++;
+      this.billService.updateBillItem(this.selectedBill.id, product).subscribe();
+    } else {
+      const newProduct: INewBillProduct = {
         id: uuid(),
-        name: product.name,
-        productId: product.id,
-        price: product.price ?? 0,
+        billId: this.selectedBill.id,
+        name: selectedProduct.name,
+        productId: selectedProduct.id,
+        menuId: null,
+        price: selectedProduct.price ?? 0,
+        note: null,
         quantity: 1,
       };
-      this.selectedBill.products.push(newProduct);
-      this.billService
-        .updateBillItem(this.selectedBill.id, newProduct)
-        .subscribe();
+      this.selectedBill.billItems.push(newProduct as IBillItem);
+      this.billService.updateBillItem(this.selectedBill.id, newProduct).subscribe();
     }
     this.calcTotal();
   }
@@ -137,16 +148,12 @@ export class TerminalComponent implements OnInit {
     }
     product.quantity = product.quantity + quantity;
     if (product.quantity < 1) {
-      this.selectedBill.products = this.selectedBill.products.filter(
-        (val) => val.productId !== product.productId
+      this.selectedBill.billItems = this.selectedBill.billItems.filter(
+        (val) => val.id !== product.id
       );
-      this.billService
-        .deleteBillItem(this.selectedBill.id, product)
-        .subscribe();
+      this.billService.deleteBillItem(this.selectedBill.id, product).subscribe();
     } else {
-      this.billService
-        .updateBillItem(this.selectedBill.id, product)
-        .subscribe();
+      this.billService.updateBillItem(this.selectedBill.id, product).subscribe();
     }
     this.calcTotal();
   }
@@ -194,7 +201,7 @@ export class TerminalComponent implements OnInit {
     if (!this.selectedBill) {
       return;
     }
-    this.selectedBill.total = this.selectedBill?.products.reduce(
+    this.selectedBill.total = this.selectedBill?.billItems.reduce(
       (acc, cur) => acc + cur.price * cur.quantity,
       0
     );
@@ -205,7 +212,7 @@ export class TerminalComponent implements OnInit {
     if (!this.selectedBill) {
       return;
     }
-    const { products, ...bill } = this.selectedBill;
+    const { billItems, ...bill } = this.selectedBill;
     this.billService.updateBill(bill).subscribe();
   }
 }

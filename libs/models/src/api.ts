@@ -36,32 +36,53 @@ export type IMenuSection = {
 };
 
 export type ISection = Section & {
-  products: Product[];
+  products: ISectionProduct[];
 };
 
-export type ISectionProduct = SectionProduct;
+export type ISectionProduct = IProduct & { supplement: number };
 
 // Bill
 export type IBill = Bill & {
-  products: IBillItem[];
+  billItems: IBillItem[];
 };
 export type INewBill = Partial<Bill>;
 
 export type IBillItem = {
   id: string;
+
+  billId: string;
+
+  productId: string | null;
+  menuId: string | null;
+
   name: string;
-  productId: string;
   price: number;
   quantity: number;
+  note: string | null;
+  sections?: {
+    id: string;
+    section: {
+      id: string;
+      name: string;
+    };
+    products: {
+      id: string;
+      name: string;
+      supplement: number;
+    }[];
+  }[];
+
+  createdAt: Date;
+  updatedAt: Date;
 };
+export type INewBillProduct = Omit<IBillItem, 'createdAt' | 'updatedAt'>;
+
+export type IBillMenu = IBillItem;
 
 // Products
 export type ICategory = Category & {
-  products: Product[];
+  products: IProduct[];
 };
 
 export type IProduct = Product;
-export type INewProduct = Optional<
-  Omit<IProduct, 'createdAt' | 'updatedAt'>,
-  'id'
->;
+export type INewProduct = Optional<Omit<IProduct, 'createdAt' | 'updatedAt'>, 'id'>;

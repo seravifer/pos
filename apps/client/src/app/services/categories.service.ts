@@ -14,7 +14,9 @@ export class CategoriesService {
   }
 
   getAllProducts() {
-    return this.http.get<ICategory[]>(`${environment.apiUrl}/categories/all`);
+    return this.http.get<ICategory[]>(
+      `${environment.apiUrl}/categories/products`
+    );
   }
 
   createCategory(product: ICategory) {

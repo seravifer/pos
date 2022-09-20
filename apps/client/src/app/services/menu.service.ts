@@ -7,8 +7,11 @@ import { ID, IMenu, INewMenu } from '@pos/models';
 export class MenusService {
   constructor(private http: HttpClient) {}
 
-  getMenus() {
-    return this.http.get<IMenu[]>(`${environment.apiUrl}/menus`);
+  getMenus(params?: { isActive?: boolean }) {
+    params = params ? params : {};
+    return this.http.get<IMenu[]>(`${environment.apiUrl}/menus`, {
+      params,
+    });
   }
 
   getMenu(id: string) {

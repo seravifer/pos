@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CategoriesService } from '@pos/client/services/categories.service';
 import { SectionsService } from '@pos/client/services/sections.service';
-import { ICategory, IProduct, ISection } from '@pos/models';
+import { ICategory, IProduct, ISection, ISectionProduct } from '@pos/models';
 
 @Component({
   selector: 'pos-sections',
@@ -40,13 +40,14 @@ export class SectionsComponent implements OnInit {
   }
 
   onSave() {
+    //FIXME
     if (this.id) {
       this.sectionsService
-        .updateSection({ ...this.section, products: this.products })
+        .updateSection({ ...this.section, products: this.products as ISectionProduct[] })
         .subscribe();
     } else {
       this.sectionsService
-        .createSection({ ...this.section, products: this.products })
+        .createSection({ ...this.section, products: this.products as ISectionProduct[] })
         .subscribe((res) => {
           this.router.navigate([res.id], {
             replaceUrl: true,

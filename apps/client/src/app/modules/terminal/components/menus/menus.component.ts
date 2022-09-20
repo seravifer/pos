@@ -1,71 +1,85 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ISection, INewMenu, IProduct } from '@pos/models';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ISection, IProduct, IMenu, IMenuSection, IBillMenu, ISectionProduct } from '@pos/models';
+import { v4 as uuid } from 'uuid';
 
-type MenuItem = {
-  menuId?: string;
-  sections: {
-    sectionId?: string;
-    products?: string[];
-  }[];
-};
+type CustomSection = ISection & IMenuSection;
 
 @Component({
   selector: 'pos-menus',
   templateUrl: './menus.component.html',
   styleUrls: ['./menus.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MenusComponent {
-  @Input() menus: INewMenu[] = [];
+  @Input() menus: IMenu[] = [];
   @Input() sections: ISection[] = [];
 
-  @Output() selectedItems = new EventEmitter<MenuItem>();
+  @Output() selectedItems = new EventEmitter<IBillMenu>();
 
-  public selectedMenu: INewMenu | null = null;
-  public selectedSection: ISection | null = null;
+  public selectedMenu: IMenu | null = null;
+  public selectedSection: CustomSection | null = null;
 
-  public menuSections: ISection[] = [];
-  public sectionProducts: IProduct[] = [];
+  public menuSections: CustomSection[] = [];
+  public sectionProducts: ISectionProduct[] = [];
 
-  public selected: MenuItem = {
+  public selected: Partial<IBillMenu> = {
+    id: uuid(),
     sections: [],
   };
 
-  constructor() {}
-
-  selectMenu(menu: INewMenu) {
+  selectMenu(menu: IMenu) {
     this.selectedMenu = menu;
-    this.selected.menuId = (menu as any).id;
+    this.selected = {
+      ...this.selected,
+      productId: null,
+      menuId: menu.id,
+      name: menu.name,
+      price: menu.price,
+      quantity: 1,
+      note: null,
+    };
     this.menuSections = menu.sections.map((section) => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return this.sections.find((s) => s.id === section.sectionId)!;
+      const s = this.sections.find((s) => s.id === section.sectionId)!;
+      return {
+        ...s,
+        ...section,
+      };
     });
   }
 
-  selectSection(section: ISection) {
+  selectSection(section: CustomSection) {
     this.selectedSection = section;
     this.sectionProducts = section.products;
   }
 
-  selectProduct(product: IProduct) {
-    const section = this.selected.sections.find(
-      (section) => section.sectionId === this.selectedSection?.id
+  selectProduct(product: ISectionProduct) {
+    const section = this.selected.sections?.find(
+      (section) => section.section?.id === this.selectedSection?.id
     );
     if (section) {
-      section.products = [product.id];
+      section.products = [{ id: product.id, name: product.name, supplement: product.supplement }];
     } else {
-      this.selected.sections.push({
-        sectionId: this.selectedSection?.id,
-        products: [product.id],
+      this.selected.sections?.push({
+        id: uuid(),
+        section: {
+          id: this.selectedSection!.id,
+          name: this.selectedSection!.name,
+        },
+        products: [{ id: product.id, name: product.name, supplement: product.supplement }],
       });
     }
-    this.selectedItems.emit(this.selected);
-    // TODO: change next selection
+
+    this.selectedItems.emit(this.selected as IBillMenu);
     // TODO: check maxProducts
   }
 
+  isSectionCompleted(section: CustomSection) {
+    return this.selected.sections?.some((s) => s.section?.id === section.id && s.products?.length);
+  }
+
   isProductSelected(product: IProduct) {
-    return this.selected.sections.some((section) =>
-      section.products?.some((id) => id === product.id)
+    return this.selected.sections?.some((section) =>
+      section.products?.some((p) => p.id === product.id)
     );
   }
 }

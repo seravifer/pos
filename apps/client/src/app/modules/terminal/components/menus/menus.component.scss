@@ -1,6 +1,7 @@
-.products {
+.list {
   display: flex;
   gap: 20px;
+  margin-bottom: 20px;
 
   .item {
     width: 180px;
@@ -11,9 +12,6 @@
     font-size: 24px;
     cursor: pointer;
     word-break: break-word;
-  }
-
-  .item {
     position: relative;
     background-color: #f3f3f3;
     padding-left: 20px;
@@ -40,5 +38,22 @@
 
     border-bottom-left-radius: 8px;
     border-top-left-radius: 8px;
+  }
+
+  .check {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: green;
+    height: 26px;
+    width: 26px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    i {
+      color: white;
+    }
   }
 }

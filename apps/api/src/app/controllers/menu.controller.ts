@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { INewMenu } from '@pos/models';
 import { DBService } from '../services/db.service';
 
@@ -15,11 +7,13 @@ export class MenusController {
   constructor(private readonly dbService: DBService) {}
 
   @Get()
-  async get() {
+  async get(@Query('isActive') active: boolean) {
+    const where = active ? { active: !!active } : {};
     const menus = await this.dbService.menu.findMany({
       include: {
         menuSection: true,
       },
+      where,
     });
     return menus.map((menu) => {
       const { menuSection, ...section } = menu;
@@ -103,11 +97,7 @@ export class MenusController {
       data: menu,
     });
 
-    return this.dbService.$transaction([
-      deleteRelation,
-      createRelation,
-      updateMenu,
-    ]);
+    return this.dbService.$transaction([deleteRelation, createRelation, updateMenu]);
   }
 
   @Delete(':id')

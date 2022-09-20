@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IBill, IBillItem, INewBill } from '@pos/models';
+import { IBill, IBillItem, INewBill, INewBillProduct } from '@pos/models';
 import { environment } from '@pos/client/environment';
 
 @Injectable({
@@ -29,22 +29,16 @@ export class BillsService {
     return this.http.delete(`${environment.apiUrl}/bills/${bill.id}`);
   }
 
+  // Bill Items
   getBillItems(id: string) {
-    return this.http.get<IBillItem[]>(
-      `${environment.apiUrl}/bills/${id}/items`
-    );
+    return this.http.get<IBillItem[]>(`${environment.apiUrl}/bills/${id}/items`);
   }
 
-  updateBillItem(id: string, product: IBillItem) {
-    return this.http.post<IBill>(
-      `${environment.apiUrl}/bills/${id}/items`,
-      product
-    );
+  updateBillItem(id: string, product: INewBillProduct | IBillItem) {
+    return this.http.post<IBill>(`${environment.apiUrl}/bills/${id}/items`, product);
   }
 
   deleteBillItem(id: string, product: IBillItem) {
-    return this.http.delete(
-      `${environment.apiUrl}/bills/${id}/items/${product.id}`
-    );
+    return this.http.delete(`${environment.apiUrl}/bills/${id}/items/${product.id}`);
   }
 }
