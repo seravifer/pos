@@ -22,7 +22,7 @@ export class BillItemsController {
       quantity: item.quantity,
     };
 
-    const billtem = this.dbService.billItem.upsert({
+    const billItem = this.dbService.billItem.upsert({
       where: {
         id: item.id,
       },
@@ -47,7 +47,7 @@ export class BillItemsController {
         create: data,
       });
     });
-    return this.dbService.$transaction([billtem, ...subitems]);
+    return this.dbService.$transaction([billItem, ...subitems]);
   }
 
   @Delete(':id')

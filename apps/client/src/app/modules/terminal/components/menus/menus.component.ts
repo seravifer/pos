@@ -67,7 +67,7 @@ export class MenusComponent implements OnInit, OnChanges {
   selectProduct(product: ISectionProduct) {
     if (!this.selectedMenu || !this.selectedSection) return;
     const section = this.selected.sections?.find(
-      (section) => section.section?.id === this.selectedSection?.id
+      (section) => section.section?.id === this.selectedSection?.sectionId
     );
     const addedProduct = { id: product.id, name: product.name, supplement: product.supplement };
     if (section) {
@@ -83,7 +83,7 @@ export class MenusComponent implements OnInit, OnChanges {
       this.selected.sections?.push({
         id: uuid(),
         section: {
-          id: this.selectedSection.id,
+          id: this.selectedSection.sectionId,
           name: this.selectedSection.name,
         },
         products: [addedProduct],
@@ -107,7 +107,9 @@ export class MenusComponent implements OnInit, OnChanges {
   }
 
   isSectionCompleted(section: IMenuSection) {
-    return this.selected.sections?.some((s) => s.section?.id === section.id && s.products?.length);
+    return this.selected.sections?.some(
+      (s) => s.section?.id === section.sectionId && s.products?.length
+    );
   }
 
   isProductSelected(product: IProduct) {

@@ -52,7 +52,7 @@ export type IBillItem = {
   quantity: number;
   note: string | null;
   sections?: {
-    id: string;
+    id: string; // FIXME
     section: {
       id: string;
       name: string;
