@@ -18,10 +18,7 @@ export class CheckoutComponent implements OnInit {
     { name: 'Efectivo', code: 'cash', icon: 'pi pi-euro' },
   ];
 
-  constructor(
-    public ref: DynamicDialogRef,
-    public config: DynamicDialogConfig
-  ) {}
+  constructor(public ref: DynamicDialogRef, public config: DynamicDialogConfig) {}
 
   ngOnInit() {
     this.bill = this.config.data.bill;

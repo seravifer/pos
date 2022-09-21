@@ -1,14 +1,4 @@
-import {
-  Bill,
-  Category,
-  Product,
-  Location,
-  Menu,
-  User,
-  Table,
-  Section,
-  SectionProduct,
-} from '@prisma/client';
+import { Bill, Category, Product, Location, Menu, User, Table, Section } from '@prisma/client';
 import { Optional } from './helpers';
 
 export type ID = { id: string };
@@ -30,9 +20,11 @@ export type INewMenu = {
 };
 
 export type IMenuSection = {
+  id: string;
   name: string;
   sectionId: string;
   maxProducts: number;
+  products: ISectionProduct[];
 };
 
 export type ISection = Section & {

@@ -40,9 +40,7 @@ export class UsersComponent implements OnInit {
         this.selectedUsers?.forEach((user) => {
           this.usersService.deleteUser(user).subscribe();
         });
-        this.users = this.users.filter(
-          (val) => !this.selectedUsers?.includes(val)
-        );
+        this.users = this.users.filter((val) => !this.selectedUsers?.includes(val));
         this.selectedUsers = null;
         this.messageService.add({
           severity: 'success',

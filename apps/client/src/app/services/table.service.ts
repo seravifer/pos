@@ -40,12 +40,8 @@ export class TableService {
     );
   }
 
-  deleteTable(item: ITable | string) {
-    return this.http.delete(
-      `${environment.apiUrl}/tables/${
-        typeof item === 'string' ? item : item.id
-      }`
-    );
+  deleteTable(id: string) {
+    return this.http.delete(`${environment.apiUrl}/tables/${id}`);
   }
 
   parseTable(item: ITable) {

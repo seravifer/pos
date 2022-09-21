@@ -3,7 +3,6 @@ import { BillsService } from '@pos/client/services/bill.service';
 import { CategoriesService } from '@pos/client/services/categories.service';
 import { LocationsService } from '@pos/client/services/locations.service';
 import { MenusService } from '@pos/client/services/menu.service';
-import { SectionsService } from '@pos/client/services/sections.service';
 import { TableService } from '@pos/client/services/table.service';
 import {
   IBill,
@@ -13,7 +12,6 @@ import {
   ITable,
   ILocation,
   IMenu,
-  ISection,
   IBillMenu,
   INewBillProduct,
 } from '@pos/models';
@@ -30,15 +28,15 @@ import { PeopleComponent } from './components/people/people.component';
 })
 export class TerminalComponent implements OnInit {
   public categories: ICategory[] = [];
-  public bills: IBill[] = [];
+  public menus: IMenu[] = [];
   public locations: ILocation[] = [];
   public tables: ITable[] = [];
-  public menus: IMenu[] = [];
-  public sections: ISection[] = [];
+  public bills: IBill[] = [];
 
-  public selectedBill: IBill | null = null;
   public selectedCategory: ICategory | null = null;
   public selectedMenus = false;
+  public selectedBill: IBill | null = null;
+  public selectedBillMenu: IBillMenu | null = null;
 
   public pageShowing: 'bill' | 'map' = 'map';
 
@@ -48,7 +46,6 @@ export class TerminalComponent implements OnInit {
     private tableService: TableService,
     private locationsService: LocationsService,
     private menuService: MenusService,
-    private sectionService: SectionsService,
     private dialogService: DialogService
   ) {}
 
@@ -61,14 +58,12 @@ export class TerminalComponent implements OnInit {
       menus: this.menuService.getMenus({
         isActive: true,
       }),
-      sections: this.sectionService.getSections(),
-    }).subscribe(({ locations, tables, categories, bills, menus, sections }) => {
+    }).subscribe(({ locations, tables, categories, bills, menus }) => {
       this.categories = categories;
       this.bills = bills;
       this.locations = locations;
       this.tables = tables;
       this.menus = menus;
-      this.sections = sections;
     });
   }
 
@@ -94,26 +89,34 @@ export class TerminalComponent implements OnInit {
   }
 
   selectCategory(category: ICategory) {
+    this.selectedBillMenu = null;
     this.selectedCategory = category;
     this.selectedMenus = false;
   }
 
   selectMenu() {
+    this.selectedBillMenu = null;
     this.selectedCategory = null;
     this.selectedMenus = true;
   }
 
+  changeMenu(menu: IBillMenu) {
+    this.selectMenu();
+    this.selectedBillMenu = menu;
+  }
+
   onSelectMenu(data: IBillMenu) {
+    this.selectedBillMenu = null;
     if (!this.selectedBill) {
       return;
     }
-    this.billService.updateBillItem(this.selectedBill.id, data).subscribe();
-    let item = this.selectedBill.billItems.find((val) => val.id === data.id);
-    if (item) {
-      item = data;
+    const index = this.selectedBill.billItems.findIndex((val) => val.id === data.id);
+    if (index > -1) {
+      this.selectedBill.billItems[index] = data;
     } else {
       this.selectedBill.billItems.push(data);
     }
+    this.billService.updateBillItem(this.selectedBill.id, data).subscribe();
     this.calcTotal();
   }
 

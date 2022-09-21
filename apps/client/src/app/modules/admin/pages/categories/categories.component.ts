@@ -15,13 +15,7 @@ export class CategoriesComponent implements OnInit {
   public categoryDialog = false;
   public submitted = false;
 
-  public COLORS = [
-    '#264653ff',
-    '#2a9d8fff',
-    '#e9c46aff',
-    '#f4a261ff',
-    '#e76f51ff',
-  ];
+  public COLORS = ['#264653ff', '#2a9d8fff', '#e9c46aff', '#f4a261ff', '#e76f51ff'];
 
   public ICONS = ICONS;
 
@@ -32,9 +26,7 @@ export class CategoriesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.categoriesService
-      .getCategories()
-      .subscribe((data) => (this.categories = data));
+    this.categoriesService.getCategories().subscribe((data) => (this.categories = data));
   }
 
   openNew() {
@@ -52,9 +44,7 @@ export class CategoriesComponent implements OnInit {
         this.selectedCategories?.forEach((product) => {
           this.categoriesService.deleteCategory(product).subscribe();
         });
-        this.categories = this.categories.filter(
-          (val) => !this.selectedCategories?.includes(val)
-        );
+        this.categories = this.categories.filter((val) => !this.selectedCategories?.includes(val));
         this.selectedCategories = null;
         this.messageService.add({
           severity: 'success',
@@ -78,9 +68,7 @@ export class CategoriesComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.categoriesService.deleteCategory(product).subscribe();
-        this.categories = this.categories.filter(
-          (val) => val.id !== product.id
-        );
+        this.categories = this.categories.filter((val) => val.id !== product.id);
         this.category = {};
 
         this.messageService.add({
@@ -103,11 +91,8 @@ export class CategoriesComponent implements OnInit {
 
     if (this.category?.name?.trim()) {
       if (this.category.id) {
-        this.categories[this.findIndexById(this.category.id)] = this
-          .category as ICategory;
-        this.categoriesService
-          .updateCategory(this.category as ICategory)
-          .subscribe();
+        this.categories[this.findIndexById(this.category.id)] = this.category as ICategory;
+        this.categoriesService.updateCategory(this.category as ICategory).subscribe();
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',
@@ -116,9 +101,7 @@ export class CategoriesComponent implements OnInit {
         });
       } else {
         this.categories.push(this.category as ICategory);
-        this.categoriesService
-          .createCategory(this.category as ICategory)
-          .subscribe();
+        this.categoriesService.createCategory(this.category as ICategory).subscribe();
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',

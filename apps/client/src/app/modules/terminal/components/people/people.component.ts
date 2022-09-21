@@ -11,10 +11,7 @@ export class PeopleComponent implements OnInit {
   public bill!: IBill;
   public people = 0;
 
-  constructor(
-    public ref: DynamicDialogRef,
-    public config: DynamicDialogConfig
-  ) {}
+  constructor(public ref: DynamicDialogRef, public config: DynamicDialogConfig) {}
 
   ngOnInit() {
     this.bill = this.config.data.bill;

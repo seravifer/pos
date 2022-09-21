@@ -1,12 +1,5 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { ICategory } from '@pos/models';
 import { DBService } from '../services/db.service';
 
 @Controller('categories')
@@ -19,7 +12,7 @@ export class CategoriesController {
   }
 
   @Get('/products')
-  getAll() {
+  getAll(): Promise<ICategory[]> {
     return this.dbService.category.findMany({
       include: {
         products: true,

@@ -21,10 +21,7 @@ export class ProductsService {
   }
 
   updateProduct(product: INewProduct) {
-    return this.http.put<IProduct>(
-      `${environment.apiUrl}/products/${product.id}`,
-      product
-    );
+    return this.http.put<IProduct>(`${environment.apiUrl}/products/${product.id}`, product);
   }
 
   deleteProduct(id: string) {

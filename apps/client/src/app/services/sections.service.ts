@@ -20,10 +20,7 @@ export class SectionsService {
   }
 
   updateSection(section: Partial<ISection>) {
-    return this.http.put<ISection>(
-      `${environment.apiUrl}/sections/${section.id}`,
-      section
-    );
+    return this.http.put<ISection>(`${environment.apiUrl}/sections/${section.id}`, section);
   }
 
   deleteSection(id: string) {

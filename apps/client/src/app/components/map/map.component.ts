@@ -1,11 +1,4 @@
-import {
-  AfterContentInit,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-} from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { Node } from './nodes/node';
 import { MapService } from './map.service';
 import { ILocation, ITable } from '@pos/models';
@@ -43,10 +36,7 @@ export class MapComponent implements AfterContentInit, OnChanges {
   public form?: FormGroup;
   public formOptions?: ItemFormOptions[];
 
-  constructor(
-    private mapService: MapService,
-    private confirmationService: ConfirmationService
-  ) {}
+  constructor(private mapService: MapService, private confirmationService: ConfirmationService) {}
 
   ngAfterContentInit(): void {
     Konva.hitOnDragEnabled = true;
@@ -79,16 +69,12 @@ export class MapComponent implements AfterContentInit, OnChanges {
 
   private load() {
     if (this.locations.length > 0 && this.tables && this.canvas) {
-      this.locations.forEach((l) =>
-        this.canvas.add(new Konva.Layer({ visible: false, id: l.id }))
-      );
+      this.locations.forEach((l) => this.canvas.add(new Konva.Layer({ visible: false, id: l.id })));
       this.changeLocation(this.locations[0]);
 
       this.tables.forEach((t) => {
         const node = this.mapService.parseItems([t]);
-        const layer = this.canvas
-          .getLayers()
-          .find((l) => l.id() === t.locationId);
+        const layer = this.canvas.getLayers().find((l) => l.id() === t.locationId);
         layer?.add(...node);
       });
     }
@@ -97,9 +83,7 @@ export class MapComponent implements AfterContentInit, OnChanges {
   changeLocation(location: Partial<ILocation>) {
     this.activeLayer?.hide();
     this.canvas.getLayer();
-    this.activeLayer = this.canvas
-      .getLayers()
-      .find((l) => l.id() === location.id);
+    this.activeLayer = this.canvas.getLayers().find((l) => l.id() === location.id);
     this.activeLayer?.show();
     this.selectedLocation = location;
   }
@@ -118,9 +102,7 @@ export class MapComponent implements AfterContentInit, OnChanges {
       message: '¿Estas seguro que quieres eliminar esta localización?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.locations = this.locations.filter(
-          (l) => l.id !== this.selectedLocation?.id
-        );
+        this.locations = this.locations.filter((l) => l.id !== this.selectedLocation?.id);
         this.activeLayer?.destroy();
         this.changeLocation(this.locations[0]);
       },
@@ -158,13 +140,8 @@ export class MapComponent implements AfterContentInit, OnChanges {
       this.form.valueChanges.subscribe((data) => {
         this.selectedItem?.setEditOptions(data);
       });
-      if (
-        this.selectedItem instanceof TableNode ||
-        this.selectedItem instanceof CircleNode
-      ) {
-        this.selected.emit(
-          this.mapService.convertToItems([this.selectedItem])[0]
-        );
+      if (this.selectedItem instanceof TableNode || this.selectedItem instanceof CircleNode) {
+        this.selected.emit(this.mapService.convertToItems([this.selectedItem])[0]);
       }
     }
   }
@@ -173,9 +150,7 @@ export class MapComponent implements AfterContentInit, OnChanges {
     const tables = this.canvas
       .getLayers()
       .flatMap((l) =>
-        this.mapService
-          .convertToItems(l.children)
-          .map((t) => ({ ...t, locationId: l.id() }))
+        this.mapService.convertToItems(l.children).map((t) => ({ ...t, locationId: l.id() }))
       );
     this.save.emit({ tables, locations: this.locations });
   }

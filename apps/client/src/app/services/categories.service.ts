@@ -14,16 +14,11 @@ export class CategoriesService {
   }
 
   getAllProducts() {
-    return this.http.get<ICategory[]>(
-      `${environment.apiUrl}/categories/products`
-    );
+    return this.http.get<ICategory[]>(`${environment.apiUrl}/categories/products`);
   }
 
   createCategory(product: ICategory) {
-    return this.http.post<ICategory>(
-      `${environment.apiUrl}/categories`,
-      product
-    );
+    return this.http.post<ICategory>(`${environment.apiUrl}/categories`, product);
   }
 
   getCategory(id: string) {
@@ -31,10 +26,7 @@ export class CategoriesService {
   }
 
   updateCategory(product: ICategory) {
-    return this.http.put<ICategory>(
-      `${environment.apiUrl}/categories/${product.id}`,
-      product
-    );
+    return this.http.put<ICategory>(`${environment.apiUrl}/categories/${product.id}`, product);
   }
 
   deleteCategory(product: ICategory) {

@@ -13,10 +13,7 @@ export class MapEditorComponent implements OnInit {
   public locations: Partial<ILocation>[] = [];
   public tables: ITable[] = [];
 
-  constructor(
-    private tableService: TableService,
-    private locationsService: LocationsService
-  ) {}
+  constructor(private tableService: TableService, private locationsService: LocationsService) {}
 
   ngOnInit(): void {
     combineLatest({
@@ -28,18 +25,10 @@ export class MapEditorComponent implements OnInit {
     });
   }
 
-  onSave({
-    tables,
-    locations,
-  }: {
-    tables: ITable[];
-    locations: Partial<ILocation>[];
-  }) {
+  onSave({ tables, locations }: { tables: ITable[]; locations: Partial<ILocation>[] }) {
     this.tableService.createOrUpdateTables(tables).subscribe();
     locations.forEach((location, position) => {
-      this.locationsService
-        .updateLocation({ ...location, position })
-        .subscribe();
+      this.locationsService.updateLocation({ ...location, position }).subscribe();
     });
     this.locations
       .filter((l) => !locations.find((l2) => l2.id === l.id))

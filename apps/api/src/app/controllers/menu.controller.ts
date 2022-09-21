@@ -1,33 +1,45 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { INewMenu } from '@pos/models';
+import { IMenu, INewMenu } from '@pos/models';
+import { Menu, MenuSection, SectionProduct, Product } from '@prisma/client';
 import { DBService } from '../services/db.service';
+
+const query = {
+  menuSection: {
+    include: {
+      section: {
+        select: {
+          sectionProduct: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      },
+    },
+  },
+};
 
 @Controller('menus')
 export class MenusController {
   constructor(private readonly dbService: DBService) {}
 
   @Get()
-  async get(@Query('isActive') active: boolean) {
+  async getAll(@Query('isActive') active: boolean): Promise<IMenu[]> {
     const where = active ? { active: !!active } : {};
     const menus = await this.dbService.menu.findMany({
-      include: {
-        menuSection: true,
-      },
+      include: query,
       where,
     });
-    return menus.map((menu) => {
-      const { menuSection, ...section } = menu;
-      return {
-        ...section,
-        sections: menuSection.map((el) => {
-          return {
-            sectionId: el.sectionId,
-            name: el.name,
-            maxProducts: el.maxProducts,
-          };
-        }),
-      };
+    return menus.map((menu) => this.mapResponse(menu));
+  }
+
+  @Get(':id')
+  async getById(@Param('id') id: string): Promise<IMenu> {
+    const menu = await this.dbService.menu.findUnique({
+      where: { id },
+      include: query,
     });
+    return this.mapResponse(menu);
   }
 
   @Post()
@@ -51,27 +63,6 @@ export class MenusController {
         },
       },
     });
-  }
-
-  @Get(':id')
-  async getById(@Param('id') id: string) {
-    const data = await this.dbService.menu.findUnique({
-      where: { id },
-      include: {
-        menuSection: true,
-      },
-    });
-    const { menuSection, ...section } = data;
-    return {
-      ...section,
-      sections: menuSection.map((el) => {
-        return {
-          sectionId: el.sectionId,
-          name: el.name,
-          maxProducts: el.maxProducts,
-        };
-      }),
-    };
   }
 
   @Put(':id')
@@ -105,5 +96,37 @@ export class MenusController {
     return this.dbService.menu.delete({
       where: { id },
     });
+  }
+
+  private mapResponse(
+    menu: Menu & {
+      menuSection: (MenuSection & {
+        section: {
+          sectionProduct: (SectionProduct & {
+            product: Product;
+          })[];
+        };
+      })[];
+    }
+  ) {
+    const { menuSection, ...menuData } = menu;
+    return {
+      ...menuData,
+      sections: menuSection.map((el) => {
+        const { section, ...sectionData } = el;
+        return {
+          id: sectionData.id,
+          name: sectionData.name,
+          maxProducts: sectionData.maxProducts,
+          sectionId: sectionData.sectionId,
+          products: section.sectionProduct.map((el) => {
+            return {
+              supplement: el.supplement,
+              ...el.product,
+            };
+          }),
+        };
+      }),
+    };
   }
 }

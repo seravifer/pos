@@ -85,9 +85,7 @@ export class GroupComponent implements OnInit {
 
   save() {
     if (this.id) {
-      this.menusService
-        .updateMenu({ id: this.id, ...this.form.getRawValue() })
-        .subscribe();
+      this.menusService.updateMenu({ id: this.id, ...this.form.getRawValue() }).subscribe();
     } else {
       this.menusService.createMenu(this.form.getRawValue()).subscribe((res) => {
         this.router.navigate([res.id], {

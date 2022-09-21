@@ -7,9 +7,18 @@
   </div>
 </div>
 
-<h2 *ngIf="selectedMenu">{{ selectedMenu.name }}</h2>
+<div class="options" *ngIf="selectedMenu">
+  <h2>{{ selectedMenu.name }}</h2>
+  <button pButton label="Cancelar" class="p-button-danger p-button-text" (click)="reset()"></button>
+  <button
+    pButton
+    label="Confirmar"
+    (click)="confirm()"
+    *ngIf="selected.sections && selected.sections.length > 0"></button>
+</div>
+
 <div class="list">
-  <div class="item" *ngFor="let section of menuSections" (click)="selectSection(section)">
+  <div class="item" *ngFor="let section of selectedMenu?.sections" (click)="selectSection(section)">
     <div class="color"></div>
     <div>{{ section.name }}</div>
     <div class="check" *ngIf="isSectionCompleted(section)">
@@ -18,14 +27,19 @@
   </div>
 </div>
 
-<h2 *ngIf="sectionProducts.length > 0">Selecciona 1 opción</h2>
-<div class="list">
-  <div class="item" *ngFor="let product of sectionProducts" (click)="selectProduct(product)">
-    <div class="color"></div>
-    <div>{{ product.name }}</div>
-    <div class="price">{{ product.supplement | currency: 'EUR' }}</div>
-    <div class="check" *ngIf="isProductSelected(product)">
-      <i class="pi pi-check"></i>
+<ng-container *ngIf="selectedSection">
+  <h2>Selecciona {{ selectedSection.maxProducts }} opción</h2>
+  <div class="list">
+    <div
+      class="item"
+      *ngFor="let product of selectedSection.products"
+      (click)="selectProduct(product)">
+      <div class="color"></div>
+      <div>{{ product.name }}</div>
+      <div class="price">{{ product.supplement | currency: 'EUR' }}</div>
+      <div class="check" *ngIf="isProductSelected(product)">
+        <i class="pi pi-check"></i>
+      </div>
     </div>
   </div>
-</div>
+</ng-container>

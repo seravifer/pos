@@ -25,12 +25,8 @@ export class ProductsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.productsService
-      .getOnlyProducts()
-      .subscribe((data) => (this.products = data));
-    this.categoriesService
-      .getCategories()
-      .subscribe((data) => (this.categories = data));
+    this.productsService.getOnlyProducts().subscribe((data) => (this.products = data));
+    this.categoriesService.getCategories().subscribe((data) => (this.categories = data));
   }
 
   openNew() {
@@ -48,9 +44,7 @@ export class ProductsComponent implements OnInit {
         this.selectedProducts?.forEach((product) => {
           this.productsService.deleteProduct(product.id).subscribe();
         });
-        this.products = this.products.filter(
-          (val) => !this.selectedProducts?.includes(val)
-        );
+        this.products = this.products.filter((val) => !this.selectedProducts?.includes(val));
         this.selectedProducts = null;
         this.messageService.add({
           severity: 'success',
@@ -97,11 +91,8 @@ export class ProductsComponent implements OnInit {
 
     if (this.product?.name?.trim()) {
       if (this.product.id) {
-        this.products[this.findIndexById(this.product.id)] = this
-          .product as IProduct;
-        this.productsService
-          .updateProduct(this.product as IProduct)
-          .subscribe();
+        this.products[this.findIndexById(this.product.id)] = this.product as IProduct;
+        this.productsService.updateProduct(this.product as IProduct).subscribe();
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',
@@ -110,9 +101,7 @@ export class ProductsComponent implements OnInit {
         });
       } else {
         this.products.push(this.product as IProduct);
-        this.productsService
-          .createProduct(this.product as IProduct)
-          .subscribe();
+        this.productsService.createProduct(this.product as IProduct).subscribe();
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',

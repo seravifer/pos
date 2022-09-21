@@ -41,7 +41,7 @@
     <ng-container *ngIf="selectedMenus">
       <pos-menus
         [menus]="menus"
-        [sections]="sections"
+        [billMenu]="selectedBillMenu"
         (selectedItems)="onSelectMenu($event)"></pos-menus>
     </ng-container>
   </div>
@@ -76,6 +76,11 @@
                 label="Eliminar"
                 (click)="changeQuantity(item, -1)"
                 class="p-button-text p-button-danger"></button>
+              <button
+                pButton
+                label="Modificar"
+                (click)="changeMenu(item)"
+                class="p-button-text"></button>
             </div>
             <div class="change-quantity" *ngIf="item.productId">
               <div class="quantity">

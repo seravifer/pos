@@ -12,6 +12,7 @@
 .groups {
   display: flex;
   align-items: stretch;
+  flex-wrap: wrap;
   gap: 20px;
   padding: 20px;
 
@@ -22,6 +23,8 @@
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 8px;
+    width: 345px;
+    height: 280px;
 
     ::ng-deep .p-dropdown {
       width: 100%;
@@ -36,10 +39,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 200px;
     border: 1px dashed #ccc;
     border-radius: 8px;
     cursor: pointer;
-    min-height: 200px;
+    width: 345px;
+    height: 280px;
   }
 }

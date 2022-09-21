@@ -1,13 +1,13 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { ISection } from '@pos/models';
-import { DBService } from '@pos/api/services/db.service';
+import { DBService } from '../services/db.service';
 
 @Controller('sections')
 export class SectionsController {
   constructor(private readonly dbService: DBService) {}
 
   @Get()
-  async getAll() {
+  async getAll(): Promise<ISection[]> {
     const sections = await this.dbService.section.findMany({
       include: {
         sectionProduct: {

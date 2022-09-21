@@ -13,16 +13,11 @@ export class LocationsService {
   getLocations() {
     return this.http
       .get<ILocation[]>(`${environment.apiUrl}/locations`)
-      .pipe(
-        map((locations) => locations.sort((a, b) => a.position - b.position))
-      );
+      .pipe(map((locations) => locations.sort((a, b) => a.position - b.position)));
   }
 
   createLocation(product: Partial<ILocation>) {
-    return this.http.post<ILocation>(
-      `${environment.apiUrl}/locations`,
-      product
-    );
+    return this.http.post<ILocation>(`${environment.apiUrl}/locations`, product);
   }
 
   getLocation(id: string) {
@@ -30,10 +25,7 @@ export class LocationsService {
   }
 
   updateLocation(product: Partial<ILocation>) {
-    return this.http.put<ILocation>(
-      `${environment.apiUrl}/locations/${product.id}`,
-      product
-    );
+    return this.http.put<ILocation>(`${environment.apiUrl}/locations/${product.id}`, product);
   }
 
   deleteLocation(id: string) {
