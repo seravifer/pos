@@ -20,11 +20,7 @@
       class="group"
       *ngFor="let sectionsForm of sectionsForm.controls; let i = index"
       [formGroupName]="i">
-      <input
-        type="text"
-        formControlName="name"
-        pInputText
-        placeholder="Nombre de la sección" />
+      <input type="text" formControlName="name" pInputText placeholder="Nombre de la sección" />
       <p-dropdown
         [options]="sections"
         optionLabel="name"

@@ -25,12 +25,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-    MenuComponent,
-    SectionsComponent,
-    GroupComponent,
-    FilterListPipe,
-  ],
+  declarations: [MenuComponent, SectionsComponent, GroupComponent, FilterListPipe],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),

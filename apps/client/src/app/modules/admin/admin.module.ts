@@ -17,47 +17,35 @@ const routes: Routes = [
       {
         path: 'categories',
         loadChildren: () =>
-          import('./pages/categories/categories.module').then(
-            (m) => m.CategoriesModule
-          ),
+          import('./pages/categories/categories.module').then((m) => m.CategoriesModule),
       },
       {
         path: 'dashboard',
         loadChildren: () =>
-          import('./pages/dashboard/dashboard.module').then(
-            (m) => m.DashboardModule
-          ),
+          import('./pages/dashboard/dashboard.module').then((m) => m.DashboardModule),
       },
       {
         path: 'products',
         loadChildren: () =>
-          import('./pages/products/products.module').then(
-            (m) => m.ProductsModule
-          ),
+          import('./pages/products/products.module').then((m) => m.ProductsModule),
       },
       {
         path: 'users',
-        loadChildren: () =>
-          import('./pages/users/users.module').then((m) => m.UsersModule),
+        loadChildren: () => import('./pages/users/users.module').then((m) => m.UsersModule),
       },
       {
         path: 'settings',
         loadChildren: () =>
-          import('./pages/settings/settings.module').then(
-            (m) => m.SettingsModule
-          ),
+          import('./pages/settings/settings.module').then((m) => m.SettingsModule),
       },
       {
         path: 'menu',
-        loadChildren: () =>
-          import('./pages/menu/menu.module').then((m) => m.MenuModule),
+        loadChildren: () => import('./pages/menu/menu.module').then((m) => m.MenuModule),
       },
       {
         path: 'map-editor',
         loadChildren: () =>
-          import('./pages/map-editor/map-editor.module').then(
-            (m) => m.MapEditorModule
-          ),
+          import('./pages/map-editor/map-editor.module').then((m) => m.MapEditorModule),
       },
     ],
   },

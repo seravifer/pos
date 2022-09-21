@@ -1,10 +1,5 @@
 <div class="actions" *ngIf="editorMode">
-  <button
-    pButton
-    (click)="addItem('table')"
-    type="button"
-    icon="pi pi-stop"
-    label="Mesa"></button>
+  <button pButton (click)="addItem('table')" type="button" icon="pi pi-stop" label="Mesa"></button>
   <button
     pButton
     (click)="addItem('circle')"
@@ -18,13 +13,7 @@
     type="button"
     icon="pi pi-pencil"
     label="Texto"></button>
-  <button
-    pButton
-    (click)="onSave()"
-    type="button"
-    class="p-button-success save">
-    Guardar
-  </button>
+  <button pButton (click)="onSave()" type="button" class="p-button-success save">Guardar</button>
 </div>
 
 <div class="map-container">

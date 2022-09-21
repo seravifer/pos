@@ -1,8 +1,6 @@
 <p-tabView>
   <p-tabPanel header="Menus">
-    <button pButton class="new" [routerLink]="['/admin/menu/group']">
-      Crear menu
-    </button>
+    <button pButton class="new" [routerLink]="['/admin/menu/group']">Crear menu</button>
     <p-table [value]="(menu$ | async) ?? []" responsiveLayout="scroll">
       <ng-template pTemplate="header">
         <tr>
@@ -16,14 +14,8 @@
         <tr>
           <td>{{ menu.name }}</td>
           <td>
-            <p-tag
-              *ngIf="menu.active"
-              severity="success"
-              value="Activado"></p-tag>
-            <p-tag
-              *ngIf="!menu.active"
-              severity="warning"
-              value="Desactivado"></p-tag>
+            <p-tag *ngIf="menu.active" severity="success" value="Activado"></p-tag>
+            <p-tag *ngIf="!menu.active" severity="warning" value="Desactivado"></p-tag>
           </td>
           <td>{{ menu.price | currency: 'EUR' }}</td>
           <td>
@@ -44,9 +36,7 @@
     </p-table>
   </p-tabPanel>
   <p-tabPanel header="Secciones">
-    <button pButton class="new" [routerLink]="['/admin/menu/section']">
-      Crear sección
-    </button>
+    <button pButton class="new" [routerLink]="['/admin/menu/section']">Crear sección</button>
     <p-table [value]="(sections$ | async) ?? []" responsiveLayout="scroll">
       <ng-template pTemplate="header">
         <tr>

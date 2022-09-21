@@ -28,12 +28,7 @@
         label="Import"
         chooseLabel="Import"
         class="p-mr-2 p-d-inline-block"></p-fileUpload>
-      <button
-        pButton
-        pRipple
-        label="Export"
-        icon="pi pi-upload"
-        class="p-button-help"></button>
+      <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
     </ng-template>
   </p-toolbar>
 
@@ -66,9 +61,7 @@
         <th style="width: 3rem">
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
-        <th pSortableColumn="name">
-          Nombre <p-sortIcon field="name"></p-sortIcon>
-        </th>
+        <th pSortableColumn="name">Nombre <p-sortIcon field="name"></p-sortIcon></th>
 
         <th></th>
       </tr>
@@ -113,16 +106,8 @@
   <ng-template pTemplate="content">
     <div class="p-field">
       <label for="name">Name</label>
-      <input
-        type="text"
-        pInputText
-        id="name"
-        [(ngModel)]="category.name"
-        required
-        autofocus />
-      <small class="p-invalid" *ngIf="submitted && !category.name">
-        Name is required.
-      </small>
+      <input type="text" pInputText id="name" [(ngModel)]="category.name" required autofocus />
+      <small class="p-invalid" *ngIf="submitted && !category.name"> Name is required. </small>
     </div>
 
     <div class="p-field">
@@ -143,19 +128,14 @@
         class="color-picker"
         (click)="colors.show($event)"
         [style.background-color]="category.color"></div>
-      <small class="p-invalid" *ngIf="submitted && !category.color">
-        Color is required.
-      </small>
+      <small class="p-invalid" *ngIf="submitted && !category.color"> Color is required. </small>
     </div>
 
     <div class="p-field">
       <p-overlayPanel #icons [dismissable]="true" [showCloseIcon]="true">
         <ng-template pTemplate>
           <div class="icon-options">
-            <div
-              class="icon-option"
-              *ngFor="let icon of ICONS"
-              (click)="category.icon = icon">
+            <div class="icon-option" *ngFor="let icon of ICONS" (click)="category.icon = icon">
               <img [src]="'/assets/icons/' + icon" />
             </div>
           </div>
@@ -169,9 +149,7 @@
         [style.background-color]="category.color">
         <img [src]="'/assets/icons/' + category.icon" />
       </div>
-      <small class="p-invalid" *ngIf="submitted && !category.icon">
-        Icon is required.
-      </small>
+      <small class="p-invalid" *ngIf="submitted && !category.icon"> Icon is required. </small>
     </div>
   </ng-template>
 

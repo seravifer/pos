@@ -10,28 +10,20 @@ const routes: Routes = [
   {
     path: 'onboarding',
     loadChildren: () =>
-      import('./modules/onboarding/onboarding.module').then(
-        (m) => m.OnboardingModule
-      ),
+      import('./modules/onboarding/onboarding.module').then((m) => m.OnboardingModule),
   },
   {
     path: 'terminal',
-    loadChildren: () =>
-      import('./modules/terminal/terminal.module').then(
-        (m) => m.TerminalModule
-      ),
+    loadChildren: () => import('./modules/terminal/terminal.module').then((m) => m.TerminalModule),
   },
   {
     path: 'admin',
-    loadChildren: () =>
-      import('./modules/admin/admin.module').then((m) => m.AdminModule),
+    loadChildren: () => import('./modules/admin/admin.module').then((m) => m.AdminModule),
   },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
-  ],
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

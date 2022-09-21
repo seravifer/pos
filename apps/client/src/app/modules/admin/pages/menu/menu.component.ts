@@ -11,8 +11,5 @@ export class MenuComponent {
   public menu$ = this.menusService.getMenus();
   public sections$ = this.sectionsService.getSections();
 
-  constructor(
-    private sectionsService: SectionsService,
-    private menusService: MenusService
-  ) {}
+  constructor(private sectionsService: SectionsService, private menusService: MenusService) {}
 }
