@@ -5,6 +5,12 @@
   <div class="options">
     <button
       pButton
+      label="Terminal"
+      icon="pi pi-align-justify"
+      class="p-button-lg"
+      (click)="pageShowing = 'bill'"></button>
+    <button
+      pButton
       label="Mesas"
       icon="pi pi-table"
       class="p-button-lg"
@@ -12,7 +18,7 @@
     <button
       pButton
       label="Tickets"
-      icon="pi pi-table"
+      icon="pi pi-bookmark"
       class="p-button-lg"
       (click)="pageShowing = 'tickets'"></button>
   </div>
@@ -55,7 +61,10 @@
     <div class="summary">
       <ng-container *ngIf="selectedBill">
         <div class="table">
-          <div class="name"># {{ (selectedBill.tableId | select: tables)?.name }}</div>
+          <div class="name" *ngIf="selectedBill.tableId">
+            # Mesa {{ (selectedBill.tableId | select: tables)?.name }}
+          </div>
+          <div class="name" *ngIf="!selectedBill.tableId"># {{ selectedBill.id | slice: 0:4 }}</div>
           <div class="people" (click)="changePeople()">
             <i class="pi pi-user"></i>
             {{ selectedBill.people ?? '-' }}
@@ -138,6 +147,11 @@
         </div>
 
         <div class="actions">
+          <button
+            pButton
+            (click)="newBill()"
+            class="p-button-outlined p-button-lg"
+            label="Nueva comanda"></button>
           <button pButton class="p-button-outlined p-button-lg" label="Imprimir ticket"></button>
           <button
             pButton
@@ -151,6 +165,12 @@
             (click)="checkout()"
             class="p-button-lg"
             label="Cobrar"></button>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!selectedBill">
+        <div class="empty">
+          <img src="/assets/empty.png" />
+          <div>Selecciona un producto</div>
         </div>
       </ng-container>
     </div>

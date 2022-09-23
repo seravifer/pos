@@ -17,7 +17,7 @@ export class BillsService {
     return this.http.get<IBill>(`${environment.apiUrl}/bills/${id}`);
   }
 
-  createBill(bill: INewBill) {
+  createBill(bill: INewBill | Partial<INewBill>) {
     return this.http.post<IBill>(`${environment.apiUrl}/bills`, bill);
   }
 

@@ -23,6 +23,16 @@
   }
 }
 
+.options {
+  display: flex;
+  gap: 20px;
+
+  .p-button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
 .actions {
   display: flex;
   gap: 20px;

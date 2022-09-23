@@ -1,7 +1,48 @@
 :host {
   height: 100%;
   width: 100%;
-  background-color: white;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: baseline;
+  gap: 20px;
+}
+
+.ticket {
+  width: 300px;
+  height: 300px;
   border-radius: 16px;
   padding: 20px;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+
+  &:before {
+    content: ' ';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 10px;
+    width: 100%;
+    background-color: rgb(52, 148, 52);
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+  }
+
+  h2 {
+    margin: 0;
+    margin-bottom: 10px;
+  }
+
+  .list-item {
+    padding: 4px 0;
+
+    .info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 20px;
+    }
+  }
 }

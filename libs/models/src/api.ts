@@ -43,7 +43,7 @@ export type ISectionProduct = IProduct & { supplement: number };
 export type IBill = Bill & {
   billItems: IBillItem[];
 };
-export type INewBill = Partial<Bill>;
+export type INewBill = Bill;
 
 export type IBillItem = {
   id: string;

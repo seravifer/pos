@@ -24,6 +24,14 @@ export class CheckoutComponent implements OnInit {
     this.bill = this.config.data.bill;
   }
 
+  clean() {
+    this.payment = 0;
+  }
+
+  all() {
+    this.payment = this.bill.total - this.bill.paid;
+  }
+
   confirm() {
     this.ref.close(this.payment);
   }

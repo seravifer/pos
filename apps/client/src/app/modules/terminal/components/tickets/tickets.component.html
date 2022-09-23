@@ -1,3 +1,11 @@
 <div class="ticket" *ngFor="let ticket of tickets" (click)="selectTicket(ticket)">
-  {{ ticket.id }}
+  <h2># {{ ticket.id | slice: 0:4 }}</h2>
+  <ng-container *ngFor="let item of ticket.billItems">
+    <div class="list-item">
+      <div class="info">
+        <div class="name">{{ item.quantity }}x {{ item.name }}</div>
+        <div class="price">{{ item | totalPrice | currency: 'EUR' }}</div>
+      </div>
+    </div>
+  </ng-container>
 </div>

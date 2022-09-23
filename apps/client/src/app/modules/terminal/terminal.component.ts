@@ -14,6 +14,7 @@ import {
   IMenu,
   IBillMenu,
   INewBillProduct,
+  INewBill,
 } from '@pos/models';
 import { DialogService } from 'primeng/dynamicdialog';
 import { combineLatest } from 'rxjs';
@@ -39,7 +40,7 @@ export class TerminalComponent implements OnInit {
   public selectedBill: IBill | null = null;
   public selectedBillMenu: IBillMenu | null = null;
 
-  public pageShowing: 'bill' | 'map' | 'tickets' = 'map';
+  public pageShowing: 'bill' | 'map' | 'tickets' = 'bill';
 
   constructor(
     private categoriesService: CategoriesService,
@@ -126,9 +127,9 @@ export class TerminalComponent implements OnInit {
     this.calcTotal();
   }
 
-  selectProduct(selectedProduct: IProduct) {
+  async selectProduct(selectedProduct: IProduct) {
     if (!this.selectedBill) {
-      return;
+      this.selectedBill = await this.createBill();
     }
     const product = this.selectedBill.billItems.find((val) => val.productId === selectedProduct.id);
     if (product) {
@@ -148,6 +149,23 @@ export class TerminalComponent implements OnInit {
       this.billService.updateBillItem(this.selectedBill.id, newProduct).subscribe();
     }
     this.calcTotal();
+  }
+
+  async createBill() {
+    const newBill: INewBill = {
+      id: uuid(),
+      tableId: null,
+      people: 0,
+      total: 0,
+      paid: 0,
+      closedAt: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.billService.createBill(newBill).subscribe();
+    const bill: IBill = { ...newBill, billItems: [] };
+    this.bills.push(bill);
+    return bill;
   }
 
   changeQuantity(product: IBillItem, quantity: number) {
@@ -187,7 +205,10 @@ export class TerminalComponent implements OnInit {
     this.updateBill();
     this.bills = this.bills.filter((val) => !val.closedAt);
     this.selectedBill = null;
-    this.pageShowing = 'map';
+  }
+
+  newBill() {
+    this.selectedBill = null;
   }
 
   checkout() {
