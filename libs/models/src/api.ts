@@ -12,14 +12,20 @@ export type IUser = User;
 
 // Menu
 export type IMenu = Menu & { sections: IMenuSection[] };
+export type IMenuSection = {
+  id: string;
+  name: string;
+  maxProducts: number;
+  products: ISectionProduct[];
+};
+
 export type INewMenu = {
   name: string;
   active: boolean;
   price: number;
-  sections: IMenuSection[];
+  sections: INewMenuSection[];
 };
-
-export type IMenuSection = {
+export type INewMenuSection = {
   id: string;
   name: string;
   sectionId: string;
@@ -41,18 +47,15 @@ export type INewBill = Partial<Bill>;
 
 export type IBillItem = {
   id: string;
-
   billId: string;
-
   productId: string | null;
   menuId: string | null;
-
   name: string;
   price: number;
   quantity: number;
   note: string | null;
   sections?: {
-    id: string; // FIXME
+    id: string;
     section: {
       id: string;
       name: string;

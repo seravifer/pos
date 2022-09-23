@@ -115,10 +115,9 @@ export class MenusController {
       sections: menuSection.map((el) => {
         const { section, ...sectionData } = el;
         return {
-          id: sectionData.id,
+          id: sectionData.sectionId,
           name: sectionData.name,
           maxProducts: sectionData.maxProducts,
-          sectionId: sectionData.sectionId,
           products: section.sectionProduct.map((el) => {
             return {
               supplement: el.supplement,

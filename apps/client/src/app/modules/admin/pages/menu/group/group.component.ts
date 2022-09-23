@@ -42,7 +42,7 @@ export class GroupComponent implements OnInit {
           this.sectionsForm.push(
             new FormGroup({
               name: new FormControl(section.name, { nonNullable: true }),
-              sectionId: new FormControl(section.sectionId, {
+              sectionId: new FormControl(section.id, {
                 nonNullable: true,
               }),
               maxProducts: new FormControl(section.maxProducts, {

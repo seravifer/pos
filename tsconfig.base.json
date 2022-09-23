@@ -17,9 +17,7 @@
     "paths": {
       "@pos/api/services/*": ["apps/api/src/app/services/*"],
       "@pos/client/*": ["apps/client/src/app/*"],
-      "@pos/client/environment": [
-        "apps/client/src/environments/environment.ts"
-      ],
+      "@pos/client/environment": ["apps/client/src/environments/environment.ts"],
       "@pos/client/services/*": ["apps/client/src/app/services/*"],
       "@pos/models": ["libs/models/src/index.ts"]
     }

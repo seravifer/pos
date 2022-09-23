@@ -19,9 +19,7 @@ import { v4 as uuid } from 'uuid';
 })
 export class MenusComponent implements OnInit, OnChanges {
   @Input() billMenu: IBillMenu | null = null;
-
   @Input() menus: IMenu[] = [];
-
   @Output() selectedItems = new EventEmitter<IBillMenu>();
 
   public selectedMenu: IMenu | null = null;
@@ -66,9 +64,7 @@ export class MenusComponent implements OnInit, OnChanges {
 
   selectProduct(product: ISectionProduct) {
     if (!this.selectedMenu || !this.selectedSection) return;
-    const section = this.selected.sections?.find(
-      (section) => section.section?.id === this.selectedSection?.sectionId
-    );
+    const section = this.selected.sections?.find((s) => s.section?.id === this.selectedSection?.id);
     const addedProduct = { id: product.id, name: product.name, supplement: product.supplement };
     if (section) {
       if (this.selectedSection.maxProducts > section.products?.length) {
@@ -83,13 +79,12 @@ export class MenusComponent implements OnInit, OnChanges {
       this.selected.sections?.push({
         id: uuid(),
         section: {
-          id: this.selectedSection.sectionId,
+          id: this.selectedSection.id,
           name: this.selectedSection.name,
         },
         products: [addedProduct],
       });
     }
-    this.selected.price = this.selectedMenu.price + product.supplement;
   }
 
   reset() {
@@ -107,9 +102,7 @@ export class MenusComponent implements OnInit, OnChanges {
   }
 
   isSectionCompleted(section: IMenuSection) {
-    return this.selected.sections?.some(
-      (s) => s.section?.id === section.sectionId && s.products?.length
-    );
+    return this.selected.sections?.some((s) => s.section?.id === section.id && s.products?.length);
   }
 
   isProductSelected(product: IProduct) {

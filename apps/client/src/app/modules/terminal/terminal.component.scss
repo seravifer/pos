@@ -21,6 +21,7 @@ header {
   padding: 20px;
   display: flex;
   flex-direction: column;
+  gap: 20px;
 
   .p-button {
     display: flex;
@@ -198,6 +199,13 @@ main {
 
       .menu {
         padding-left: 10px;
+        display: flex;
+        flex-direction: column;
+
+        .price {
+          margin-left: auto;
+        }
+
         .menu-section {
           .section-name {
             font-size: 16px;

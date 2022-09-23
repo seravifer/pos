@@ -20,6 +20,7 @@ import { combineLatest } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { PeopleComponent } from './components/people/people.component';
+import { calcPrice } from './components/price';
 
 @Component({
   selector: 'pos-terminal',
@@ -38,7 +39,7 @@ export class TerminalComponent implements OnInit {
   public selectedBill: IBill | null = null;
   public selectedBillMenu: IBillMenu | null = null;
 
-  public pageShowing: 'bill' | 'map' = 'map';
+  public pageShowing: 'bill' | 'map' | 'tickets' = 'map';
 
   constructor(
     private categoriesService: CategoriesService,
@@ -67,7 +68,7 @@ export class TerminalComponent implements OnInit {
     });
   }
 
-  selectTable(table: ITable) {
+  onSelectTable(table: ITable) {
     const bill = this.bills.find((b) => b.tableId === table.id);
     if (bill) {
       this.selectedBill = bill;
@@ -81,6 +82,11 @@ export class TerminalComponent implements OnInit {
           this.selectedBill = { ...bill, billItems: [] };
         });
     }
+    this.pageShowing = 'bill';
+  }
+
+  onSelectTicket(bill: IBill) {
+    this.selectedBill = bill;
     this.pageShowing = 'bill';
   }
 
@@ -126,8 +132,7 @@ export class TerminalComponent implements OnInit {
     }
     const product = this.selectedBill.billItems.find((val) => val.productId === selectedProduct.id);
     if (product) {
-      product.quantity++;
-      this.billService.updateBillItem(this.selectedBill.id, product).subscribe();
+      this.changeQuantity(product, 1);
     } else {
       const newProduct: INewBillProduct = {
         id: uuid(),
@@ -149,7 +154,7 @@ export class TerminalComponent implements OnInit {
     if (!this.selectedBill) {
       return;
     }
-    product.quantity = product.quantity + quantity;
+    product.quantity += quantity;
     if (product.quantity < 1) {
       this.selectedBill.billItems = this.selectedBill.billItems.filter(
         (val) => val.id !== product.id
@@ -205,7 +210,7 @@ export class TerminalComponent implements OnInit {
       return;
     }
     this.selectedBill.total = this.selectedBill?.billItems.reduce(
-      (acc, cur) => acc + cur.price * cur.quantity,
+      (total, billItem) => total + calcPrice(billItem),
       0
     );
     this.updateBill();
