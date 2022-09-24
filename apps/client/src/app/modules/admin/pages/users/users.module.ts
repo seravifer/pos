@@ -21,6 +21,7 @@ import { SliderModule } from 'primeng/slider';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
+import { PasswordModule } from 'primeng/password';
 import { UsersComponent } from './users.component';
 
 const routes: Routes = [{ path: '', component: UsersComponent }];
@@ -51,6 +52,7 @@ const routes: Routes = [{ path: '', component: UsersComponent }];
     InputNumberModule,
     ConfirmDialogModule,
     InputTextareaModule,
+    PasswordModule,
   ],
   providers: [MessageService, ConfirmationService],
 })

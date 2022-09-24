@@ -105,15 +105,18 @@
   <ng-template pTemplate="content">
     <div class="p-field">
       <label for="name">Name</label>
-      <input type="text" pInputText id="name" [(ngModel)]="user.name" required autofocus />
+      <input type="text" pInputText id="name" [(ngModel)]="user.name" required />
       <small class="p-invalid" *ngIf="submitted && !user.name">Name is required.</small>
     </div>
     <div class="p-field">
-      <label for="name">Nombre de usuario</label>
-      <input type="text" pInputText id="username" [(ngModel)]="user.username" required autofocus />
-      <small class="p-invalid" *ngIf="submitted && !user.name">
-        El nombre de usuario es obligatorio.
-      </small>
+      <label for="password">Password</label>
+      <p-password
+        id="password"
+        [(ngModel)]="user.password"
+        required
+        [toggleMask]="true"
+        [feedback]="false"></p-password>
+      <small class="p-invalid" *ngIf="submitted && !user.name">Password is required.</small>
     </div>
   </ng-template>
 

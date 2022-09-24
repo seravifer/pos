@@ -1,5 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { INewUser } from '@pos/models';
 import { DBService } from '../services/db.service';
+import { hash } from 'bcrypt';
 
 @Controller('users')
 export class UsersController {
@@ -7,24 +9,49 @@ export class UsersController {
 
   @Get()
   get() {
-    return this.dbService.user.findMany();
+    return this.dbService.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 
   @Post()
-  create(@Body() data: any) {
-    return this.dbService.user.create({ data });
+  async create(@Body() data: INewUser) {
+    const hashed = await hash(data.password, 10);
+    const user = {
+      name: data.name,
+      hash: hashed,
+    };
+    return this.dbService.user.create({ data: user });
   }
 
   @Get(':id')
   getById(@Param('id') id: string) {
-    return this.dbService.user.findUnique({ where: { id } });
+    return this.dbService.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() data: any) {
+  async update(@Param('id') id: string, @Body() data: INewUser) {
+    const hashed = await hash(data.password, 10);
+    const user = {
+      name: data.name,
+      hash: hashed,
+    };
     return this.dbService.user.update({
       where: { id },
-      data,
+      data: user,
     });
   }
 

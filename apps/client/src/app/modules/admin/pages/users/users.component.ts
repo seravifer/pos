@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService } from '@pos/client/services/users.service';
-import { IUser } from '@pos/models';
+import { INewUser, IUser } from '@pos/models';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
@@ -10,7 +10,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 })
 export class UsersComponent implements OnInit {
   users: IUser[] = [];
-  user: Partial<IUser> = {};
+  user: Partial<INewUser> = {};
   selectedUsers: IUser[] | null = null;
   userDialog = false;
   submitted = false;
@@ -52,7 +52,7 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  editUser(user: IUser) {
+  editUser(user: INewUser) {
     this.user = { ...user };
     this.userDialog = true;
   }

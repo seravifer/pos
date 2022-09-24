@@ -9,6 +9,11 @@ export type ILocation = Location;
 
 // User
 export type IUser = User;
+export type INewUser = {
+  id?: string;
+  name: string;
+  password: string;
+};
 
 // Menu
 export type IMenu = Menu & { sections: IMenuSection[] };
