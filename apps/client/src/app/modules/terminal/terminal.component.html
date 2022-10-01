@@ -178,9 +178,9 @@
   <ng-container *ngIf="pageShowing === 'map'">
     <div class="map">
       <pos-map
-        [editorMode]="false"
         [locations]="locations"
         [tables]="tables"
+        [bills]="bills"
         (selected)="onSelectTable($event)"></pos-map>
     </div>
   </ng-container>

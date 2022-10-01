@@ -82,7 +82,6 @@ export class MapComponent implements AfterContentInit, OnChanges {
 
   changeLocation(location: Partial<ILocation>) {
     this.activeLayer?.hide();
-    this.canvas.getLayer();
     this.activeLayer = this.canvas.getLayers().find((l) => l.id() === location.id);
     this.activeLayer?.show();
     this.selectedLocation = location;

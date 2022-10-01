@@ -9,7 +9,6 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CheckoutComponent } from './components/checkout/checkout.component';
-import { MapModule } from '@pos/client/components/map/map.module';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { TimeComponent } from './components/time/time.component';
 import { SelectPipe } from '@pos/client/pipes/select.pipe';
@@ -18,6 +17,7 @@ import { NumberPadModule } from '@pos/client/components/number-pad/number-pad.mo
 import { MenusComponent } from './components/menus/menus.component';
 import { TotalPricePipe } from './components/menu-price.pipe';
 import { TicketsComponent } from './components/tickets/tickets.component';
+import { MapViewModule } from './components/map/map.module';
 
 const routes: Routes = [{ path: '', component: TerminalComponent }];
 
@@ -37,7 +37,7 @@ const routes: Routes = [{ path: '', component: TerminalComponent }];
     RouterModule.forChild(routes),
     SelectPipe,
     NumberPadModule,
-    MapModule,
+    MapViewModule,
     FormsModule,
     ReactiveFormsModule,
     ButtonModule,

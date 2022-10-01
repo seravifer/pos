@@ -1,0 +1,21 @@
+<div class="map-container">
+  <div class="map">
+    <div id="canvas"></div>
+  </div>
+  <div class="locations">
+    <div
+      class="location"
+      cdkDrag
+      *ngFor="let location of locations"
+      (click)="changeLocation(location!)">
+      <button
+        pButton
+        [class]="{
+          'p-button-outlined': location.id !== selectedLocation?.id,
+          'location-button': true
+        }">
+        {{ location.name }}
+      </button>
+    </div>
+  </div>
+</div>

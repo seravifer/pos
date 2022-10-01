@@ -79,8 +79,8 @@ export class TerminalComponent implements OnInit {
           tableId: table.id,
         })
         .subscribe((bill) => {
-          this.bills.push(bill);
           this.selectedBill = { ...bill, billItems: [] };
+          this.bills.push(this.selectedBill);
         });
     }
     this.pageShowing = 'bill';
@@ -132,6 +132,7 @@ export class TerminalComponent implements OnInit {
       this.selectedBill = await this.createBill();
     }
     const product = this.selectedBill.billItems.find((val) => val.productId === selectedProduct.id);
+    console.log(this.selectedBill);
     if (product) {
       this.changeQuantity(product, 1);
     } else {

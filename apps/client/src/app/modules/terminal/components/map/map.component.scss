@@ -1,0 +1,85 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  height: 100%;
+}
+
+.actions {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+
+  .separator {
+    border-left: 1px solid rgb(214, 214, 214);
+    margin: 0 10px;
+  }
+
+  .save {
+    margin-left: auto;
+  }
+}
+
+.locations {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.location-button.p-button-outlined {
+  background: white;
+}
+
+.location-name {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.options {
+  padding: 20px;
+  background-color: white;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1;
+  border-radius: 16px;
+
+  .item {
+    margin-bottom: 10px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .p-inputtext {
+    width: 100%;
+  }
+
+  .delete {
+    margin-top: 20px;
+  }
+}
+
+.map-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .map {
+    position: relative;
+    flex: 1 1 auto;
+  }
+}
+
+#canvas {
+  background-image: url('/assets/floor.webp');
+  border-radius: 16px;
+  height: 100%;
+  width: 100%;
+}
