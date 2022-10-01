@@ -9,6 +9,7 @@ import { LocationsController } from './controllers/locations.controller';
 import { BillItemsController } from './controllers/bill-items.controller';
 import { MenusController } from './controllers/menu.controller';
 import { SectionsController } from './controllers/sections.controller';
+import { AuthController } from './controllers/auth.controller';
 
 @Module({
   imports: [],
@@ -22,6 +23,7 @@ import { SectionsController } from './controllers/sections.controller';
     BillItemsController,
     MenusController,
     SectionsController,
+    AuthController,
   ],
   providers: [DBService],
 })

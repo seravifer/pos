@@ -2,7 +2,7 @@
   <i class="pi pi-user"></i>
   {{ people }}
 </div>
-<pos-calculator [hasComma]="false" [(ngModel)]="people"></pos-calculator>
+<pos-number-pad [hasComma]="false" [(ngModel)]="people"></pos-number-pad>
 <div class="actions">
   <button pButton class="p-button-danger p-button-lg" (click)="cancel()" label="Cancelar"></button>
   <button

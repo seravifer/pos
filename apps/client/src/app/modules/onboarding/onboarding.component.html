@@ -1,1 +1,22 @@
-<router-outlet></router-outlet>
+<main *ngIf="!showNumberPad">
+  <h1>Seleccione usuario de terminal</h1>
+  <div class="users" *ngFor="let user of users$ | async">
+    <button
+      pButton
+      [label]="user.name"
+      icon="pi pi-user"
+      class="p-button-lg"
+      (click)="onSelectUser(user)"></button>
+  </div>
+</main>
+<main *ngIf="showNumberPad" class="password">
+  <h1>Pin de {{ selectedUser?.name }}</h1>
+  <div class="pin">
+    <i *ngFor="let dummy of [].constructor(pass.length)" class="pi pi-circle-fill"></i>
+    <i *ngFor="let dummy of [].constructor(4 - pass.length)" class="pi pi-circle"></i>
+  </div>
+  <pos-number-pad
+    [hasComma]="false"
+    [(ngModel)]="pin"
+    (ngModelChange)="onSelectPin($event)"></pos-number-pad>
+</main>

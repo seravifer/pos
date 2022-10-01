@@ -14,7 +14,7 @@ import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { TimeComponent } from './components/time/time.component';
 import { SelectPipe } from '@pos/client/pipes/select.pipe';
 import { PeopleComponent } from './components/people/people.component';
-import { CalculatorModule } from '@pos/client/components/calculator/calculator.module';
+import { NumberPadModule } from '@pos/client/components/number-pad/number-pad.module';
 import { MenusComponent } from './components/menus/menus.component';
 import { TotalPricePipe } from './components/menu-price.pipe';
 import { TicketsComponent } from './components/tickets/tickets.component';
@@ -36,7 +36,7 @@ const routes: Routes = [{ path: '', component: TerminalComponent }];
     CommonModule,
     RouterModule.forChild(routes),
     SelectPipe,
-    CalculatorModule,
+    NumberPadModule,
     MapModule,
     FormsModule,
     ReactiveFormsModule,

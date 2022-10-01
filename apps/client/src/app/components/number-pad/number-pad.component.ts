@@ -2,18 +2,18 @@ import { Component, forwardRef, Input } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-  selector: 'pos-calculator',
-  templateUrl: './calculator.component.html',
-  styleUrls: ['./calculator.component.scss'],
+  selector: 'pos-number-pad',
+  templateUrl: './number-pad.component.html',
+  styleUrls: ['./number-pad.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => CalculatorComponent),
+      useExisting: forwardRef(() => NumberPadComponent),
       multi: true,
     },
   ],
 })
-export class CalculatorComponent {
+export class NumberPadComponent {
   public integral = '';
   public decimal = '';
   public hasDecimal = false;
@@ -35,10 +35,14 @@ export class CalculatorComponent {
   }
 
   writeValue(value: number) {
-    if (value) {
+    if (typeof value == 'number') {
       this.integral = Math.trunc(value) + '';
-      this.decimal = (value + '').split('.')[1];
-      this.hasDecimal = true;
+      this.decimal = value.toString().split('.')[1] ?? '';
+      if (parseInt(this.decimal) > 0) {
+        this.hasDecimal = true;
+      } else {
+        this.hasDecimal = false;
+      }
     }
   }
 

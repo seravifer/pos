@@ -1,0 +1,45 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+main {
+  width: 500px;
+  height: 560px;
+  border-radius: 16px;
+  background-color: #fff;
+  padding: 40px;
+}
+
+h1 {
+  margin-top: 0;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.users {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.p-button {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+main.password {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pin {
+  display: flex;
+  justify-content: space-around;
+}

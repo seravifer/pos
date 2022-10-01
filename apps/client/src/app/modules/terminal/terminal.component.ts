@@ -158,6 +158,7 @@ export class TerminalComponent implements OnInit {
       people: 0,
       total: 0,
       paid: 0,
+      userId: null,
       closedAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),

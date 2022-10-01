@@ -3,6 +3,8 @@ import { INewUser } from '@pos/models';
 import { DBService } from '../services/db.service';
 import { hash } from 'bcrypt';
 
+const SALT_ROUNDS = 10;
+
 @Controller('users')
 export class UsersController {
   constructor(private readonly dbService: DBService) {}
@@ -21,7 +23,7 @@ export class UsersController {
 
   @Post()
   async create(@Body() data: INewUser) {
-    const hashed = await hash(data.password, 10);
+    const hashed = await hash(data.password, SALT_ROUNDS);
     const user = {
       name: data.name,
       hash: hashed,
