@@ -3,8 +3,8 @@
 ## TODO
 
 - [ ] Usuarios
-- [ ] Abrir / Cerrar caja
 - [ ] Mesas con estado
+- [ ] Abrir / Cerrar caja
 - [ ] Descuentos
 - [ ] Pedidos para llevar
 - [ ] Unir mesas

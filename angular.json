@@ -3,7 +3,9 @@
   "version": 2,
   "projects": {
     "api": "apps/api",
+    "app": "apps/app",
     "client": "apps/client",
+    "kitchen": "apps/kitchen",
     "models": "libs/models"
   }
 }
