@@ -18,6 +18,7 @@ import { MenusComponent } from './components/menus/menus.component';
 import { TotalPricePipe } from './components/menu-price.pipe';
 import { TicketsComponent } from './components/tickets/tickets.component';
 import { MapViewModule } from './components/map/map.module';
+import { ChipModule } from 'primeng/chip';
 
 const routes: Routes = [{ path: '', component: TerminalComponent }];
 
@@ -46,6 +47,7 @@ const routes: Routes = [{ path: '', component: TerminalComponent }];
     InputNumberModule,
     SelectButtonModule,
     DynamicDialogModule,
+    ChipModule,
   ],
 })
 export class TerminalModule {}

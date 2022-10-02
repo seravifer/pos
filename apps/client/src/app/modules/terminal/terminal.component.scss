@@ -171,6 +171,24 @@ main {
     }
   }
 
+  .info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+
+    .time {
+      font-size: 20px;
+    }
+
+    .pickup {
+      cursor: pointer;
+      &--active ::ng-deep .p-chip {
+        background-color: var(--green-400);
+      }
+    }
+  }
+
   .list {
     flex: 1;
     display: flex;
@@ -266,6 +284,11 @@ main {
     display: flex;
     flex-direction: column;
     gap: 20px;
+
+    &--inline {
+      display: flex;
+      gap: 20px;
+    }
 
     .p-button {
       width: 100%;

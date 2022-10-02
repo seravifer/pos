@@ -60,14 +60,30 @@
     </div>
     <div class="summary">
       <ng-container *ngIf="selectedBill">
-        <div class="table">
-          <div class="name" *ngIf="selectedBill.tableId">
-            # Mesa {{ (selectedBill.tableId | select: tables)?.name }}
+        <div>
+          <div class="table">
+            <div class="name" *ngIf="selectedBill.tableId">
+              # Mesa {{ (selectedBill.tableId | select: tables)?.name }}
+            </div>
+            <div class="name" *ngIf="!selectedBill.tableId">
+              # {{ selectedBill.id | slice: 0:4 }}
+            </div>
+            <div class="people" (click)="changePeople()">
+              <i class="pi pi-user"></i>
+              {{ selectedBill.people ?? '-' }}
+            </div>
           </div>
-          <div class="name" *ngIf="!selectedBill.tableId"># {{ selectedBill.id | slice: 0:4 }}</div>
-          <div class="people" (click)="changePeople()">
-            <i class="pi pi-user"></i>
-            {{ selectedBill.people ?? '-' }}
+          <div class="info">
+            <div
+              class="pickup"
+              [class.pickup--active]="selectedBill.isPickup"
+              (click)="changePickup()">
+              <p-chip label="Para recoger"></p-chip>
+            </div>
+            <div class="time">
+              <i class="pi pi-clock"></i>
+              {{ selectedBill.createdAt | date: 'HH:mm' }}
+            </div>
           </div>
         </div>
         <div class="list">
@@ -147,11 +163,18 @@
         </div>
 
         <div class="actions">
-          <button
-            pButton
-            (click)="newBill()"
-            class="p-button-outlined p-button-lg"
-            label="Nueva comanda"></button>
+          <div class="actions--inline">
+            <button
+              pButton
+              (click)="newBill()"
+              class="p-button-outlined p-button-lg"
+              label="Nueva comanda"></button>
+            <button
+              pButton
+              (click)="deleteBill()"
+              class="p-button-outlined p-button-lg p-button-warning"
+              label="Eliminar comanda"></button>
+          </div>
           <button pButton class="p-button-outlined p-button-lg" label="Imprimir ticket"></button>
           <button
             pButton

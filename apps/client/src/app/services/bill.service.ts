@@ -25,8 +25,8 @@ export class BillsService {
     return this.http.put<IBill>(`${environment.apiUrl}/bills/${bill.id}`, bill);
   }
 
-  deleteBill(bill: IBill) {
-    return this.http.delete(`${environment.apiUrl}/bills/${bill.id}`);
+  deleteBill(id: string) {
+    return this.http.delete(`${environment.apiUrl}/bills/${id}`);
   }
 
   // Bill Items

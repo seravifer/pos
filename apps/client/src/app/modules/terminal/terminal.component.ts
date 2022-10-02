@@ -159,6 +159,7 @@ export class TerminalComponent implements OnInit {
       people: 0,
       total: 0,
       paid: 0,
+      isPickup: false,
       userId: null,
       closedAt: null,
       createdAt: new Date(),
@@ -186,6 +187,14 @@ export class TerminalComponent implements OnInit {
     this.calcTotal();
   }
 
+  changePickup() {
+    if (!this.selectedBill) {
+      return;
+    }
+    this.selectedBill.isPickup = !this.selectedBill.isPickup;
+    this.updateBill();
+  }
+
   changePeople() {
     this.dialogService
       .open(PeopleComponent, {
@@ -210,6 +219,14 @@ export class TerminalComponent implements OnInit {
   }
 
   newBill() {
+    this.selectedBill = null;
+  }
+
+  deleteBill() {
+    if (this.selectedBill) {
+      this.bills = this.bills.filter((bill) => bill.id !== this.selectedBill!.id);
+      this.billService.deleteBill(this.selectedBill.id).subscribe();
+    }
     this.selectedBill = null;
   }
 
