@@ -1,5 +1,4 @@
 import Konva from 'konva';
-import { ItemType } from '../types';
 import { Node } from './node';
 
 export type TableOptions = {
@@ -9,7 +8,6 @@ export type TableOptions = {
   width: number;
   chairs: number;
   rotation: number;
-  people: number;
   active: boolean;
   x: number;
   y: number;
@@ -65,9 +63,11 @@ export class TableNode extends Node {
   }
 
   private render() {
+    const { height, width } = this.options;
+
     this.destroyChildren();
-    this.width(+this.options.width);
-    this.height(+this.options.height);
+    this.width(+width);
+    this.height(+height);
     this.changeRotation(this, this.options.rotation);
 
     // Distribution of chairs
@@ -94,63 +94,77 @@ export class TableNode extends Node {
     // top
     for (let i = 0; i < side[0]; i++) {
       chairs.push(
-        new Konva.Circle({
-          x: calcPos(i, side[0], +this.options.width),
-          y: 0,
-          radius: 20,
-          fill: 'green',
+        new Konva.Rect({
+          x: calcPos(i, side[0], +width) - 20,
+          y: -28,
+          fill: this.options.active ? '#40c166' : '#dadee4',
+          cornerRadius: [40, 40, 4, 4],
+          height: 20,
+          width: 40,
         })
       );
     }
     // bottom
     for (let i = 0; i < side[1]; i++) {
       chairs.push(
-        new Konva.Circle({
-          x: calcPos(i, side[1], +this.options.width),
-          y: +this.options.height,
-          radius: 20,
-          fill: 'green',
+        new Konva.Rect({
+          x: calcPos(i, side[1], +width) + 20,
+          y: +height + 28,
+          fill: this.options.active ? '#40c166' : '#dadee4',
+          cornerRadius: [40, 40, 4, 4],
+          height: 20,
+          width: 40,
+          rotation: 180,
         })
       );
     }
     // right
     for (let i = 0; i < side[2]; i++) {
       chairs.push(
-        new Konva.Circle({
-          x: +this.options.width,
-          y: calcPos(i, side[2], +this.options.height),
-          radius: 20,
-          fill: 'green',
+        new Konva.Rect({
+          x: +width + 28,
+          y: calcPos(i, side[2], +height) - 20,
+          fill: this.options.active ? '#40c166' : '#dadee4',
+          cornerRadius: [40, 40, 4, 4],
+          height: 20,
+          width: 40,
+          rotation: 90,
         })
       );
     }
     // left
     for (let i = 0; i < side[3]; i++) {
       chairs.push(
-        new Konva.Circle({
-          x: 0,
-          y: calcPos(i, side[3], +this.options.height),
-          radius: 20,
-          fill: 'green',
+        new Konva.Rect({
+          x: -28,
+          y: calcPos(i, side[3], +height) + 20,
+          fill: this.options.active ? '#40c166' : '#dadee4',
+          cornerRadius: [40, 40, 4, 4],
+          height: 20,
+          width: 40,
+          rotation: 270,
         })
       );
     }
 
     const table = new Konva.Rect({
-      width: +this.options.width,
-      height: +this.options.height,
-      fill: this.options.active ? 'green' : 'lightblue',
+      width: +width,
+      height: +height,
+      fill: 'white',
+      stroke: '#40c166',
+      strokeWidth: this.options.active ? 6 : 0,
       cornerRadius: 6,
-      stroke: 'white',
-      strokeWidth: 2,
+      shadowColor: 'black',
+      shadowBlur: 8,
+      shadowOpacity: 0.2,
     });
     const name = new Konva.Text({
       text: this.options.text,
       fontSize: 22,
       fontFamily: 'Calibri',
       fill: '#000',
-      width: +this.options.width,
-      height: +this.options.height,
+      width: +width,
+      height: +height,
       verticalAlign: 'middle',
       align: 'center',
     });

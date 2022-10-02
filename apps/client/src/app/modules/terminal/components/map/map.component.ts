@@ -2,9 +2,9 @@ import { AfterContentInit, Component, EventEmitter, Input, OnChanges, Output } f
 import { Node } from './nodes/node';
 import { MapService } from './map.service';
 import { IBill, ILocation, ITable } from '@pos/models';
-import Konva from 'konva';
 import { TableNode } from './nodes/table';
 import { CircleNode } from './nodes/circle';
+import Konva from 'konva';
 
 @Component({
   selector: 'pos-map',
@@ -12,7 +12,7 @@ import { CircleNode } from './nodes/circle';
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements AfterContentInit, OnChanges {
-  @Input() locations: Partial<ILocation>[] = [];
+  @Input() locations: ILocation[] = [];
   @Input() tables: ITable[] = [];
   @Input() bills: IBill[] = [];
 
@@ -21,8 +21,7 @@ export class MapComponent implements AfterContentInit, OnChanges {
   private canvas!: Konva.Stage;
   private activeLayer?: Konva.Layer;
 
-  public selectedItem?: Node;
-  public selectedLocation?: Partial<ILocation>;
+  public selectedLocation?: ILocation;
 
   constructor(private mapService: MapService) {}
 
@@ -60,7 +59,7 @@ export class MapComponent implements AfterContentInit, OnChanges {
     }
   }
 
-  changeLocation(location: Partial<ILocation>) {
+  changeLocation(location: ILocation) {
     this.activeLayer?.hide();
     this.activeLayer = this.canvas.getLayers().find((l) => l.id() === location.id);
     this.activeLayer?.show();
@@ -68,9 +67,8 @@ export class MapComponent implements AfterContentInit, OnChanges {
   }
 
   onSelect(item: Node) {
-    this.selectedItem = item;
-    if (this.selectedItem instanceof TableNode || this.selectedItem instanceof CircleNode) {
-      this.selected.emit(this.mapService.convertToItems([this.selectedItem])[0]);
+    if (item instanceof TableNode || item instanceof CircleNode) {
+      this.selected.emit(this.mapService.convertToItems([item])[0]);
     }
   }
 }

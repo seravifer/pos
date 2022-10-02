@@ -1,6 +1,5 @@
 import Konva from 'konva';
 import { Node } from './node';
-import { ItemType } from '../types';
 
 export type CircleOptions = {
   id: string;
@@ -8,6 +7,7 @@ export type CircleOptions = {
   height: number;
   chairs: number;
   rotation: number;
+  active: boolean;
   x: number;
   y: number;
 };
@@ -49,7 +49,7 @@ export class CircleNode extends Node {
     this.y(this.y() + dy);
   }
 
-  public override toObject(): CircleOptions & { type: ItemType } {
+  public override toObject() {
     return {
       id: this.id(),
       type: 'circle',
@@ -65,43 +65,53 @@ export class CircleNode extends Node {
   private render() {
     this.destroyChildren();
 
+    const { height, active } = this.options;
+
     const chairs = [];
     const totalPoints = this.options.chairs;
-    const r = this.options.height / 2;
+    const r = height / 2;
     for (let i = 1; i <= totalPoints; i++) {
       const theta = (Math.PI * 2) / totalPoints;
       const angle = theta * i;
+      const rotation = angle * (180 / Math.PI) - 270;
 
       chairs.push(
-        new Konva.Circle({
+        new Konva.Rect({
           x: r * Math.cos(angle) + r,
           y: r * Math.sin(angle) + r,
-          radius: 20,
-          fill: 'green',
+          fill: this.options.active ? '#40c166' : '#dadee4',
+          cornerRadius: [40, 40, 4, 4],
+          offset: { x: 20, y: 26 },
+          rotation,
+          height: 20,
+          width: 40,
         })
       );
     }
 
     const circle = new Konva.Circle({
-      width: +this.options.height,
-      height: +this.options.height,
-      x: +this.options.height / 2,
-      y: +this.options.height / 2,
-      fill: 'lightblue',
-      stroke: 'white',
-      strokeWidth: 2,
+      width: +height,
+      height: +height,
+      x: +height / 2,
+      y: +height / 2,
+      fill: 'white',
+      stroke: '#40c166',
+      strokeWidth: active ? 6 : 0,
+      shadowColor: 'black',
+      shadowBlur: 8,
+      shadowOpacity: 0.2,
     });
     const name = new Konva.Text({
       text: this.options.text,
       fontSize: 22,
       fontFamily: 'Calibri',
       fill: '#000',
-      width: +this.options.height,
-      height: +this.options.height,
+      width: +height,
+      height: +height,
       verticalAlign: 'middle',
       align: 'center',
     });
 
-    this.add(...chairs, circle, name);
+    this.add(circle, ...chairs, name);
   }
 }

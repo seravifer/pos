@@ -1,5 +1,16 @@
 <div class="map-container">
   <div class="map">
+    <div class="legend">
+      <h3>Mesas:</h3>
+      <div>
+        <i class="pi pi-circle-fill" style="color: #56c066"></i>
+        <span>Ocupadas: 7</span>
+      </div>
+      <div>
+        <i class="pi pi-circle-fill" style="color: #dbdee4"></i>
+        <span>Disponibles: 9</span>
+      </div>
+    </div>
     <div id="canvas"></div>
   </div>
   <div class="locations">
@@ -10,10 +21,8 @@
       (click)="changeLocation(location!)">
       <button
         pButton
-        [class]="{
-          'p-button-outlined': location.id !== selectedLocation?.id,
-          'location-button': true
-        }">
+        class="location-button p-button-lg"
+        [class.p-button-outlined]="location.id !== selectedLocation?.id">
         {{ location.name }}
       </button>
     </div>

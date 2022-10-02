@@ -75,11 +75,35 @@
     position: relative;
     flex: 1 1 auto;
   }
-}
 
-#canvas {
-  background-image: url('/assets/floor.webp');
-  border-radius: 16px;
-  height: 100%;
-  width: 100%;
+  .legend {
+    background-color: white;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    padding: 20px 30px;
+    border-radius: 16px;
+    z-index: 1;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h3 {
+      margin: 0;
+    }
+  }
+
+  #canvas {
+    background-color: #f2f5fa;
+    border-radius: 16px;
+    height: 100%;
+    width: 100%;
+  }
 }
