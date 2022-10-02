@@ -21,6 +21,12 @@
       icon="pi pi-bookmark"
       class="p-button-lg"
       (click)="pageShowing = 'tickets'"></button>
+    <button
+      pButton
+      label="Bloquear"
+      icon="pi pi-power-off"
+      class="p-button-lg logout"
+      (click)="logout()"></button>
   </div>
   <ng-container *ngIf="pageShowing === 'bill'">
     <div class="items">

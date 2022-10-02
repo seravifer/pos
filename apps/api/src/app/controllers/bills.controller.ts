@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { IBill, INewBill } from '@pos/models';
 import { Bill } from '@prisma/client';
+import { AuthGuard } from '../guards/auth.guard';
 import { DBService } from '../services/db.service';
 
 @Controller('bills')
+@UseGuards(AuthGuard)
 export class BillsController {
   constructor(private readonly dbService: DBService) {}
 

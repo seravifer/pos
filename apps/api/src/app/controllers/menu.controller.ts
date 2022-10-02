@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { IMenu, INewMenu } from '@pos/models';
 import { Menu, MenuSection, SectionProduct, Product } from '@prisma/client';
+import { AuthGuard } from '../guards/auth.guard';
 import { DBService } from '../services/db.service';
 
 const query = {
@@ -20,6 +21,7 @@ const query = {
 };
 
 @Controller('menus')
+@UseGuards(AuthGuard)
 export class MenusController {
   constructor(private readonly dbService: DBService) {}
 

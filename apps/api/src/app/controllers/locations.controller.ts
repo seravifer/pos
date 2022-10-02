@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { DBService } from '../services/db.service';
 import { ILocation } from '@pos/models';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('locations')
+@UseGuards(AuthGuard)
 export class LocationsController {
   constructor(private readonly dbService: DBService) {}
 

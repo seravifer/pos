@@ -10,9 +10,10 @@ import { BillItemsController } from './controllers/bill-items.controller';
 import { MenusController } from './controllers/menu.controller';
 import { SectionsController } from './controllers/sections.controller';
 import { AuthController } from './controllers/auth.controller';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [],
+  imports: [JwtModule.register({ secret: process.env.JWT_SECRET ?? 'secret' })],
   controllers: [
     ProductsController,
     CategoriesController,

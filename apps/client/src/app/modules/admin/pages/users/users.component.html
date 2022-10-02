@@ -19,17 +19,6 @@
         (click)="deleteSelectedUsers()"
         [disabled]="!selectedUsers || !selectedUsers.length"></button>
     </ng-template>
-
-    <ng-template pTemplate="right">
-      <p-fileUpload
-        mode="basic"
-        accept="image/*"
-        [maxFileSize]="1000000"
-        label="Import"
-        chooseLabel="Import"
-        class="p-mr-2 p-d-inline-block"></p-fileUpload>
-      <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
-    </ng-template>
   </p-toolbar>
 
   <p-table
@@ -109,14 +98,13 @@
       <small class="p-invalid" *ngIf="submitted && !user.name">Name is required.</small>
     </div>
     <div class="p-field">
-      <label for="password">Password</label>
-      <p-password
-        id="password"
-        [(ngModel)]="user.password"
-        required
-        [toggleMask]="true"
-        [feedback]="false"></p-password>
-      <small class="p-invalid" *ngIf="submitted && !user.name">Password is required.</small>
+      <label for="pin">Pin</label>
+      <p-inputNumber
+        id="pin"
+        [(ngModel)]="user.pin"
+        [useGrouping]="false"
+        [maxlength]="4"></p-inputNumber>
+      <small class="p-invalid" *ngIf="submitted && !user.pin">Pin is required.</small>
     </div>
   </ng-template>
 

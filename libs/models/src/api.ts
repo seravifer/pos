@@ -8,11 +8,21 @@ export type ITable = Table;
 export type ILocation = Location;
 
 // User
-export type IUser = User;
+export type IUser = Omit<User, 'hash'>;
 export type INewUser = {
   id?: string;
   name: string;
-  password: string;
+  pin: string;
+};
+
+export type ILoginUser = {
+  id: string;
+  name: string;
+};
+
+export type ILogin = {
+  user: IUser;
+  token: string;
 };
 
 // Menu

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '@pos/client/services/auth.service';
 import { BillsService } from '@pos/client/services/bill.service';
 import { CategoriesService } from '@pos/client/services/categories.service';
 import { LocationsService } from '@pos/client/services/locations.service';
@@ -48,6 +49,7 @@ export class TerminalComponent implements OnInit {
     private tableService: TableService,
     private locationsService: LocationsService,
     private menuService: MenusService,
+    private authService: AuthService,
     private dialogService: DialogService
   ) {}
 
@@ -262,5 +264,9 @@ export class TerminalComponent implements OnInit {
     }
     const { billItems, ...bill } = this.selectedBill;
     this.billService.updateBill(bill).subscribe();
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

@@ -1,11 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { INewUser } from '@pos/models';
 import { DBService } from '../services/db.service';
 import { hash } from 'bcrypt';
+import { AuthGuard } from '../guards/auth.guard';
 
 const SALT_ROUNDS = 10;
 
 @Controller('users')
+@UseGuards(AuthGuard)
 export class UsersController {
   constructor(private readonly dbService: DBService) {}
 
@@ -23,7 +25,7 @@ export class UsersController {
 
   @Post()
   async create(@Body() data: INewUser) {
-    const hashed = await hash(data.password, SALT_ROUNDS);
+    const hashed = await hash(data.pin, SALT_ROUNDS);
     const user = {
       name: data.name,
       hash: hashed,
@@ -46,7 +48,7 @@ export class UsersController {
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() data: INewUser) {
-    const hashed = await hash(data.password, 10);
+    const hashed = await hash(data.pin, SALT_ROUNDS);
     const user = {
       name: data.name,
       hash: hashed,

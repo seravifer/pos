@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { interval, map } from 'rxjs';
+import { map, timer } from 'rxjs';
 
 @Component({
   selector: 'pos-time',
-  templateUrl: './time.component.html',
-  styleUrls: ['./time.component.scss'],
+  template: `{{ time$ | async | date: 'HH:mm' }}`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimeComponent {
-  public time$ = interval(1_000).pipe(map(() => new Date()));
+  public time$ = timer(0, 1_000).pipe(map(() => new Date()));
 }
